@@ -230,13 +230,20 @@ void Player::Turn()
 {
 	/* --プレイヤーの旋回処理-- */
 
-	if (turnTimer_ > 0.0f) 
+
+	if (turnTimer_ > 0.0f)
 	{
-		turnTimer_ = std::clamp(turnTimer_ - 1 / 30.0f, 0.0f, turnTimer_);
-		float destinationRotationYTable[] = { 0, std::numbers::pi_v<float>, };
+		turnTimer_ = 1.0f / 30.0f;
+
+		float destinationRotationYTable[] =
+		{
+			std::numbers::pi_v<float> / 2.0f,
+			std::numbers::pi_v<float>*3.0f / 2.0f
+		};
 		//角度の取得
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
-		playerModel_->GetWorldTransform()->rotation_.y = std::lerp(destinationRotationY, turnFirstRotationY_, turnTimer_);
+		//角度を変更する
+		playerModel_->GetWorldTransform()->rotation_.y = LerpShortTranslate(playerModel_->GetWorldTransform()->rotation_.y, destinationRotationY, turnTimer_);
 	}
 }
 
