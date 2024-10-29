@@ -27,7 +27,7 @@ void CameraController::Update()
 	targetPosition_ = Add(targetWorldTransform->translation_, targetOffset_);
 
 	//座標補間
-	camera_->transform.translate = targetPosition_;/*Lerp(camera_->transform.translate, targetPosition, interpolationRate);*/
+	camera_->transform_.translate = targetPosition_;/*Lerp(camera_->transform.translate, targetPosition, interpolationRate);*/
 
 	camera_->UpdateMatrix();
 }
@@ -37,7 +37,7 @@ void CameraController::Reset()
 	//追従対象のワールドトランスフォームを参照
 	const WorldTransform* targetWorldTransform = target_->GetWorldTransform();
 	//追従対象とオフセットからカメラの座標を計算
-	camera_->transform.translate = Add(targetWorldTransform->translation_ , targetOffset_);
+	camera_->transform_.translate = Add(targetWorldTransform->translation_ , targetOffset_);
 
 
 }

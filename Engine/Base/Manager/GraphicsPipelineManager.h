@@ -63,35 +63,35 @@ public:
 
 	/// @brief PSOメンバーを取得します。
 	/// @return PsoMember構造体
-	PsoMember GetPsoMember()const { return psoMember; };
+	PsoMember GetPsoMember()const { return psoMember_; };
 
 private:
 
 	DirectXCommon* dxCommon_ = nullptr;
-	HRESULT hr;
+	HRESULT hr_;
 
-	IDxcUtils* m_dxcUtils = nullptr;
-	IDxcCompiler3* m_dxcCompiler = nullptr;
-	IDxcIncludeHandler* m_includeHandler = nullptr;
+	IDxcUtils* dxcUtils_ = nullptr;
+	IDxcCompiler3* dxcCompiler_ = nullptr;
+	IDxcIncludeHandler* includeHandler_ = nullptr;
 
-	Microsoft::WRL::ComPtr< ID3D12RootSignature> rootSignature = nullptr;	//バイナリを元に生成
+	Microsoft::WRL::ComPtr< ID3D12RootSignature> rootSignature_ = nullptr;	//バイナリを元に生成
 
 
-	D3D12_BLEND_DESC NormalblendDesc{};
+	D3D12_BLEND_DESC NormalblendDesc_{};
 
-	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	D3D12_RASTERIZER_DESC rasterizerDesc_{};
 
-	Microsoft::WRL::ComPtr< IDxcBlob> vertexShaderBlob;
-	Microsoft::WRL::ComPtr< IDxcBlob> pixelShaderBlob;
+	Microsoft::WRL::ComPtr< IDxcBlob> vertexShaderBlob_;
+	Microsoft::WRL::ComPtr< IDxcBlob> pixelShaderBlob_;
 
-	D3D12_DEPTH_STENCIL_DESC depthStencil{};	//DepthStensilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencil_{};	//DepthStensilStateの設定
 
-	Microsoft::WRL::ComPtr< ID3D12PipelineState> graphicPipelineState = nullptr;
+	Microsoft::WRL::ComPtr< ID3D12PipelineState> graphicPipelineState_ = nullptr;
 	
-	PsoMember psoMember;
+	PsoMember psoMember_;
 
 	//静的メンバ変数の宣言と初期化
-	static GraphicsPipelineManager* instance;
+	static GraphicsPipelineManager* instance_;
 
 private:
 

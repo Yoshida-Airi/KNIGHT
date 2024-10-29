@@ -58,9 +58,9 @@ public:
 
 private:
 
-	std::map<std::string, std::unique_ptr<Model>> models;
-	std::vector<std::unique_ptr<WorldTransform>> objects;
-	std::unique_ptr<LevelData> levelData;
+	std::map<std::string, std::unique_ptr<Model>> modelsData_;
+	std::vector<std::unique_ptr<WorldTransform>> objects_;
+	std::unique_ptr<LevelData> levelData_;
 
 	std::vector<Model*>models_;
 

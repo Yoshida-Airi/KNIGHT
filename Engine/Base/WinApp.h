@@ -79,7 +79,7 @@ private:
 
 	HWND hwnd_ = nullptr;	//ウィンドウを表す識別子
 	WNDCLASS wc_{};			//ウィンドウクラスの設定
-	static WinApp* instance;	//シングルトン
+	static WinApp* instance_;	//シングルトン
 
 	std::wstring windowTitle_ = L"KNIGHT";	//タイトル
 

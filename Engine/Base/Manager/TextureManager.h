@@ -76,7 +76,7 @@ public:
 
 private:
 
-	static const size_t kMaxTexture = 256;	//最大テクスチャ数
+	static const size_t kMaxTexture_ = 256;	//最大テクスチャ数
 	DirectXCommon* dxCommon_;
 	SrvManager* srvManager_;
 
@@ -89,15 +89,15 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_ = {};
 
 	//中間リソース
-	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxTexture> intermediateResource;
+	std::array<Microsoft::WRL::ComPtr<ID3D12Resource>, kMaxTexture_> intermediateResource_;
 
-	std::unordered_map<std::string, TextureData> textureDatas;
-	bool IsusedTexture[kMaxTexture];
-	uint32_t descriptorSizeSRV;
+	std::unordered_map<std::string, TextureData> textureDatas_;
+	bool isUsedTexture_[kMaxTexture_];
+	uint32_t descriptorSizeSRV_;
 
-	static TextureManager* instance;
+	static TextureManager* instance_;
 
-	static uint32_t kSRVIndexTop;
+	static uint32_t kSRVIndexTop_;
 
 private:
 

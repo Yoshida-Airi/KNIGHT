@@ -14,21 +14,21 @@ void EffectManager::Update(float deltaTime)
         deltaTime_ = deltaTime;
 
         texture = TextureManager::GetInstance();  // TextureManager のインスタンスを取得するメソッドが存在すると仮定
-        blackTexture = texture->LoadTexture("Resources/uvChecker.png");
-        fadeIn.reset(Sprite::Create(blackTexture));
-        fadeIn->SetSize({ 1920, 720 });
+        blackTexture_ = texture->LoadTexture("Resources/uvChecker.png");
+        fadeIn_.reset(Sprite::Create(blackTexture_));
+        fadeIn_->SetSize({ 1920, 720 });
 
         initialized_ = true;  // 初期化が完了したことを示すフラグを設定
     }
 
     // アニメーションの更新はここで行う
     deltaTime_ -= 0.01f;
-    fadeIn->Update();
-    fadeIn->SetMaterialData({ 1.0f, 1.0f, 1.0f, deltaTime_ });
+    fadeIn_->Update();
+    fadeIn_->SetMaterialData({ 1.0f, 1.0f, 1.0f, deltaTime_ });
 }
 
 void EffectManager::Draw(Camera* camera)
 {
-    fadeIn->Draw(camera);
+    fadeIn_->Draw(camera);
 }
 

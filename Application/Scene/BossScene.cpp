@@ -5,21 +5,20 @@
 BossScene::~BossScene()
 {
 
-	delete camera;
-	delete levelEditor;
-	delete cameraController;
+	delete camera_;
+	delete cameraController_;
 
-	for (Enemy* enemy : enemys)
+	for (Enemy* enemy : enemys_)
 	{
 		delete enemy;
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys)
+	for (FlyEnemy* flyEnemy : flyEnemys_)
 	{
 		delete flyEnemy;
 	}
 
-	for (Ground* ground : grounds)
+	for (Ground* ground : grounds_)
 	{
 		delete ground;
 	}
@@ -43,8 +42,8 @@ BossScene::~BossScene()
 
 void BossScene::Initialize()
 {
-	texture = TextureManager::GetInstance();
-	input = Input::GetInstance();
+	texture_ = TextureManager::GetInstance();
+	input_ = Input::GetInstance();
 	sceneManager_ = SceneManager::GetInstance();
 
 	//当たり判定処理の設定
@@ -53,68 +52,61 @@ void BossScene::Initialize()
 
 
 	//テクスチャの読み込み
-	uvTexture = texture->LoadTexture("Resources/SampleAssets/uvChecker.png");
-	monsterBall = texture->LoadTexture("Resources/SampleAssets/monsterBall.png");
-	Doll = texture->LoadTexture("Resources/SampleAssets/Doll.png");
-	circle = texture->LoadTexture("Resources/SampleAssets/circle.png");
-	configTexture = texture->LoadTexture("Resources/Scene/config.png");
-	HPTexture = texture->LoadTexture("Resources/Object/Heart.png");
+	configTexture_ = texture_->LoadTexture("Resources/Scene/config.png");
+	HPTexture_ = texture_->LoadTexture("Resources/Object/Heart.png");
 
-	camera = new Camera;
-	camera->Initialize();
-	camera->transform.translate={16.0f,66.3f,-42.0f};
+	camera_ = new Camera;
+	camera_->Initialize();
+	camera_->transform_.translate={16.0f,66.3f,-42.0f};
 
-	levelEditor = new LevelEditor();
-	levelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
-	levelEditor->Initialize();
 
-	weapon = std::make_unique<Weapon>();
-	weapon->Initialize();
+	weapon_ = std::make_unique<Weapon>();
+	weapon_->Initialize();
 
 
 	//SpawnBlock({ 47.8f, -1.0f, 0 }, { 50.31f, 1.0f, 1.0f });
 	//SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
 	//SpawnBlock({ 20.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
 
-	player = std::make_unique<Player>();
-	player->SetWeapon(weapon.get());
-	player->SetGround(grounds);
-	player->Initialize();
+	player_ = std::make_unique<Player>();
+	player_->SetWeapon(weapon_.get());
+	player_->SetGround(grounds_);
+	player_->Initialize();
 
-	boss = std::make_unique<Boss>();
-	boss->Initialize();
-	boss->SetPlayer(player.get());
+	boss_ = std::make_unique<Boss>();
+	boss_->Initialize();
+	boss_->SetPlayer(player_.get());
 
-	skydome = std::make_unique<Skydome>();
-	skydome->Initialize();
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize();
 
-	goal = std::make_unique<Goal>();
-	goal->Initialize();
+	goal_ = std::make_unique<Goal>();
+	goal_->Initialize();
 
 	//cameraController = new CameraController;
 	//cameraController->Initialize(camera);
 	//cameraController->SetTarget(player.get());
 	//cameraController->Reset();
 
-	config.reset(Sprite::Create(configTexture));
+	config_.reset(Sprite::Create(configTexture_));
 
-	hp1.reset(Sprite::Create(HPTexture));
-	hp2.reset(Sprite::Create(HPTexture));
-	hp3.reset(Sprite::Create(HPTexture));
-	hp4.reset(Sprite::Create(HPTexture));
-	hp5.reset(Sprite::Create(HPTexture));
+	hp1_.reset(Sprite::Create(HPTexture_));
+	hp2_.reset(Sprite::Create(HPTexture_));
+	hp3_.reset(Sprite::Create(HPTexture_));
+	hp4_.reset(Sprite::Create(HPTexture_));
+	hp5_.reset(Sprite::Create(HPTexture_));
 
-	hp1->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp2->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp3->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp4->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp5->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	hp1_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	hp2_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	hp3_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	hp4_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	hp5_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
 
-	hp1->GetWorldTransform()->translation_ = { 20.0f,20.0f,0.0f };
-	hp2->GetWorldTransform()->translation_ = { 40.0f,20.0f,0.0f };
-	hp3->GetWorldTransform()->translation_ = { 60.0f,20.0f,0.0f };
-	hp4->GetWorldTransform()->translation_ = { 80.0f,20.0f,0.0f };
-	hp5->GetWorldTransform()->translation_ = { 100.0f,20.0f,0.0f };
+	hp1_->GetWorldTransform()->translation_ = { 20.0f,20.0f,0.0f };
+	hp2_->GetWorldTransform()->translation_ = { 40.0f,20.0f,0.0f };
+	hp3_->GetWorldTransform()->translation_ = { 60.0f,20.0f,0.0f };
+	hp4_->GetWorldTransform()->translation_ = { 80.0f,20.0f,0.0f };
+	hp5_->GetWorldTransform()->translation_ = { 100.0f,20.0f,0.0f };
 
 	fade_ = std::make_unique <Fade>();
 	fade_->Initialize();
@@ -129,7 +121,7 @@ void BossScene::Initialize()
 
 	GenerateBlocks();
 
-	player->SetMapChipField(mapChipField_);
+	player_->SetMapChipField(mapChipField_);
 }
 
 void BossScene::Update()
@@ -156,23 +148,23 @@ void BossScene::Draw()
 {
 
 
-	for (Ground* ground : grounds)
+	for (Ground* ground : grounds_)
 	{
-		ground->Draw(camera);
+		ground->Draw(camera_);
 	}
 
 
-	skydome->Draw(camera);
-	player->Draw(camera);
-	weapon->Draw(camera);
-	for (Enemy* enemy : enemys)
+	skydome_->Draw(camera_);
+	player_->Draw(camera_);
+	weapon_->Draw(camera_);
+	for (Enemy* enemy : enemys_)
 	{
-		enemy->Draw(camera);
+		enemy->Draw(camera_);
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys)
+	for (FlyEnemy* flyEnemy : flyEnemys_)
 	{
-		flyEnemy->Draw(camera);
+		flyEnemy->Draw(camera_);
 	}
 
 
@@ -191,56 +183,56 @@ void BossScene::Draw()
 				continue;
 			}
 
-			block->Draw(camera);
+			block->Draw(camera_);
 		}
 	}
 
-	boss->Draw(camera);
+	boss_->Draw(camera_);
 
-	goal->Draw(camera);
+	goal_->Draw(camera_);
 
 	//colliderManager_->Draw(camera);
 
-	config->Draw(camera);
+	config_->Draw(camera_);
 
 
-	if (player->GetHP() == 5)
+	if (player_->GetHP() == 5)
 	{
 
-		hp1->Draw(camera);
-		hp2->Draw(camera);
-		hp3->Draw(camera);
-		hp4->Draw(camera);
-		hp5->Draw(camera);
+		hp1_->Draw(camera_);
+		hp2_->Draw(camera_);
+		hp3_->Draw(camera_);
+		hp4_->Draw(camera_);
+		hp5_->Draw(camera_);
 	}
-	if (player->GetHP() == 4)
+	if (player_->GetHP() == 4)
 	{
 
-		hp1->Draw(camera);
-		hp2->Draw(camera);
-		hp3->Draw(camera);
-		hp4->Draw(camera);
+		hp1_->Draw(camera_);
+		hp2_->Draw(camera_);
+		hp3_->Draw(camera_);
+		hp4_->Draw(camera_);
 	}
-	if (player->GetHP() == 3)
+	if (player_->GetHP() == 3)
 	{
 
-		hp1->Draw(camera);
-		hp2->Draw(camera);
-		hp3->Draw(camera);
+		hp1_->Draw(camera_);
+		hp2_->Draw(camera_);
+		hp3_->Draw(camera_);
 	}
-	if (player->GetHP() == 2)
+	if (player_->GetHP() == 2)
 	{
 
-		hp1->Draw(camera);
-		hp2->Draw(camera);
+		hp1_->Draw(camera_);
+		hp2_->Draw(camera_);
 	}
-	if (player->GetHP() == 1)
+	if (player_->GetHP() == 1)
 	{
 
-		hp1->Draw(camera);
+		hp1_->Draw(camera_);
 	}
 
-	fade_->Draw(camera);
+	fade_->Draw(camera_);
 }
 
 void BossScene::CheckAllCollisions()
@@ -251,16 +243,16 @@ void BossScene::CheckAllCollisions()
 	colliderManager_->ListClear();
 
 	//コライダーにオブジェクトを登録
-	colliderManager_->AddColliders(player.get());
+	colliderManager_->AddColliders(player_.get());
 
-	if (weapon->GetIsAttack() == true)
+	if (weapon_->GetIsAttack() == true)
 	{
 		//攻撃中のみ
-		colliderManager_->AddColliders(weapon.get());
+		colliderManager_->AddColliders(weapon_.get());
 	}
-	colliderManager_->AddColliders(boss.get());
+	colliderManager_->AddColliders(boss_.get());
 
-	colliderManager_->AddColliders(goal.get());
+	colliderManager_->AddColliders(goal_.get());
 
 	//colliderManager_->AddColliders(levelEditor);
 	//当たり判定
@@ -280,13 +272,13 @@ void BossScene::SpawnBlock(const Vector3& position, const Vector3& scale)
 	ground->SetScale(scale);
 
 	// リストに登録
-	grounds.push_back(ground);
+	grounds_.push_back(ground);
 }
 
 void BossScene::CreateDeathEffect(Vector3 position)
 {
 	DeathEffect* newDeathEffect = new DeathEffect();
-	newDeathEffect->Initialize(camera);
+	newDeathEffect->Initialize(camera_);
 	newDeathEffect->SetFlag(true);
 
 	newDeathEffect->SetPosition(position);
@@ -301,18 +293,18 @@ void BossScene::ChangePhase(Phase phase)
 
 void BossScene::GamePlayPhase()
 {
-	input->TriggerKey(DIK_0);
+	input_->TriggerKey(DIK_0);
 
-	if (player->GetWorldTransform()->translation_.x >= 18.0f)
+	if (player_->GetWorldTransform()->translation_.x >= 18.0f)
 	{
-		player->GetWorldTransform()->translation_.x= 18.0f;
+		player_->GetWorldTransform()->translation_.x= 18.0f;
 	}
 
-	camera->UpdateMatrix();
+	camera_->UpdateMatrix();
 
 #ifdef _DEBUG
 
-	camera->CameraDebug();
+	camera_->CameraDebug();
 
 #endif // _DEBUG
 
@@ -321,16 +313,16 @@ void BossScene::GamePlayPhase()
 	colliderManager_->UpdateWorldTransform();
 
 
-	if (boss->GetIsAlive() == false)
+	if (boss_->GetIsAlive() == false)
 	{
 		ChangePhase(Phase::kClear);
 		fade_->Start(Fade::Status::FadeOut, 1.5f);
 	}
 
-	if (player->GetHP() == 0)
+	if (player_->GetHP() == 0)
 	{
 		ChangePhase(Phase::kDeath);
-		CreateDeathEffect({ player->GetWorldPosition() });
+		CreateDeathEffect({ player_->GetWorldPosition() });
 		fade_->Start(Fade::Status::FadeOut, 1.5f);
 	}
 
@@ -341,18 +333,18 @@ void BossScene::GamePlayPhase()
 		fade_->Stop();
 	}
 
-	config->Update();
-	hp1->Update();
-	hp2->Update();
-	hp3->Update();
-	hp4->Update();
-	hp5->Update();
+	config_->Update();
+	hp1_->Update();
+	hp2_->Update();
+	hp3_->Update();
+	hp4_->Update();
+	hp5_->Update();
 
-	boss->Update();
+	boss_->Update();
 
-	if (boss->GetIsAlive() == false)
+	if (boss_->GetIsAlive() == false)
 	{
-		CreateDeathEffect({ boss->GetWorldPosition() });
+		CreateDeathEffect({ boss_->GetWorldPosition() });
 	}
 
 
@@ -366,7 +358,7 @@ void BossScene::GamePlayPhase()
 		return false;
 		});
 
-	enemys.remove_if([](Enemy* enemys) {
+	enemys_.remove_if([](Enemy* enemys) {
 		if (enemys->GetIsAlive() == false) {
 			delete enemys;
 			return true;
@@ -374,7 +366,7 @@ void BossScene::GamePlayPhase()
 		return false;
 		});
 
-	flyEnemys.remove_if([](FlyEnemy* flyEnemys) {
+	flyEnemys_.remove_if([](FlyEnemy* flyEnemys) {
 		if (flyEnemys->GetIsAlive() == false) {
 			delete flyEnemys;
 			return true;
@@ -387,10 +379,9 @@ void BossScene::GamePlayPhase()
 		deathEffects->Update();
 	}
 
-	levelEditor->Update();
 
 	int i = 0;
-	for (Ground* ground : grounds)
+	for (Ground* ground : grounds_)
 	{
 		i++;
 		ground->Update();
@@ -398,22 +389,22 @@ void BossScene::GamePlayPhase()
 	}
 
 
-	player->Update();
+	player_->Update();
 	//武器の更新
-	weapon->Update();
+	weapon_->Update();
 
-	for (Enemy* enemy : enemys)
+	for (Enemy* enemy : enemys_)
 	{
 		enemy->Update();
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys)
+	for (FlyEnemy* flyEnemy : flyEnemys_)
 	{
 		flyEnemy->Update();
 	}
 
-	skydome->Update();
-	goal->Update();
+	skydome_->Update();
+	goal_->Update();
 
 	CheckAllCollisions();
 
@@ -438,11 +429,11 @@ void BossScene::GamePlayPhase()
 
 void BossScene::GameClearPhase()
 {
-	input->TriggerKey(DIK_0);
+	input_->TriggerKey(DIK_0);
 
 #ifdef _DEBUG
 
-	camera->CameraDebug();
+	camera_->CameraDebug();
 
 #endif // _DEBUG
 
@@ -461,14 +452,14 @@ void BossScene::GameClearPhase()
 
 	}
 
-	config->Update();
-	hp1->Update();
-	hp2->Update();
-	hp3->Update();
-	hp4->Update();
-	hp5->Update();
+	config_->Update();
+	hp1_->Update();
+	hp2_->Update();
+	hp3_->Update();
+	hp4_->Update();
+	hp5_->Update();
 
-	for (Enemy* enemy : enemys) {
+	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
 			CreateDeathEffect({ enemy->GetWorldPosition() });
@@ -485,7 +476,7 @@ void BossScene::GameClearPhase()
 	//	return false;
 	//	});
 
-	enemys.remove_if([](Enemy* enemys) {
+	enemys_.remove_if([](Enemy* enemys) {
 		if (enemys->GetIsAlive() == false) {
 			delete enemys;
 			return true;
@@ -498,10 +489,9 @@ void BossScene::GameClearPhase()
 		deathEffects->Update();
 	}
 
-	levelEditor->Update();
 
 	int i = 0;
-	for (Ground* ground : grounds)
+	for (Ground* ground : grounds_)
 	{
 		i++;
 		ground->Update();
@@ -509,17 +499,17 @@ void BossScene::GameClearPhase()
 	}
 
 
-	player->Update();
+	player_->Update();
 	//武器の更新
-	weapon->Update();
+	weapon_->Update();
 
-	for (Enemy* enemy : enemys)
+	for (Enemy* enemy : enemys_)
 	{
 		enemy->Update();
 	}
 
-	skydome->Update();
-	goal->Update();
+	skydome_->Update();
+	goal_->Update();
 
 	CheckAllCollisions();
 
@@ -544,11 +534,11 @@ void BossScene::GameClearPhase()
 
 void BossScene::GameOverPhase()
 {
-	input->TriggerKey(DIK_0);
+	input_->TriggerKey(DIK_0);
 
 #ifdef _DEBUG
 
-	camera->CameraDebug();
+	camera_->CameraDebug();
 
 #endif // _DEBUG
 
@@ -567,14 +557,14 @@ void BossScene::GameOverPhase()
 
 	}
 
-	config->Update();
-	hp1->Update();
-	hp2->Update();
-	hp3->Update();
-	hp4->Update();
-	hp5->Update();
+	config_->Update();
+	hp1_->Update();
+	hp2_->Update();
+	hp3_->Update();
+	hp4_->Update();
+	hp5_->Update();
 
-	for (Enemy* enemy : enemys) {
+	for (Enemy* enemy : enemys_) {
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
 			CreateDeathEffect({ enemy->GetWorldPosition() });
@@ -591,7 +581,7 @@ void BossScene::GameOverPhase()
 	//	return false;
 	//	});
 
-	enemys.remove_if([](Enemy* enemys) {
+	enemys_.remove_if([](Enemy* enemys) {
 		if (enemys->GetIsAlive() == false) {
 			delete enemys;
 			return true;
@@ -604,10 +594,8 @@ void BossScene::GameOverPhase()
 		deathEffects->Update();
 	}
 
-	levelEditor->Update();
-
 	int i = 0;
-	for (Ground* ground : grounds)
+	for (Ground* ground : grounds_)
 	{
 		i++;
 		ground->Update();
@@ -615,17 +603,17 @@ void BossScene::GameOverPhase()
 	}
 
 
-	player->Update();
+	player_->Update();
 	//武器の更新
-	weapon->Update();
+	weapon_->Update();
 
-	for (Enemy* enemy : enemys)
+	for (Enemy* enemy : enemys_)
 	{
 		enemy->Update();
 	}
 
-	skydome->Update();
-	goal->Update();
+	skydome_->Update();
+	goal_->Update();
 
 	CheckAllCollisions();
 

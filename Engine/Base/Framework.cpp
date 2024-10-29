@@ -3,29 +3,29 @@
 Framework::~Framework()
 {
 
-	delete texture;
-	texture = nullptr;
+	delete texture_;
+	texture_ = nullptr;
 
-	delete srvManager;
+	delete srvManager_;
 
-	delete audio;
+	delete audio_;
 
-	delete input;
-	input = nullptr;
+	delete input_;
+	input_ = nullptr;
 
 
 	//DirectXの解放
-	delete dxCommon;
-	dxCommon = nullptr;
+	delete dxCommon_;
+	dxCommon_ = nullptr;
 
-	delete psoManager;
+	delete psoManager_;
 
 	//WindowAPIの解放
-	delete winApp;
-	winApp = nullptr;
+	delete winApp_;
+	winApp_ = nullptr;
 
 
-	delete imgui;
+	delete imgui_;
 
 
 	delete sceneManager_;
@@ -41,33 +41,33 @@ Framework::~Framework()
 void Framework::Initialize()
 {
 	//WindowAPIの初期化
-	winApp = WinApp::GetInstance();
-	winApp->Initialize();
+	winApp_ = WinApp::GetInstance();
+	winApp_->Initialize();
 
 	//DirectXの初期化
-	dxCommon = DirectXCommon::GetInstance();
-	dxCommon->Initialize();
+	dxCommon_ = DirectXCommon::GetInstance();
+	dxCommon_->Initialize();
 
-	psoManager = GraphicsPipelineManager::GetInstance();
-	psoManager->Initialize();
+	psoManager_ = GraphicsPipelineManager::GetInstance();
+	psoManager_->Initialize();
 
-	srvManager = SrvManager::GetInstance();
-	srvManager->Initialize();
+	srvManager_ = SrvManager::GetInstance();
+	srvManager_->Initialize();
 
-	texture = TextureManager::GetInstance();
-	texture->Initialize();
+	texture_ = TextureManager::GetInstance();
+	texture_->Initialize();
 
-	input = Input::GetInstance();
-	input->Initialize();
+	input_ = Input::GetInstance();
+	input_->Initialize();
 
-	audio = Audio::GetInstance();
-	audio->Initialize();
+	audio_ = Audio::GetInstance();
+	audio_->Initialize();
 
-	imgui = ImGuiManager::GetInstance();
-	imgui->Initialize();
+	imgui_ = ImGuiManager::GetInstance();
+	imgui_->Initialize();
 
-	glovalVariable = GlobalVariables::GetInstance();
-	glovalVariable->LoadFiles();
+	glovalVariable_ = GlobalVariables::GetInstance();
+	glovalVariable_->LoadFiles();
 
 
 	sceneManager_ = SceneManager::GetInstance();
@@ -77,10 +77,10 @@ void Framework::Initialize()
 void Framework::Update()
 {
 
-	imgui->Begin();
+	imgui_->Begin();
 
-	input->Update();
-	glovalVariable->Update();
+	input_->Update();
+	glovalVariable_->Update();
 
 
 	sceneManager_->Update();
@@ -89,18 +89,18 @@ void Framework::Update()
 
 void Framework::Draw()
 {
-	dxCommon->PreDraw();
-	srvManager->PreDraw();
+	dxCommon_->PreDraw();
+	srvManager_->PreDraw();
 	sceneManager_->Draw();
 
 #ifdef _DEBUG
 	ImGui::ShowDemoWindow();
 #endif // _DEBUG
 
-	imgui->End();
-	imgui->Draw();
+	imgui_->End();
+	imgui_->Draw();
 
-	dxCommon->PostDraw();
+	dxCommon_->PostDraw();
 }
 
 void Framework::Run()
@@ -108,7 +108,7 @@ void Framework::Run()
 	//初期化
 	Initialize();
 	// ウィンドウの×ボタンが押されるまでループ
-	while (winApp->ProcessMessage()==0)
+	while (winApp_->ProcessMessage()==0)
 	{
 		//更新
 		Update();

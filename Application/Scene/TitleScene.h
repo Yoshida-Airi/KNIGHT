@@ -44,34 +44,31 @@ public:
 
 private:
 
-	EffectManager* efect = nullptr;
-	TextureManager* textureManager = nullptr;
+	EffectManager* effect_ = nullptr;
+	TextureManager* textureManager_ = nullptr;
 
-	Input* input;
+	Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera;
+	Camera* camera_;
 
-	uint32_t titleLogo;
-	uint32_t backGroundTexture;
-	uint32_t spaceTexture;
-	uint32_t soundData;
+	uint32_t titleLogo_;
+	uint32_t backGroundTexture_;
+	uint32_t spaceTexture_;
+	uint32_t soundData_;
 	
-	std::unique_ptr<Sprite> title = nullptr;
-	std::unique_ptr<Sprite> backGround = nullptr;
-	std::unique_ptr<Sprite> space = nullptr;
+	std::unique_ptr<Sprite> title_ = nullptr;
+	std::unique_ptr<Sprite> backGround_ = nullptr;
+	std::unique_ptr<Sprite> space_ = nullptr;
 
-	std::unique_ptr<Model> fence_ = nullptr;
-	std::unique_ptr<Model> cube_ = nullptr;
-
-	std::unique_ptr <Skydome>skydome;
+	std::unique_ptr <Skydome>skydome_;
 
 	std::unique_ptr<Fade> fade_ = nullptr;
 	std::unique_ptr<TitleEffect> titleEffect_ = nullptr;
 	
-	bool isSceneChange = false;
+	bool isSceneChange_ = false;
 
-	const float kDeltaTime = 1.0f / 60.0f;
-	int frameCount = 0;
-	int blinkFrames = 50;  // 30フレームごとに点滅
+	const float kDeltaTime_ = 1.0f / 60.0f;
+	int frameCount_ = 0;
+	int blinkFrames_ = 50;  // 30フレームごとに点滅
 };
 

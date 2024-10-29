@@ -4,11 +4,11 @@
 
 GlobalVariables* GlobalVariables::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new GlobalVariables;
+		instance_ = new GlobalVariables;
 	}
-	return instance;
+	return instance_;
 }
 
 void GlobalVariables::Update()
@@ -130,13 +130,13 @@ void GlobalVariables::SaveFile(const std::string& groupName)
 	}
 
 	//ディレクトリがなければ作成する
-	std::filesystem::path dir(kDirectoryPath);
+	std::filesystem::path dir(kDirectoryPath_);
 	if (!std::filesystem::exists(dir))
 	{
 		std::filesystem::create_directories(dir);
 	}
 
-	std::string filePath = kDirectoryPath + groupName + ".json";
+	std::string filePath = kDirectoryPath_ + groupName + ".json";
 	std::ofstream ofs;
 	ofs.open(filePath);
 
@@ -157,7 +157,7 @@ void GlobalVariables::SaveFile(const std::string& groupName)
 
 void GlobalVariables::LoadFiles()
 {
-	std::filesystem::path dir(kDirectoryPath);
+	std::filesystem::path dir(kDirectoryPath_);
 	if (!std::filesystem::exists(dir))
 	{
 		//ディレクトリが無い
@@ -184,7 +184,7 @@ void GlobalVariables::LoadFiles()
 
 void GlobalVariables::LoadFile(const std::string& groupName)
 {
-	std::string filePath = kDirectoryPath + groupName + ".json";
+	std::string filePath = kDirectoryPath_ + groupName + ".json";
 	//読み込み用ファイルストリーム
 	std::ifstream ifs;
 	//ファイルを読み込みように開く
@@ -351,4 +351,4 @@ Vector3 GlobalVariables::GetVector3Value(const std::string& groupName, const std
 
 
 //静的メンバ変数の宣言と初期化
-GlobalVariables* GlobalVariables::instance = nullptr;
+GlobalVariables* GlobalVariables::instance_ = nullptr;

@@ -29,9 +29,9 @@ private:
 	TextureManager* texture;
 	Camera* camera_;
 
-	uint32_t blackTexture;
+	uint32_t blackTexture_;
 
-	std::unique_ptr<Sprite> fadeIn = nullptr;
+	std::unique_ptr<Sprite> fadeIn_ = nullptr;
 
 	float deltaTime_ = 0.0f;
 

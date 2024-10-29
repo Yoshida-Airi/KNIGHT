@@ -3,11 +3,11 @@
 
 SceneManager* SceneManager::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new SceneManager;
+		instance_ = new SceneManager;
 	}
-	return instance;
+	return instance_;
 }
 
 SceneManager::~SceneManager()
@@ -57,4 +57,4 @@ void SceneManager::SetSceneFactory(AbstractSceneFactory* sceneFactory)
 
 
 //静的メンバ変数の宣言と初期化
-SceneManager* SceneManager::instance = nullptr;
+SceneManager* SceneManager::instance_ = nullptr;

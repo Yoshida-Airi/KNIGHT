@@ -51,11 +51,11 @@ public:
 
 private:
 
-	static ModelLoader* instance;
+	static ModelLoader* instance_;
 
-	static const size_t kMaxModel = 256;	//最大モデル数
-	std::array<ModelData, kMaxModel> model;
-	bool IsusedModel[kMaxModel] = { false };
+	static const size_t kMaxModel_ = 256;	//最大モデル数
+	std::array<ModelData, kMaxModel_> model_;
+	bool isUsedModel_[kMaxModel_] = { false };
 
 
 private:

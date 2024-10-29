@@ -2,11 +2,11 @@
 
 GraphicsPipelineManager* GraphicsPipelineManager::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new GraphicsPipelineManager;
+		instance_ = new GraphicsPipelineManager;
 	}
-	return instance;
+	return instance_;
 }
 
 void GraphicsPipelineManager::Initialize()
@@ -17,10 +17,10 @@ void GraphicsPipelineManager::Initialize()
 	//SetupInputLayout();
 	SetupRasterrizerState();
 
-	psoMember.object3D = CreateObject3D(L"Object3D");
-	psoMember.skinningObject3D = CreateSkinningObject3D(L"SkinningObject3d");
-	psoMember.sprite = CreateSprite(L"Sprite");
-	psoMember.particle = CreateParticle(L"Particle");
+	psoMember_.object3D = CreateObject3D(L"Object3D");
+	psoMember_.skinningObject3D = CreateSkinningObject3D(L"SkinningObject3d");
+	psoMember_.sprite = CreateSprite(L"Sprite");
+	psoMember_.particle = CreateParticle(L"Particle");
 
 }
 
@@ -361,13 +361,13 @@ GraphicsPipelineManager::PSOData GraphicsPipelineManager::CreateParticle(const s
 
 void GraphicsPipelineManager::InitializeDXCCompiler()
 {
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&m_dxcUtils));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_dxcCompiler));
-	assert(SUCCEEDED(hr));
+	hr_ = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+	assert(SUCCEEDED(hr_));
+	hr_ = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
+	assert(SUCCEEDED(hr_));
 
-	hr = m_dxcUtils->CreateDefaultIncludeHandler(&m_includeHandler);
-	assert(SUCCEEDED(hr));
+	hr_ = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
+	assert(SUCCEEDED(hr_));
 }
 
 
@@ -444,16 +444,16 @@ void GraphicsPipelineManager::SetupBlendState(BlendMode blendMode)
 	}
 
 	// ブレンドステートを適用
-	NormalblendDesc = blendDesc;
+	NormalblendDesc_ = blendDesc;
 
 }
 
 void GraphicsPipelineManager::SetupRasterrizerState()
 {
 	//裏面を表示しない
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
 	//三角形を塗りつぶす
-	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
 }
 
 
@@ -461,11 +461,11 @@ void GraphicsPipelineManager::SetupRasterrizerState()
 void GraphicsPipelineManager::SetupDepthStencilState()
 {
 	//Depthの機能を有効化する
-	depthStencil.DepthEnable = true;
+	depthStencil_.DepthEnable = true;
 	//書き込みします
-	depthStencil.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthStencil_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	//比較関数はLessEqual。つまり、近ければ描画される
-	depthStencil.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	depthStencil_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 
 //CompileShader関数
@@ -486,9 +486,9 @@ IDxcBlob* GraphicsPipelineManager::CompileShader
 	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
-	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+	hr_ = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
 	//読めなかったら止める
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr_));
 	//読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer;
 	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
@@ -509,7 +509,7 @@ IDxcBlob* GraphicsPipelineManager::CompileShader
 	};
 	//実際にShaderをコンパイルする
 	IDxcResult* shaderResult = nullptr;
-	hr = dxcCompiler->Compile
+	hr_ = dxcCompiler->Compile
 	(
 		&shaderSourceBuffer,		//読み込んだファイル
 		arguments,					//コンパイルオプション
@@ -518,7 +518,7 @@ IDxcBlob* GraphicsPipelineManager::CompileShader
 		IID_PPV_ARGS(&shaderResult)	//includeが含まれた諸々
 	);
 	//コンパイルエラーではなくdxcが起動できないなど致命的な状況
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr_));
 
 	//3.警告・エラーが出ていないか確認する
 	//警告・エラーが出てたらログに出して止める
@@ -536,8 +536,8 @@ IDxcBlob* GraphicsPipelineManager::CompileShader
 	//4.Compile結果を受け取って返す
 	//コンパイル結果から実行用のバイナリ部分を取得
 	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
-	assert(SUCCEEDED(hr));
+	hr_ = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
+	assert(SUCCEEDED(hr_));
 	//成功したログを出す
 	Log(ConvertString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
@@ -574,21 +574,21 @@ GraphicsPipelineManager::PSOData GraphicsPipelineManager::CreateCommonPSO(const 
 
 	Microsoft::WRL::ComPtr< ID3DBlob> signatureBlob = nullptr;
 	Microsoft::WRL::ComPtr< ID3DBlob> errorBlob = nullptr;
-	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
-	if (FAILED(hr))
+	hr_ = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr_))
 	{
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 
 
-	hr = dxCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&psoData.rootSignature));
-	assert(SUCCEEDED(hr));
+	hr_ = dxCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&psoData.rootSignature));
+	assert(SUCCEEDED(hr_));
 
 
-	psoData.vertexShaderBlob = CompileShader(L"Resources/Shaders/" + filePath + L".VS.hlsl", L"vs_6_0", m_dxcUtils, m_dxcCompiler, m_includeHandler);
+	psoData.vertexShaderBlob = CompileShader(L"Resources/Shaders/" + filePath + L".VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(psoData.vertexShaderBlob != nullptr);
-	psoData.pixelShaderBlob = CompileShader(L"Resources/Shaders/" + filePath + L".PS.hlsl", L"ps_6_0", m_dxcUtils, m_dxcCompiler, m_includeHandler);
+	psoData.pixelShaderBlob = CompileShader(L"Resources/Shaders/" + filePath + L".PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_,includeHandler_);
 	assert(psoData.pixelShaderBlob != nullptr);
 
 
@@ -597,8 +597,8 @@ GraphicsPipelineManager::PSOData GraphicsPipelineManager::CreateCommonPSO(const 
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
 	graphicsPipelineStateDesc.VS = { psoData.vertexShaderBlob->GetBufferPointer(),psoData.vertexShaderBlob->GetBufferSize() };
 	graphicsPipelineStateDesc.PS = { psoData.pixelShaderBlob->GetBufferPointer(),psoData.pixelShaderBlob->GetBufferSize() };
-	graphicsPipelineStateDesc.BlendState = NormalblendDesc;
-	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;
+	graphicsPipelineStateDesc.BlendState = NormalblendDesc_;
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc_;
 
 
 	//深度の設定
@@ -614,8 +614,8 @@ GraphicsPipelineManager::PSOData GraphicsPipelineManager::CreateCommonPSO(const 
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 
-	hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&psoData.graphicPipelineState));
-	assert(SUCCEEDED(hr));
+	hr_ = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&psoData.graphicPipelineState));
+	assert(SUCCEEDED(hr_));
 
 
 
@@ -623,4 +623,4 @@ GraphicsPipelineManager::PSOData GraphicsPipelineManager::CreateCommonPSO(const 
 }
 
 //静的メンバ変数の宣言と初期化
-GraphicsPipelineManager* GraphicsPipelineManager::instance = nullptr;
+GraphicsPipelineManager* GraphicsPipelineManager::instance_ = nullptr;

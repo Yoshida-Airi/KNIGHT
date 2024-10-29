@@ -38,22 +38,18 @@ public:
 
 private:
 
-	EffectManager* efect = nullptr;
-	TextureManager* textureManager = nullptr;
+	EffectManager* effect_ = nullptr;
+	TextureManager* textureManager_ = nullptr;
 
-	Input* input;
+	Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera;
+	Camera* camera_;
 
-	uint32_t titleTexture;
+	uint32_t titleTexture_;
 
-	uint32_t soundData;
+	uint32_t soundData_;
 
-	std::unique_ptr<Sprite> title = nullptr;
-
-	std::unique_ptr<Model> fence_ = nullptr;
-	std::unique_ptr<Model> cube_ = nullptr;
-
+	std::unique_ptr<Sprite> title_ = nullptr;
 
 
 };

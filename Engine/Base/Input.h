@@ -52,15 +52,15 @@ private:
 
 	WinApp* winApp_;
 
-	IDirectInput8* directInput = nullptr;
-	IDirectInputDevice8* keyboard = nullptr;	//キーボードデバイス
-	BYTE key[256] = {};
-	BYTE keyPre[256] = {};	//前回の全キーの状態
+	IDirectInput8* directInput_ = nullptr;
+	IDirectInputDevice8* keyboard_ = nullptr;	//キーボードデバイス
+	BYTE key_[256] = {};
+	BYTE keyPre_[256] = {};	//前回の全キーの状態
 
 	// デッドゾーンの設定
 	const int DEADZONE_THRESHOLD = 8000;
 
 
-	static Input* instance;
+	static Input* instance_;
 
 };

@@ -3,11 +3,11 @@
 
 Animation* Animation::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new Animation;
+		instance_ = new Animation;
 	}
-	return instance;
+	return instance_;
 }
 
 void Animation::Update(Skeleton& skelton)
@@ -36,18 +36,18 @@ AnimationData Animation::LoadAnimationFile(const std::string& filename)
 	uint32_t index = 0;
 	//AnimationData animation;	//今回作るアニメーション
 
-	for (int i = 0; i < kMaxAnimation; i++)
+	for (int i = 0; i < kMaxAnimation_; i++)
 	{
 		//同じモデルがあった場合
-		if (animationDatas[i].filename == filename)
+		if (animationDatas_[i].filename == filename)
 		{
-			return animationDatas[i];
+			return animationDatas_[i];
 		}
 
-		if (isUsedAnimation[i] == false) {
+		if (isUsedAnimation_[i] == false) {
 			index = i;
-			isUsedAnimation[i] = true;
-			animationDatas.at(index).filename = filename;
+			isUsedAnimation_[i] = true;
+			animationDatas_.at(index).filename = filename;
 			break;
 		}
 	}
@@ -59,23 +59,23 @@ AnimationData Animation::LoadAnimationFile(const std::string& filename)
 
 	if (scene->mNumAnimations == 0)//アニメーションがない
 	{
-		animationDatas.at(index).isValid = false;
-		return animationDatas[index];
+		animationDatas_.at(index).isValid = false;
+		return animationDatas_[index];
 	}
 	else
 	{
-		animationDatas.at(index).isValid = true;
+		animationDatas_.at(index).isValid = true;
 	}
 
 	aiAnimation* animationAssimp = scene->mAnimations[0];	//最初のアニメーションだけ採用
-	animationDatas.at(index).duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	//時間の単位を病に変換
+	animationDatas_.at(index).duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond);	//時間の単位を病に変換
 
 
 	//NodeAnimationを解析
 	for (uint32_t channelIndex = 0; channelIndex < animationAssimp->mNumChannels; ++channelIndex)
 	{
 		aiNodeAnim* nodeAnimationAssimp = animationAssimp->mChannels[channelIndex];
-		NodeAnimation& nodeAnimation = animationDatas.at(index).nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
+		NodeAnimation& nodeAnimation = animationDatas_.at(index).nodeAnimations[nodeAnimationAssimp->mNodeName.C_Str()];
 
 		//translate
 		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumPositionKeys; ++keyIndex)
@@ -111,7 +111,7 @@ AnimationData Animation::LoadAnimationFile(const std::string& filename)
 
 	}
 
-	return animationDatas[index];
+	return animationDatas_[index];
 }
 
 
@@ -211,4 +211,4 @@ void Animation::ApplyAnimation(Skeleton& skelton, const AnimationData& animation
 	}
 }
 
-Animation* Animation::instance = NULL;
+Animation* Animation::instance_ = NULL;

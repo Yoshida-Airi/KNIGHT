@@ -36,18 +36,18 @@ public:
 
 
 private:
-	Camera* camera;
+	Camera* camera_;
 	
-	std::unique_ptr<Model> walk = nullptr;
-	std::unique_ptr<Model> model2 = nullptr;
-	std::unique_ptr<Model> model3 = nullptr;
-	std::unique_ptr<Model> model4 = nullptr;
+	std::unique_ptr<Model> walk_ = nullptr;
+	std::unique_ptr<Model> model2_ = nullptr;
+	std::unique_ptr<Model> model3_ = nullptr;
+	std::unique_ptr<Model> model4_ = nullptr;
 
 	
 
-	AnimationData walkAnimation;
+	AnimationData walkAnimation_;
 
-	LevelEditor* levelEditor;
+	LevelEditor* levelEditor_;
 
 
 	std::vector<std::vector<Model*>>blocks_;

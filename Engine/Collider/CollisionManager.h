@@ -51,6 +51,6 @@ private:
 	// コライダーリスト
 	std::list<Collider*> colliders_;
 
-	std::unique_ptr<Model>model;
+	
 
 };

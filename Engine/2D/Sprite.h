@@ -121,7 +121,7 @@ private://プライベート変数
 
 	D3D12_RESOURCE_DESC resourceDesc_{};	//テクスチャの情報
 
-	Matrix4x4* transformationMatrixData = nullptr;
+	Matrix4x4* transformationMatrixData_ = nullptr;
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
@@ -131,7 +131,7 @@ private://プライベート変数
 	Material* materialData_ = nullptr;	//マテリアルデータ
 	uint32_t* indexData_ = nullptr;		//インデックスデータ
 
-	EulerTransform uvTransform;
+	EulerTransform uvTransform_;
 	Vector2 textureSize_;	//切り出しサイズ
 
 	bool isInvisible_ = false;	//非表示フラグ	true : 消える
@@ -143,16 +143,16 @@ private://プライベート変数
 	Vector2 anchorPoint_ = { 0.0f,0.0f };
 
 	//画像のサイズ
-	float textureSizeLeft;
-	float textureSizeRight;
-	float textureSizeTop;
-	float textureSizeBottom;
+	float textureSizeLeft_;
+	float textureSizeRight_;
+	float textureSizeTop_;
+	float textureSizeBottom_;
 
 	//texcoord用
-	float texLeft;
-	float texRight;
-	float texTop;
-	float texBottom;
+	float texLeft_;
+	float texRight_;
+	float texTop_;
+	float texBottom_;
 
 private://プライベート関数
 

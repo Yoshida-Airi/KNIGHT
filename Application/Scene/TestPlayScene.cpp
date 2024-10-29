@@ -4,8 +4,8 @@
 
 TestPlayScene::~TestPlayScene()
 {
-	delete camera;
-	delete levelEditor;
+	delete camera_;
+	delete levelEditor_;
 
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -23,31 +23,31 @@ TestPlayScene::~TestPlayScene()
 
 void TestPlayScene::Initialize()
 {
-	camera = new Camera;
-	camera->Initialize();
+	camera_ = new Camera;
+	camera_->Initialize();
 
-	walkAnimation = Animation::GetInstance()->LoadAnimationFile("Resources/SampleAssets/human/walk.gltf");
+	walkAnimation_ = Animation::GetInstance()->LoadAnimationFile("Resources/SampleAssets/human/walk.gltf");
 
-	walk.reset(Model::Create("Resources/SampleAssets/human/walk.gltf"));
-	walk->SetisInvisible(true);
+	walk_.reset(Model::Create("Resources/SampleAssets/human/walk.gltf"));
+	walk_->SetisInvisible(true);
 	//model->SetAnimation(walkAnimation);
 	//model->UseAnimation(false);
-	model2.reset(Model::Create("Resources/SampleAssets/cube.obj"));
-	model2->GetWorldTransform()->translation_.x = 5.0f;
-	model2->SetisInvisible(true);
+	model2_.reset(Model::Create("Resources/SampleAssets/cube.obj"));
+	model2_->GetWorldTransform()->translation_.x = 5.0f;
+	model2_->SetisInvisible(true);
 
-	model3.reset(Model::Create("Resources/SampleAssets/human/sneakWalk.gltf"));
+	model3_.reset(Model::Create("Resources/SampleAssets/human/sneakWalk.gltf"));
 	//model3->SetAnimation(walkAnimation);
-	model3->SetisInvisible(true);
+	model3_->SetisInvisible(true);
 
-	model4.reset(Model::Create("Resources/SampleAssets/simpleSkin.gltf"));
-	model4->GetWorldTransform()->rotation_.y = 3.14f;
-	model4->SetisInvisible(true);
+	model4_.reset(Model::Create("Resources/SampleAssets/simpleSkin.gltf"));
+	model4_->GetWorldTransform()->rotation_.y = 3.14f;
+	model4_->SetisInvisible(true);
 
 
 
-	levelEditor = new LevelEditor();
-	levelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
+	levelEditor_ = new LevelEditor();
+	levelEditor_->LoaderJsonFile("Resources/Level/levelEditor.json");
 
 
 
@@ -60,25 +60,25 @@ void TestPlayScene::Initialize()
 
 void TestPlayScene::Update()
 {
-	camera->CameraDebug();
-	walk->Update();
-	model2->Update();
-	model3->Update();
-	model4->Update();
+	camera_->CameraDebug();
+	walk_->Update();
+	model2_->Update();
+	model3_->Update();
+	model4_->Update();
 
 	
 
 	if (Input::GetInstance()->TriggerKey(DIK_0))
 	{
-		walk->MoveAnimation(false);
+		walk_->MoveAnimation(false);
 	}
 
-	walk->ModelDebug("model");
-	model2->ModelDebug("cube");
-	model3->ModelDebug("walk");
-	model4->ModelDebug("simpleSkin");
+	walk_->ModelDebug("model");
+	model2_->ModelDebug("cube");
+	model3_->ModelDebug("walk");
+	model4_->ModelDebug("simpleSkin");
 
-	levelEditor->Update();
+	levelEditor_->Update();
 
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -96,12 +96,12 @@ void TestPlayScene::Update()
 
 void TestPlayScene::Draw()
 {
-	levelEditor->Draw(camera);
+	levelEditor_->Draw(camera_);
 
-	walk->Draw(camera);
-	model2->Draw(camera);
-	model3->Draw(camera);
-	model4->Draw(camera);
+	walk_->Draw(camera_);
+	model2_->Draw(camera_);
+	model3_->Draw(camera_);
+	model4_->Draw(camera_);
 
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -112,7 +112,7 @@ void TestPlayScene::Draw()
 				continue;
 			}
 
-			block->Draw(camera);
+			block->Draw(camera_);
 		}
 	}
 

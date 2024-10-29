@@ -32,26 +32,26 @@ public:
 
 #pragma region 射影行列の設定
 	// 垂直方向視野角
-	float fovAngleY = 45.0f * 3.141592654f / 180.0f;
+	float fovAngleY_ = 45.0f * 3.141592654f / 180.0f;
 	// ビューポートのアスペクト比
-	float aspectRatio = (float)16 / 9;
+	float aspectRatio_ = (float)16 / 9;
 	// 深度限界（手前側）
-	float nearZ = 0.1f;
+	float nearZ_ = 0.1f;
 	// 深度限界（奥側）
-	float farZ = 1000.0f;
+	float farZ_ = 1000.0f;
 
 
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffer_;
 
-	EulerTransform transform;
-	Matrix4x4 matView;
-	Matrix4x4 matProjection;
+	EulerTransform transform_;
+	Matrix4x4 matView_;
+	Matrix4x4 matProjection_;
 
-	Matrix4x4 smatView;
-	Matrix4x4 smatProjection;
+	Matrix4x4 smatView_;
+	Matrix4x4 smatProjection_;
 
-	Matrix4x4 cameraMatrix;
+	Matrix4x4 cameraMatrix_;
 
 #pragma endregion
 
@@ -88,11 +88,11 @@ public:
 private:
 
 
-	WinApp* winApp;
-	DirectXCommon* dxCommon;
+	WinApp* winApp_;
+	DirectXCommon* dxCommon_;
 
 	// マッピング済みアドレス
-	ConstBufferDataViewProjection* constMap = nullptr;
+	ConstBufferDataViewProjection* constMap_ = nullptr;
 	/// @brief コピー禁止のため、コピーコンストラクタを削除
 	Camera(const Camera&) = delete;
 	/// @brief コピー禁止のため、代入演算子を削除

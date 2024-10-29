@@ -3,7 +3,7 @@
 
 MyGame::~MyGame()
 {
-	delete scene;
+	delete scene_;
 
 }
 

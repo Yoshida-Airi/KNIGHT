@@ -42,11 +42,11 @@ public:
 	Microsoft::WRL::ComPtr< ID3D12DescriptorHeap>CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 	
 	/*=======　　　ゲッター	=======*/
-	ID3D12Device* GetDevice()const { return device.Get(); };
-	ID3D12GraphicsCommandList* GetCommandList()const { return commandList.Get(); };
+	ID3D12Device* GetDevice()const { return device_.Get(); };
+	ID3D12GraphicsCommandList* GetCommandList()const { return commandList_.Get(); };
 	//Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> GetSRVDescriptorHeap()const { return srvDescriptorHeap.Get(); };
-	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const { return swapChainDesc; };
-	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const { return rtvDesc; };
+	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc()const { return swapChainDesc_; };
+	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc()const { return rtvDesc_; };
 
 public:
 
@@ -119,32 +119,32 @@ private:
 	WinApp* winApp_;
 
 	HRESULT hr;
-	Microsoft::WRL::ComPtr< IDXGIFactory7> dxgiFactory = nullptr;	//DXGIFactory
-	Microsoft::WRL::ComPtr <IDXGIAdapter4> useAdapter = nullptr;	//使用するアダプタ用の変数。
-	Microsoft::WRL::ComPtr< ID3D12Device> device = nullptr;			//デバイス
-	Microsoft::WRL::ComPtr< ID3D12CommandQueue> commandQueue = nullptr;	//コマンドキュー
-	Microsoft::WRL::ComPtr < ID3D12CommandAllocator> commandAllocator = nullptr;	//コマンドアロケータ
-	Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList = nullptr;	//コマンドリスト
-	Microsoft::WRL::ComPtr < IDXGISwapChain4> swapChain = nullptr;	//スワップチェーン
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> rtvDescriptorHeap = nullptr;		//RTV用のディスクリプタヒープ
+	Microsoft::WRL::ComPtr< IDXGIFactory7> dxgiFactory_ = nullptr;	//DXGIFactory
+	Microsoft::WRL::ComPtr <IDXGIAdapter4> useAdapter_ = nullptr;	//使用するアダプタ用の変数。
+	Microsoft::WRL::ComPtr< ID3D12Device> device_ = nullptr;			//デバイス
+	Microsoft::WRL::ComPtr< ID3D12CommandQueue> commandQueue_ = nullptr;	//コマンドキュー
+	Microsoft::WRL::ComPtr < ID3D12CommandAllocator> commandAllocator_ = nullptr;	//コマンドアロケータ
+	Microsoft::WRL::ComPtr < ID3D12GraphicsCommandList> commandList_ = nullptr;	//コマンドリスト
+	Microsoft::WRL::ComPtr < IDXGISwapChain4> swapChain_ = nullptr;	//スワップチェーン
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
+	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> rtvDescriptorHeap_ = nullptr;		//RTV用のディスクリプタヒープ
 	//Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> srvDescriptorHeap = nullptr;		//SRV用のディスクリプタヒープ
-	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> dsvDescriptorHeap = nullptr;		//DSV用のディスクリプタヒープ
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	Microsoft::WRL::ComPtr < ID3D12Resource> swapChainResources[2] = { nullptr };	//スワップチェーンリソース
-	Microsoft::WRL::ComPtr < ID3D12Resource> depthStencilResource = nullptr;	
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];	//RTVを二つ作るのでディスクリプタを二つ用意
-	D3D12_RESOURCE_BARRIER barrier{};	//トランスフォームバリア
-	Microsoft::WRL::ComPtr< ID3D12Fence> fence = nullptr;	//フェンス
-	uint64_t fenceValue = 0;	//フェンスの値
-	HANDLE fenceEvent = nullptr;
+	Microsoft::WRL::ComPtr < ID3D12DescriptorHeap> dsvDescriptorHeap_ = nullptr;		//DSV用のディスクリプタヒープ
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
+	Microsoft::WRL::ComPtr < ID3D12Resource> swapChainResources_[2] = { nullptr };	//スワップチェーンリソース
+	Microsoft::WRL::ComPtr < ID3D12Resource> depthStencilResource_ = nullptr;	
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles_[2];	//RTVを二つ作るのでディスクリプタを二つ用意
+	D3D12_RESOURCE_BARRIER barrier_{};	//トランスフォームバリア
+	Microsoft::WRL::ComPtr< ID3D12Fence> fence_ = nullptr;	//フェンス
+	uint64_t fenceValue_ = 0;	//フェンスの値
+	HANDLE fenceEvent_ = nullptr;
 
 	//記録時間(FPS固定)
 	std::chrono::steady_clock::time_point reference_;
 
 	
-	D3D12_VIEWPORT viewport{};	//ビューポート
-	D3D12_RECT scissorRect{};	//シザー矩形
+	D3D12_VIEWPORT viewport_{};	//ビューポート
+	D3D12_RECT scissorRect_{};	//シザー矩形
 
 	//静的メンバ変数の宣言と初期化
 	static DirectXCommon* instance;

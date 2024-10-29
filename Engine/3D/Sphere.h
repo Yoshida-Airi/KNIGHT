@@ -83,18 +83,18 @@ private:
 	WorldTransform* worldTransform_ = {};
 
 	//分割数
-	const uint32_t kSubdivision = 16;
+	const uint32_t kSubdivision_ = 16;
 
 	//経度分割1つ分の角度
-	const float kLonEvery = static_cast<float>(std::numbers::pi) * 2.0f / float(kSubdivision);
+	const float kLonEvery_ = static_cast<float>(std::numbers::pi) * 2.0f / float(kSubdivision_);
 	//緯度分割1つ分の角度
-	const float kLatEvery = static_cast<float>(std::numbers::pi) / float(kSubdivision);
+	const float kLatEvery_ = static_cast<float>(std::numbers::pi) / float(kSubdivision_);
 
 	//uint32_t latIndex = 0;
 	//uint32_t lonIndex = 0;
 
 	//球の全ての頂点
-	const uint32_t totalVertex = 1536;
+	const uint32_t totalVertex_ = 1536;
 
 	bool isInvisible_ = false;
 

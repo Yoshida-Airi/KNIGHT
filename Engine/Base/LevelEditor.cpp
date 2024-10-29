@@ -38,7 +38,7 @@ void LevelEditor::LoaderJsonFile(std::string filePath)
 	assert(name.compare("scene") == 0);
 
 	//レベルデータ格納用インスタンスを生成
-	levelData.reset(new LevelData());
+	levelData_.reset(new LevelData());
 
 	//"objects"の全オブジェクトを走査
 	for (nlohmann::json& object : deserialized["objects"])
@@ -53,9 +53,9 @@ void LevelEditor::LoaderJsonFile(std::string filePath)
 		if (objectType.compare("MESH") == 0)
 		{
 			//要素追加
-			levelData->objects.emplace_back(LevelData::ObjectData{});
+			levelData_->objects.emplace_back(LevelData::ObjectData{});
 			//今追加した要素の参照を得る
-			LevelData::ObjectData& objectData = levelData->objects.back();
+			LevelData::ObjectData& objectData = levelData_->objects.back();
 
 			if (object.contains("file_name"))
 			{
@@ -110,20 +110,20 @@ void LevelEditor::LoaderJsonFile(std::string filePath)
 	}
 
 	//レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects)
+	for (auto& objectData : levelData_->objects)
 	{
 		//ファイル名から登録済みモデルを検索
-		decltype(models)::iterator it = models.find(objectData.filename);
-		if (it == models.end())
+		decltype(modelsData_)::iterator it = modelsData_.find(objectData.filename);
+		if (it == modelsData_.end())
 		{
 			//Model* model = Model::Create(objectData.filename);
 		
-			models[objectData.filename].reset(Model::Create(objectData.filename));
+			modelsData_[objectData.filename].reset(Model::Create(objectData.filename));
 
 		}
 	}
 
-	for (auto& objectData : levelData->objects)
+	for (auto& objectData : levelData_->objects)
 	{
 		//モデルを指定して3Dオブジェクトを生成
 		std::unique_ptr<WorldTransform> newObject = std::make_unique<WorldTransform>();
@@ -133,7 +133,7 @@ void LevelEditor::LoaderJsonFile(std::string filePath)
 		newObject->scale_ = objectData.scaling;
 		newObject->UpdateWorldMatrix();
 		//配列に登録
-		objects.push_back(std::move(newObject));
+		objects_.push_back(std::move(newObject));
 
 	}
 
@@ -146,9 +146,9 @@ void LevelEditor::Initialize()
 	Collider::SetTypeID(CollisionTypeDef::kMap);
 	Collider::SetColliderTypeID(ColliderType::AABB);
 
-	models_.reserve(this->models.size());
+	models_.reserve(this->modelsData_.size());
 
-	for (auto& pair : this->models) {
+	for (auto& pair : this->modelsData_) {
 		models_.push_back(std::move(pair.second.get()));
 	}
 
@@ -172,24 +172,24 @@ void LevelEditor::Draw(Camera* camera)
 {
 	int i = 0;
 	//レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects)
+	for (auto& objectData : levelData_->objects)
 	{
 		Model* model = nullptr;
-		decltype(models)::iterator it = models.find(objectData.filename);
-		if (it != models.end())
+		decltype(modelsData_)::iterator it = modelsData_.find(objectData.filename);
+		if (it != modelsData_.end())
 		{
 			model = (it->second.get());
 		}
 		if (model)
 		{
 			//model->SetWorldTransform(objects[i].get());
-			model->GetWorldTransform()->constMap = (objects[i].get()->constMap);
-			model->GetWorldTransform()->constBuffer_ = (objects[i].get()->constBuffer_);
-			model->GetWorldTransform()->matWorld_ = objects[i].get()->matWorld_;
-			model->GetWorldTransform()->parent_ = objects[i].get()->parent_;
-			model->GetWorldTransform()->translation_ = (objects[i].get()->translation_);
-			model->GetWorldTransform()->rotation_ = (objects[i].get()->rotation_);
-			model->GetWorldTransform()->scale_ = (objects[i].get()->scale_);
+			model->GetWorldTransform()->constMap = (objects_[i].get()->constMap);
+			model->GetWorldTransform()->constBuffer_ = (objects_[i].get()->constBuffer_);
+			model->GetWorldTransform()->matWorld_ = objects_[i].get()->matWorld_;
+			model->GetWorldTransform()->parent_ = objects_[i].get()->parent_;
+			model->GetWorldTransform()->translation_ = (objects_[i].get()->translation_);
+			model->GetWorldTransform()->rotation_ = (objects_[i].get()->rotation_);
+			model->GetWorldTransform()->scale_ = (objects_[i].get()->scale_);
 			//model->GetWorldTransform()->UpdateWorldMatrix();
 			model->Update();
 
@@ -212,7 +212,7 @@ void LevelEditor::Draw(Camera* camera)
 Vector3 LevelEditor::GetWorldPosition()
 {
 	Vector3 worldPosition = { 0.0f,0.0f,0.0f };
-	for (auto& pair : models) {
+	for (auto& pair : modelsData_) {
 		std::string modelName = pair.first; // モデル名
 		Model* modelPtr = pair.second.get(); // ユニークポインタからモデルを取得
 
@@ -235,7 +235,7 @@ AABB LevelEditor::GetAABB()
 	AABB aabb = {};
 
 	//レベルデータからオブジェクトを生成、配置
-	for (auto& objectData : levelData->objects)
+	for (auto& objectData : levelData_->objects)
 	{
 		aabb.min = { objectData.center.x - objectData.size.x / 2.0f, objectData.center.y - objectData.size.y / 2.0f, objectData.center.z - objectData.size.z / 2.0f };
 		aabb.max = { objectData.center.x + objectData.size.x / 2.0f, objectData.center.y + objectData.size.y / 2.0f, objectData.center.z + objectData.size.z / 2.0f };
@@ -252,11 +252,11 @@ void LevelEditor::OnCollision(Collider* other)
 	{
 		int i = 0;
 		//レベルデータからオブジェクトを生成、配置
-		for (auto& objectData : levelData->objects)
+		for (auto& objectData : levelData_->objects)
 		{
 			Model* model = nullptr;
-			decltype(models)::iterator it = models.find(objectData.filename);
-			if (it != models.end())
+			decltype(modelsData_)::iterator it = modelsData_.find(objectData.filename);
+			if (it != modelsData_.end())
 			{
 				model = (it->second.get());
 			}

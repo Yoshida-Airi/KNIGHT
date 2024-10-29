@@ -43,7 +43,7 @@ private:
 	DirectXCommon* dxCommon_;
 	SrvManager* srvManager_;
 
-	static ImGuiManager* instance;
+	static ImGuiManager* instance_;
 
 	Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> srvDescriptorHeap_ = nullptr;
 

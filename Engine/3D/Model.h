@@ -73,7 +73,7 @@ public:
 	/// @param isUse true:アニメーション使用する
 	void UseAnimation(bool isUse)
 	{
-		animation.isValid = isUse;
+		animationData_.isValid = isUse;
 	}
 
 	/// @brief モデルを生成
@@ -104,14 +104,14 @@ public:
 	/// @param animationData アニメーションデータ
 	void SetAnimation(AnimationData animationData)
 	{
-		animation = animationData;
+		animationData_ = animationData;
 	}
 
 	/// @brief アニメーションを移動させるフラグの設定
 	/// @param isActive アニメーションが有効な場合は true
 	void MoveAnimation(bool isActive)
 	{
-		isActiveAnimation = isActive;
+		isActiveAnimation_ = isActive;
 	}
 
 	/// @brief マテリアルデータを設定
@@ -160,12 +160,12 @@ private:
 	bool isInvisible_ = false;
 
 
-	AnimationData animation;
-	Skeleton skelton;
-	SkinCluster skinCluster;
-	float animationTime = 0.0f;
+	AnimationData animationData_;
+	Skeleton skelton_;
+	SkinCluster skinCluster_;
+	float animationTime_ = 0.0f;
 
-	bool isActiveAnimation = true;
+	bool isActiveAnimation_ = true;
 
 	
 private:

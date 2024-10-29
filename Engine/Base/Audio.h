@@ -82,15 +82,15 @@ public:
 	void SoundStopWave(const uint32_t& soundHandle);
 
 private:
-	static const size_t kMaxAudio = 256;	//最大テクスチャ数
+	static const size_t kMaxAudio_ = 256;	//最大テクスチャ数
 
-	Microsoft::WRL::ComPtr<IXAudio2>xAudio2;
-	IXAudio2MasteringVoice* masterVoice;
+	Microsoft::WRL::ComPtr<IXAudio2>xAudio2_;
+	IXAudio2MasteringVoice* masterVoice_;
 
-	bool IsusedAudio[kMaxAudio];
-	std::array<SoundData, kMaxAudio> audios_;
-	static Audio* instance;
+	bool isUsedAudio_[kMaxAudio_];
+	std::array<SoundData, kMaxAudio_> audios_;
+	static Audio* instance_;
 
-	bool isroop;	//false::ループ再生しない　true::ループ再生する
+	bool isroop_;	//false::ループ再生しない　true::ループ再生する
 
 };

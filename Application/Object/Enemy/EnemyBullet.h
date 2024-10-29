@@ -36,8 +36,8 @@ private:
 
 	//速度
 	Vector3 velocity_;
-	static const int32_t kLifeTime = 60 * 5;
-	int32_t deathTimer_ = kLifeTime;
+	static const int32_t kLifeTime_ = 60 * 5;
+	int32_t deathTimer_ = kLifeTime_;
 	bool isDead_ = false;
 
 	Player* player_ = nullptr;

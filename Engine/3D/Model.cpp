@@ -34,12 +34,12 @@ void Model::Initialize(const std::string& filename)
 		textureHandle_ = texture_->LoadTexture(modelData_.material.textureFilePath);
 	}
 
-	animation = animation_->LoadAnimationFile(filename);
+	animationData_ = animation_->LoadAnimationFile(filename);
 
-	if (animation.isValid == true)
+	if (animationData_.isValid == true)
 	{
-		skelton = animation_->CreateSkelton(modelData_.rootNode);
-		skinCluster = CreateSkinCluster(dxCommon_->GetDevice(), skelton/*, modelData_*/);
+		skelton_ = animation_->CreateSkelton(modelData_.rootNode);
+		skinCluster_ = CreateSkinCluster(dxCommon_->GetDevice(), skelton_/*, modelData_*/);
 	}
 
 	VertexBuffer();
@@ -94,19 +94,19 @@ void Model::Update()
 
 #endif // _DEBUG
 
-	if (animation.isValid == true)
+	if (animationData_.isValid == true)
 	{
-		if (isActiveAnimation == true)
+		if (isActiveAnimation_ == true)
 		{
-			animationTime += 1.0f / 60.0f;
-			animationTime = std::fmod(animationTime, animation.duration);
+			animationTime_ += 1.0f / 60.0f;
+			animationTime_ = std::fmod(animationTime_, animationData_.duration);
 		}
 
 		//スケルトンに適用
-		animation_->ApplyAnimation(skelton, animation, animationTime);
-		animation_->Update(skelton);
+		animation_->ApplyAnimation(skelton_, animationData_, animationTime_);
+		animation_->Update(skelton_);
 
-		ClasterUpdate(skinCluster, skelton);
+		ClasterUpdate(skinCluster_, skelton_);
 
 
 		worldTransform_->TransferMatrix();
@@ -129,12 +129,12 @@ void Model::Draw(Camera* camera)
 		return;
 	}
 
-	if (animation.isValid == true)
+	if (animationData_.isValid == true)
 	{
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] =
 		{
 			vertexBufferView_,
-			skinCluster.influenceBufferView
+			skinCluster_.influenceBufferView
 		};
 
 
@@ -145,7 +145,7 @@ void Model::Draw(Camera* camera)
 		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 	}
 
-	if (animation.isValid == false)
+	if (animationData_.isValid == false)
 	{
 		dxCommon_->GetCommandList()->SetGraphicsRootSignature(psoManager_->GetPsoMember().object3D.rootSignature.Get());
 		dxCommon_->GetCommandList()->SetPipelineState(psoManager_->GetPsoMember().object3D.graphicPipelineState.Get());
@@ -171,10 +171,10 @@ void Model::Draw(Camera* camera)
 	//ライト用のCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, lightResource_->GetGPUVirtualAddress());
 	
-	if (animation.isValid == true)
+	if (animationData_.isValid == true)
 	{
 		//weight用のCBufferの場所を設定
-		dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster.paletteSrvHandle.second);
+		dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
 	}
 	
 	//描画

@@ -86,9 +86,9 @@ private:
 	std::map<std::string, Group>datas_;
 
 	//グローバル変数の保存先ファイル
-	const std::string kDirectoryPath = "Resources/GlobalVariables/";
+	const std::string kDirectoryPath_ = "Resources/GlobalVariables/";
 
 	//静的メンバ変数の宣言と初期化
-	static GlobalVariables* instance;
+	static GlobalVariables* instance_;
 };
 

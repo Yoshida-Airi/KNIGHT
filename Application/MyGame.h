@@ -25,7 +25,7 @@ public:
 	void Draw()override;
 
 private:
-	BaseScene* scene;
+	BaseScene* scene_;
 
 };
 

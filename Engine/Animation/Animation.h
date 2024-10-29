@@ -123,11 +123,11 @@ public:
 
 private:
 
-	static const size_t kMaxAnimation = 256;	//最大モデル数
-	std::array<AnimationData, kMaxAnimation> animationDatas;
-	bool isUsedAnimation[kMaxAnimation] = { false };
+	static const size_t kMaxAnimation_ = 256;	//最大モデル数
+	std::array<AnimationData, kMaxAnimation_> animationDatas_;
+	bool isUsedAnimation_[kMaxAnimation_] = { false };
 
-	static Animation* instance;
+	static Animation* instance_;
 
 };
 

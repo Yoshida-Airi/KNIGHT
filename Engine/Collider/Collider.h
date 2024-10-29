@@ -71,12 +71,6 @@ private:
 	uint32_t collisionType_ = 0u;
 
 
-	////衝突属性(自分)
-	//uint32_t collisionAttribute_ = 0xffffffff;
-	////衝突マスク(相手)
-	//uint32_t CollisionMask_ = 0xffffffff;
-	WorldTransform* worldTransform;
-
 	std::unique_ptr<Model>model_;
 
 };

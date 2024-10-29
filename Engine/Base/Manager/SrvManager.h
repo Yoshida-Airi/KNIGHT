@@ -34,7 +34,7 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
-	Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> GetDescriptorHeap()const { return descriptorHeap.Get(); };
+	Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> GetDescriptorHeap()const { return descriptorHeap_.Get(); };
 
 	/*セッター*/
 	void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex);
@@ -56,15 +56,15 @@ public:
 	static const uint32_t kMaxSRVCount;	//最大SRV数
 
 private:
-	DirectXCommon* dxCommon = nullptr;
+	DirectXCommon* dxCommon_ = nullptr;
 
 	
-	uint32_t descriptorSize;//SRV用のディスクリプタサイズ
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap;	//SRV用のディスクリプタヒープ
+	uint32_t descriptorSize_;//SRV用のディスクリプタサイズ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap_;	//SRV用のディスクリプタヒープ
 
-	uint32_t useIndex = 0;	//次に使用するSRVインデックス
+	uint32_t useIndex_ = 0;	//次に使用するSRVインデックス
 
-	static SrvManager* instance;
+	static SrvManager* instance_;
 
 };
 

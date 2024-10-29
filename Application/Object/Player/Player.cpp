@@ -60,60 +60,6 @@ void Player::Update()
 		break;
 	}
 
-	//	GameObject::Update();
-	//	ApplyGlobalVariables();
-	//	//デバッグ
-	//	playerModel_->ModelDebug("player");
-	//
-	//
-	//
-	//	BehaviorRootUpdate();
-	//	BehaviorAttackUpdate();
-	//
-	//	//速度加算
-	//	//playerModel->GetWorldTransform()->translation_ = Add(playerModel->GetWorldTransform()->translation_, velocity_);
-	//
-	//
-	//	collisionMapInfo_.move = velocity_;
-	//	//マップ衝突チェック
-	//	CollisionMap(collisionMapInfo_);
-	//
-	//	CollisionMove(collisionMapInfo_);
-	//	HitTop(collisionMapInfo_);
-	//	CollisionWall(collisionMapInfo_);
-	//	SwitchGround(collisionMapInfo_);
-	//
-	//#ifdef _DEBUG
-	//	ImGui::Text("x %d", collisionMapInfo_.move.x);
-	//	ImGui::Text("y %d", collisionMapInfo_.move.y);
-	//	ImGui::Text("z %d", collisionMapInfo_.move.z);
-	//	ImGui::Text("isTop %d", collisionMapInfo_.isTop);
-	//	ImGui::Text("isGround %d", collisionMapInfo_.isGround);
-	//	ImGui::Text("isWall %d", collisionMapInfo_.isWall);
-	//	ImGui::Text("grand %d", onGround_);
-	//	ImGui::Text("HP %d", hp_);
-	//#endif // _DEBUG
-	//
-	//	//無敵時間
-	//	if (isInvincible_)
-	//	{
-	//		invincibilityTimer_ -= 1.0f / 60.0f;
-	//		if (invincibilityTimer_ <= 0.0f)
-	//		{
-	//			isInvincible_ = false;
-	//		}
-	//	}
-	//
-	//	if (hp_ == 0)
-	//	{
-	//		// アルファ値を段々と減少させる
-	//		alpha_ -= fadeSpeed_;
-	//		if (alpha_ < 0.0f) {
-	//			alpha_ = 0.0f;  // アルファ値が負にならないように制限
-	//		}
-	//
-	//		playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
-	//	}
 }
 
 void Player::Draw(Camera* camera)

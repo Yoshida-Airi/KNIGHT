@@ -30,7 +30,7 @@ public:
 	void SetSceneFactory(AbstractSceneFactory* sceneFactory);
 
 private:
-	static SceneManager* instance;	//シングルトン
+	static SceneManager* instance_;	//シングルトン
 	AbstractSceneFactory* sceneFactory_ = nullptr;
 	//今のシーン
 	BaseScene* scene_ = nullptr;

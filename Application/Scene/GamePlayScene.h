@@ -98,60 +98,41 @@ public:
 
 
 private:
-	TextureManager* texture;
+	TextureManager* texture_;
 	SceneManager* sceneManager_ = nullptr;
 
 	//当たり判定処理
 	std::unique_ptr<CollisionManager> colliderManager_ = nullptr;
 
-
-	uint32_t uvTexture;
-	uint32_t monsterBall;
-	uint32_t Doll;
-	uint32_t circle;
-
-	uint32_t configTexture;
-	uint32_t HPTexture;
+	uint32_t configTexture_;
+	uint32_t HPTexture_;
 	
 
-	Camera* camera;
-	
+	Camera* camera_;
+	Input* input_;
 
-	Input* input;
-
-
-	std::unique_ptr<Triangle> triangle = nullptr;
-	std::unique_ptr<Triangle> triangle2 = nullptr;
-	std::unique_ptr<Sprite> sprite = nullptr;
-	std::unique_ptr<Sprite> sprite2 = nullptr;
-	std::unique_ptr<Sphere> sphere = nullptr;
-	//std::unique_ptr<Model> model = nullptr;
-	std::unique_ptr<Model> model2 = nullptr;
-
-	std::unique_ptr<ParticleSystem> particle = nullptr;
-	std::unique_ptr<ParticleSystem> particle2 = nullptr;
 
 	std::unique_ptr<Fade> fade_ = nullptr;
 
 	//LevelEditor* levelEditor = nullptr;
 
-	std::unique_ptr <Player> player;
-	std::list<Enemy*> enemys;
-	std::list<FlyEnemy*> flyEnemys;
-	std::unique_ptr <Skydome>skydome;
-	std::unique_ptr <Goal>goal;
-	CameraController* cameraController;
-	std::unique_ptr<Weapon>weapon;
-	std::list<Ground*>grounds;
+	std::unique_ptr <Player> player_;
+	std::list<Enemy*> enemys_;
+	std::list<FlyEnemy*> flyEnemys_;
+	std::unique_ptr <Skydome>skydome_;
+	std::unique_ptr <Goal>goal_;
+	CameraController* cameraController_;
+	std::unique_ptr<Weapon>weapon_;
+	std::list<Ground*>grounds_;
 	std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
-	std::unique_ptr<Sprite> config = nullptr;
-	std::unique_ptr<Sprite> hp1 = nullptr;
-	std::unique_ptr<Sprite> hp2 = nullptr;
-	std::unique_ptr<Sprite> hp3 = nullptr;
-	std::unique_ptr<Sprite> hp4 = nullptr;
-	std::unique_ptr<Sprite> hp5 = nullptr;
+	std::unique_ptr<Sprite> config_ = nullptr;
+	std::unique_ptr<Sprite> hp1_ = nullptr;
+	std::unique_ptr<Sprite> hp2_ = nullptr;
+	std::unique_ptr<Sprite> hp3_ = nullptr;
+	std::unique_ptr<Sprite> hp4_ = nullptr;
+	std::unique_ptr<Sprite> hp5_ = nullptr;
 
 	Phase phase_;
 

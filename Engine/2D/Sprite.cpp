@@ -22,7 +22,7 @@ void Sprite::Initialize(uint32_t textureHandle)
 	textureHandle_ = textureHandle;
 
 	
-	uvTransform =
+	uvTransform_ =
 	{
 		{1.0f,1.0f,1.0f,},
 		{0.0f,0.0f,0.0f,},
@@ -35,31 +35,31 @@ void Sprite::Initialize(uint32_t textureHandle)
 
 	AdjustTextureSize();
 	
-	textureSizeLeft = 0.0f * textureSize_.x;
-	textureSizeRight = 1.0f * textureSize_.x;
-	textureSizeTop = 0.0f * textureSize_.y;
-	textureSizeBottom = 1.0f * textureSize_.y;
+	textureSizeLeft_ = 0.0f * textureSize_.x;
+	textureSizeRight_ = 1.0f * textureSize_.x;
+	textureSizeTop_ = 0.0f * textureSize_.y;
+	textureSizeBottom_ = 1.0f * textureSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
 
 
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
 	//頂点の設定
-	vertexData_[LB].position = { textureSizeLeft,textureSizeBottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { textureSizeLeft_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { textureSizeLeft,textureSizeTop,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { textureSizeLeft_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { textureSizeRight,textureSizeBottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { textureSizeRight_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { textureSizeRight,textureSizeTop,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
+	vertexData_[RT].position = { textureSizeRight_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 
 	SetMaterialData(color);
@@ -84,9 +84,9 @@ void Sprite::Update()
 
 
 
-	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform.translate));
+	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 
@@ -126,10 +126,10 @@ void Sprite::Draw(Camera* camera)
 
 void Sprite::SetVertexData(const float left, const float right, const float top, const float bottom)
 {
-	textureSizeLeft = left;
-	textureSizeRight = right;
-	textureSizeTop = top;
-	textureSizeBottom = bottom;
+	textureSizeLeft_ = left;
+	textureSizeRight_ = right;
+	textureSizeTop_ = top;
+	textureSizeBottom_ = bottom;
 }
 
 void Sprite::SetMaterialData(const Vector4 color)
@@ -153,9 +153,9 @@ void Sprite::Debug(const char* name)
 	{
 		if (ImGui::TreeNode("uvTransform"))
 		{
-			ImGui::DragFloat2("UVTransform", &uvTransform.translate.x, 0.01f);
-			ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f);
-			ImGui::SliderAngle("UVRotate", &uvTransform.rotate.z);
+			ImGui::DragFloat2("UVTransform", &uvTransform_.translate.x, 0.01f);
+			ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f);
+			ImGui::SliderAngle("UVRotate", &uvTransform_.rotate.z);
 
 			float material[4] = { materialData_->color.x,materialData_->color.y,materialData_->color.z,materialData_->color.w };
 			ImGui::ColorEdit4("material", material);
@@ -237,30 +237,30 @@ void Sprite::UpdateVertexBuffer()
 
 
 	//テクスチャのサイズを合わせる
-	textureSizeLeft = (0.0f - anchorPoint_.x) * cutSize_.x;
-	textureSizeRight = (1.0f - anchorPoint_.x) * cutSize_.x;
-	textureSizeTop = (0.0f - anchorPoint_.y) * cutSize_.y;
-	textureSizeBottom = (1.0f - anchorPoint_.y) * cutSize_.y;
+	textureSizeLeft_ = (0.0f - anchorPoint_.x) * cutSize_.x;
+	textureSizeRight_ = (1.0f - anchorPoint_.x) * cutSize_.x;
+	textureSizeTop_ = (0.0f - anchorPoint_.y) * cutSize_.y;
+	textureSizeBottom_ = (1.0f - anchorPoint_.y) * cutSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
 
 
 
 	//頂点の設定
-	vertexData_[LB].position = { textureSizeLeft,textureSizeBottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { textureSizeLeft_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { textureSizeLeft,textureSizeTop,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { textureSizeLeft_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { textureSizeRight,textureSizeBottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { textureSizeRight_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { textureSizeRight,textureSizeTop,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
+	vertexData_[RT].position = { textureSizeRight_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 	
 }

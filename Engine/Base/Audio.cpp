@@ -2,11 +2,11 @@
 
 Audio* Audio::GetInstance()
 {
-	if (instance == NULL)
+	if (instance_ == NULL)
 	{
-		instance = new Audio;
+		instance_ = new Audio;
 	}
-	return instance;
+	return instance_;
 }
 
 Audio::~Audio()
@@ -17,9 +17,9 @@ Audio::~Audio()
 void Audio::Initialize()
 {
 	//xAuido2エンジンのインスタンス生成
-	HRESULT hr = XAudio2Create(&xAudio2, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	HRESULT hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
 	//マスターボイスの生成
-	hr = xAudio2->CreateMasteringVoice(&masterVoice);
+	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
 }
 
 void Audio::Update()
@@ -34,7 +34,7 @@ uint32_t Audio::SoundLoadWave(const char* filename)
 {
 	uint32_t index = 0;
 
-	for (int i = 0; i < kMaxAudio; i++)
+	for (int i = 0; i < kMaxAudio_; i++)
 	{
 		//同じ音声があった場合
 		if (audios_[i].filename == filename)
@@ -42,15 +42,15 @@ uint32_t Audio::SoundLoadWave(const char* filename)
 			return audios_[i].textureHandle;
 		}
 
-		if (IsusedAudio[i] == false) {
+		if (isUsedAudio_[i] == false) {
 			index = i;
-			IsusedAudio[i] = true;
+			isUsedAudio_[i] = true;
 			break;
 		}
 	}
 
 	//indexが不正な値だった場合止める
-	if (index < 0 || kMaxAudio <= index) {
+	if (index < 0 || kMaxAudio_ <= index) {
 		//MaxSpriteより多い
 		assert(false);
 	}
@@ -136,7 +136,7 @@ void Audio::SoundPlayWave(const uint32_t& soundHandle, bool isRoop)
 	HRESULT hr;
 
 	//波形フォーマットをもとにSourceVoiceの生成
-	hr = xAudio2->CreateSourceVoice(&audios_.at(soundHandle).pSourceVoice, &audios_.at(soundHandle).wfex);
+	hr = xAudio2_->CreateSourceVoice(&audios_.at(soundHandle).pSourceVoice, &audios_.at(soundHandle).wfex);
 	assert(SUCCEEDED(hr));
 
 	//再生する波形データの設定
@@ -163,4 +163,4 @@ void Audio::SoundStopWave(const uint32_t& soundHandle)
 	audios_[soundHandle].pSourceVoice->Stop();
 }
 
-Audio* Audio::instance = NULL;
+Audio* Audio::instance_ = NULL;
