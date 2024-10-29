@@ -7,6 +7,9 @@
 #include"Model.h"
 #include"Collider.h"
 #include"GameObject.h"
+#include"Object/Enemy/EnemyBullet.h"
+
+class Player;
 
 /**
 * @class Boss
@@ -47,6 +50,15 @@ public:
 	}
 
 	/**
+	* @brief プレイヤー情報取得
+	* @param player プレイヤー情報
+	*/
+	void SetPlayer(Player* player)
+	{
+		player_ = player;
+	}
+
+	/**
 	* @brief ボスのワールド座標を取得する
 	* @return ボスのワールド座標
 	*/
@@ -74,6 +86,24 @@ public:
 		return isAlive_;
 	}
 
+	enum class Phase
+	{
+		kWait,
+		kWork,
+		kAttack,
+		kDeath,
+	};
+
+
+	/**
+	* @brief フェーズの変更
+	* @param[in] phase 変更するフェーズ
+	*/
+	void ChangePhase(Phase phase);
+
+
+
+
 private:
 
 	std::unique_ptr<Model>enemyModel_;
@@ -82,7 +112,7 @@ private:
 	bool isAlive_ = true;	//生きているか: true 生きている
 
 	float moveSpeed_ = 0.03f;  // 移動速度
-	float moveDistance_ = 5.0f;  // 移動する距離
+	float moveDistance_ = 15.0f;  // 移動する距離
 	float traveledDistance_ = 0.0f;  // 移動した距離
 	bool movingRight_ = true;  // 右方向に移動しているかどうか
 
@@ -90,5 +120,21 @@ private:
 	bool isInvincible_;
 	float invincibilityTimer_;
 	static constexpr float invincibilityDuration_ = 1.0f; // 無敵時間の長さ（秒）
+
+	Phase phase_;
+
+	float amplitude_ = 0.2f;  // 浮く高さを1.0fに設定
+	float speed_ = 0.05f;      // 浮く速度をゆっくりとした0.1fに設定
+	float initialY_;  // 現在のy座標を初期値に設定
+	float time_ = 0.0f;            // 時間の初期値を0に設定
+
+	Player* player_;
+
+private:
+
+	void WaitPhase();
+	void AttackPhase();
+	void WorkPhase();
+	void DeathPhase();
 };
 

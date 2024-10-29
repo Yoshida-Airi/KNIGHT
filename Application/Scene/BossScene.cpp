@@ -28,7 +28,17 @@ BossScene::~BossScene()
 		delete deathEffects;
 	}
 
+	for (std::vector<Model*>& blockLine : blocks_)
+	{
+		for (Model* block : blockLine)
+		{
+			delete block;
+		}
+	}
 
+	blocks_.clear();
+
+	delete mapChipField_;
 }
 
 void BossScene::Initialize()
@@ -52,7 +62,7 @@ void BossScene::Initialize()
 
 	camera = new Camera;
 	camera->Initialize();
-	camera->transform.translate.x = 9.0f;
+	camera->transform.translate={16.0f,66.3f,-42.0f};
 
 	levelEditor = new LevelEditor();
 	levelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
@@ -62,9 +72,9 @@ void BossScene::Initialize()
 	weapon->Initialize();
 
 
-	SpawnBlock({ 47.8f, -1.0f, 0 }, { 50.31f, 1.0f, 1.0f });
-	SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
-	SpawnBlock({ 20.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	//SpawnBlock({ 47.8f, -1.0f, 0 }, { 50.31f, 1.0f, 1.0f });
+	//SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	//SpawnBlock({ 20.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
 
 	player = std::make_unique<Player>();
 	player->SetWeapon(weapon.get());
@@ -73,6 +83,7 @@ void BossScene::Initialize()
 
 	boss = std::make_unique<Boss>();
 	boss->Initialize();
+	boss->SetPlayer(player.get());
 
 	skydome = std::make_unique<Skydome>();
 	skydome->Initialize();
@@ -113,7 +124,12 @@ void BossScene::Initialize()
 
 	phase_ = Phase::kPlay;
 
+	mapChipField_ = new MapChipField;
+	mapChipField_->LoadMapChipCsv("Resources/CSV/bossField.csv");
 
+	GenerateBlocks();
+
+	player->SetMapChipField(mapChipField_);
 }
 
 void BossScene::Update()
@@ -163,6 +179,20 @@ void BossScene::Draw()
 	for (DeathEffect* deathEffects : deathEffect_)
 	{
 		deathEffects->Draw();
+	}
+
+	// ブロックの描画処理
+	for (std::vector<Model*>& blockLine : blocks_)
+	{
+		for (Model* block : blockLine)
+		{
+			if (!block)
+			{
+				continue;
+			}
+
+			block->Draw(camera);
+		}
 	}
 
 	boss->Draw(camera);
@@ -387,6 +417,19 @@ void BossScene::GamePlayPhase()
 
 	CheckAllCollisions();
 
+	// ブロックの更新処理
+	for (std::vector<Model*>& blockLine : blocks_)
+	{
+		for (Model* block : blockLine)
+		{
+			if (!block)
+			{
+				continue;
+			}
+
+			block->Update();
+		}
+	}
 
 	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
 	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
@@ -480,6 +523,19 @@ void BossScene::GameClearPhase()
 
 	CheckAllCollisions();
 
+	// ブロックの更新処理
+	for (std::vector<Model*>& blockLine : blocks_)
+	{
+		for (Model* block : blockLine)
+		{
+			if (!block)
+			{
+				continue;
+			}
+
+			block->Update();
+		}
+	}
 
 	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
 	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
@@ -573,8 +629,53 @@ void BossScene::GameOverPhase()
 
 	CheckAllCollisions();
 
+	// ブロックの更新処理
+	for (std::vector<Model*>& blockLine : blocks_)
+	{
+		for (Model* block : blockLine)
+		{
+			if (!block)
+			{
+				continue;
+			}
+
+			block->Update();
+		}
+	}
 
 	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
 	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
+
+}
+
+
+void BossScene::GenerateBlocks()
+{
+	//要素数
+	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVertical();
+	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+
+	//要素数を変更
+	blocks_.resize(numBlockVirtical);
+	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+	{
+		blocks_[i].resize(numBlockHorizontal);
+	}
+
+	//ブロックの生成
+	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+	{
+		for (uint32_t j = 0; j < numBlockHorizontal; ++j)
+		{
+			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
+			{
+				Model* model = new Model();
+				model->Initialize("Resources/Level/map.obj");
+				blocks_[i][j] = model;
+				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+
+			}
+		}
+	}
 
 }

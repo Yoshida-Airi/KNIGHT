@@ -33,6 +33,7 @@
 #include"Effect/DeathEffect.h"
 #include"Effect/Fade.h"
 #include"Object/Enemy/Boss.h"
+#include"Object/Ground/MapChipField.h"
 
 #include"LevelEditor.h"
 
@@ -110,13 +111,6 @@ private:
 	Input* input;
 
 
-	std::unique_ptr<Triangle> triangle = nullptr;
-	std::unique_ptr<Triangle> triangle2 = nullptr;
-	std::unique_ptr<Sprite> sprite = nullptr;
-	std::unique_ptr<Sprite> sprite2 = nullptr;
-	std::unique_ptr<Sphere> sphere = nullptr;
-	std::unique_ptr<Model> model = nullptr;
-	std::unique_ptr<Model> model2 = nullptr;
 
 	std::unique_ptr<ParticleSystem> particle = nullptr;
 	std::unique_ptr<ParticleSystem> particle2 = nullptr;
@@ -146,6 +140,11 @@ private:
 
 	Phase phase_;
 
+	std::vector<std::vector<Model*>>blocks_;
+	MapChipField* mapChipField_;
+
+
+
 private:
 	/// @brief ゲームプレイフェーズの処理
 	void GamePlayPhase();
@@ -153,5 +152,6 @@ private:
 	void GameClearPhase();
 	/// @brief ゲームオーバーフェーズの処理
 	void GameOverPhase();
+	void GenerateBlocks();
 };
 

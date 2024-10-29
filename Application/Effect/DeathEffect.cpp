@@ -5,16 +5,17 @@ void DeathEffect::Initialize(Camera* camera)
 	textureManager_ = TextureManager::GetInstance();
 	circleTexture_ = textureManager_->LoadTexture("Resources/SampleAssets/circle.png");
 
-	Vector3 velocity = { 0.0f,0.0f,0.0f };
+	Vector3 velocity = { 20.0f,20.0f,0.0f };
 	hitEffect_.reset(ParticleSystem::Create(circleTexture_, camera, velocity, false));
+	//hitEffect_->emitter_->transform.translate = { 1.0f,0.6f,-4.2f };
 	hitEffect_->emitter_->transform.scale = { 1.0f,0.6f,1.0f };
-	hitEffect_->emitter_->count = 40;
-	hitEffect_->emitter_->frequency = 0.2f;
-	hitEffect_->SetLifeTime(1.0f, 3.0f);
+	hitEffect_->emitter_->count = 80;
+	hitEffect_->emitter_->frequency = 0.15f;
+	hitEffect_->SetLifeTime(0.5f, 1.0f);
 	hitEffect_->SetUseBillBoard();
 	hitEffect_->SetRandomAllVelocity();
-	hitEffect_->SetColor({ 1.0f,1.0f,0.0f });
-	hitEffect_->SetRandomColor();
+	hitEffect_->SetColor({ 0.3f,0.3f,0.5f });
+	//hitEffect_->SetRandomColor();
 }
 
 void DeathEffect::Update()

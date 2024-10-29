@@ -26,6 +26,7 @@ void Player::Initialize()
 	//playerModel->GetWorldTransform()->rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	playerModel_->GetWorldTransform()->translation_.x = 7.2f;
 	playerModel_->GetWorldTransform()->translation_.y = 75.0f;
+	playerModel_->GetWorldTransform()->translation_.y = 10.0f;
 	//playerModel->GetWorldTransform()->rotation_.y = 1.5f;
 
 
@@ -39,65 +40,80 @@ void Player::Initialize()
 	grobalVariables_->AddItem(groupName_, "playerHeight", kHeight_);
 
 
-
+	phase_ = Phase::kPlay;
 
 }
 
 void Player::Update()
 {
-	GameObject::Update();
-	ApplyGlobalVariables();
-	//デバッグ
-	playerModel_->ModelDebug("player");
 
 
-	BehaviorRootUpdate();
-	BehaviorAttackUpdate();
-
-	//速度加算
-	//playerModel->GetWorldTransform()->translation_ = Add(playerModel->GetWorldTransform()->translation_, velocity_);
-
-
-	collisionMapInfo_.move = velocity_;
-	//マップ衝突チェック
-	CollisionMap(collisionMapInfo_);
-
-	CollisionMove(collisionMapInfo_);
-	HitTop(collisionMapInfo_);
-	CollisionWall(collisionMapInfo_);
-	SwitchGround(collisionMapInfo_);
-
-#ifdef _DEBUG
-	ImGui::Text("x %d", collisionMapInfo_.move.x);
-	ImGui::Text("y %d", collisionMapInfo_.move.y);
-	ImGui::Text("z %d", collisionMapInfo_.move.z);
-	ImGui::Text("isTop %d", collisionMapInfo_.isTop);
-	ImGui::Text("isGround %d", collisionMapInfo_.isGround);
-	ImGui::Text("isWall %d", collisionMapInfo_.isWall);
-	ImGui::Text("grand %d", onGround_);
-	ImGui::Text("HP %d", hp_);
-#endif // _DEBUG
-
-	//無敵時間
-	if (isInvincible_)
+	switch (phase_)
 	{
-		invincibilityTimer_ -= 1.0f / 60.0f;
-		if (invincibilityTimer_ <= 0.0f)
-		{
-			isInvincible_ = false;
-		}
+	case Player::Phase::kPlay:
+		//ゲームプレイフェーズの処理
+		GamePlayPhase();
+		break;
+	case Player::Phase::kDeath:
+		//自キャラ死亡時の処理
+		DeathPhase();
+		break;
 	}
 
-	if (hp_ == 0)
-	{
-		// アルファ値を段々と減少させる
-		alpha_ -= fadeSpeed_;
-		if (alpha_ < 0.0f) {
-			alpha_ = 0.0f;  // アルファ値が負にならないように制限
-		}
-
-		playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
-	}
+	//	GameObject::Update();
+	//	ApplyGlobalVariables();
+	//	//デバッグ
+	//	playerModel_->ModelDebug("player");
+	//
+	//
+	//
+	//	BehaviorRootUpdate();
+	//	BehaviorAttackUpdate();
+	//
+	//	//速度加算
+	//	//playerModel->GetWorldTransform()->translation_ = Add(playerModel->GetWorldTransform()->translation_, velocity_);
+	//
+	//
+	//	collisionMapInfo_.move = velocity_;
+	//	//マップ衝突チェック
+	//	CollisionMap(collisionMapInfo_);
+	//
+	//	CollisionMove(collisionMapInfo_);
+	//	HitTop(collisionMapInfo_);
+	//	CollisionWall(collisionMapInfo_);
+	//	SwitchGround(collisionMapInfo_);
+	//
+	//#ifdef _DEBUG
+	//	ImGui::Text("x %d", collisionMapInfo_.move.x);
+	//	ImGui::Text("y %d", collisionMapInfo_.move.y);
+	//	ImGui::Text("z %d", collisionMapInfo_.move.z);
+	//	ImGui::Text("isTop %d", collisionMapInfo_.isTop);
+	//	ImGui::Text("isGround %d", collisionMapInfo_.isGround);
+	//	ImGui::Text("isWall %d", collisionMapInfo_.isWall);
+	//	ImGui::Text("grand %d", onGround_);
+	//	ImGui::Text("HP %d", hp_);
+	//#endif // _DEBUG
+	//
+	//	//無敵時間
+	//	if (isInvincible_)
+	//	{
+	//		invincibilityTimer_ -= 1.0f / 60.0f;
+	//		if (invincibilityTimer_ <= 0.0f)
+	//		{
+	//			isInvincible_ = false;
+	//		}
+	//	}
+	//
+	//	if (hp_ == 0)
+	//	{
+	//		// アルファ値を段々と減少させる
+	//		alpha_ -= fadeSpeed_;
+	//		if (alpha_ < 0.0f) {
+	//			alpha_ = 0.0f;  // アルファ値が負にならないように制限
+	//		}
+	//
+	//		playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
+	//	}
 }
 
 void Player::Draw(Camera* camera)
@@ -156,10 +172,10 @@ void Player::Move()
 	velocity_.y = std::max(velocity_.y, -kLimitFallSpeed_);
 
 	//移動処理
-	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT)) 
+	if (Input::GetInstance()->PushKey(DIK_RIGHT) || Input::GetInstance()->PushKey(DIK_LEFT))
 	{
 		Vector3 acceleration = {};
-		if (Input::GetInstance()->PushKey(DIK_RIGHT)) 
+		if (Input::GetInstance()->PushKey(DIK_RIGHT))
 		{
 			//旋回処理
 			if (lrDirection_ != LRDirection::kRight)
@@ -169,13 +185,13 @@ void Player::Move()
 				turnTimer_ = 1.0f;
 			}
 			//減速処理
-			if (velocity_.x < 0.0f) 
+			if (velocity_.x < 0.0f)
 			{
 				velocity_.x *= (1.0f - kAttenuation_);
 			}
 			acceleration.x += kAcceleration_;
 		}
-		else if (Input::GetInstance()->PushKey(DIK_LEFT)) 
+		else if (Input::GetInstance()->PushKey(DIK_LEFT))
 		{
 			//旋回処理
 			if (lrDirection_ != LRDirection::kLeft)
@@ -185,7 +201,7 @@ void Player::Move()
 				turnTimer_ = 1.0f;
 			}
 			//減速処理
-			if (velocity_.x > 0.0f) 
+			if (velocity_.x > 0.0f)
 			{
 				velocity_.x *= (1.0f - kAttenuation_);
 			}
@@ -194,7 +210,7 @@ void Player::Move()
 		velocity_ = Add(velocity_, acceleration);
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed_, kLimitRunSpeed_);
 	} // 非按键时速度衰减
-	else 
+	else
 	{
 		velocity_.x *= (1.0f - kAttenuation_);
 	}
@@ -204,7 +220,7 @@ void Player::Move()
 	if (onGround_)
 	{
 
-		if (Input::GetInstance()->PushKey(DIK_UP)) 
+		if (Input::GetInstance()->PushKey(DIK_UP))
 		{
 			if (!isJump_)
 			{
@@ -280,6 +296,11 @@ void Player::Jump()
 
 }
 
+void Player::ChangePhase(Phase phase)
+{
+	phase_ = phase;
+}
+
 void Player::ApplyGlobalVariables()
 {
 	kAcceleration_ = grobalVariables_->GetFloatValue(groupName_, "Acceleration");
@@ -336,7 +357,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 	MapChipField::IndexSet indexSet;
 
 	std::array<Vector3, kNumCorner> positionsNew;
-	for (uint32_t i = 0; i < positionsNew.size(); ++i) 
+	for (uint32_t i = 0; i < positionsNew.size(); ++i)
 	{
 		positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 	}
@@ -344,7 +365,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 	//左上
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock) 
+	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
@@ -408,7 +429,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info)
 		hit = true;
 	}
 
-	if (hit) 
+	if (hit)
 	{
 		Vector3 offset = { 0.0f, kHeight_ / 2.0f, 0.0f };
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Subtract(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
@@ -418,7 +439,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info)
 		info.move.y = std::min(0.0f, moveY);
 		info.isGround = true;
 	}
-	else 
+	else
 	{
 		info.isGround = false;
 	}
@@ -426,7 +447,7 @@ void Player::CollisionMapBottom(CollisionMapInfo& info)
 
 void Player::CollisionMapLeft(CollisionMapInfo& info)
 {
-	if (info.move.x >= 0) 
+	if (info.move.x >= 0)
 	{
 		return;
 	}
@@ -444,19 +465,19 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 	//左上
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock) 
+	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
 	//左下
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock) 
+	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
 
-	if (hit) 
+	if (hit)
 	{
 		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Subtract(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
@@ -497,7 +518,7 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 	//右下
 	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
 	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock) 
+	if (mapChipType == MapChipType::kBlock)
 	{
 		hit = true;
 	}
@@ -548,6 +569,105 @@ void Player::CollisionWall(const CollisionMapInfo& info)
 	{
 		velocity_.x *= (1.0f - kAttenuationWall_);
 		//velocity_.x = 0;
+	}
+}
+
+void Player::GamePlayPhase()
+{
+	GameObject::Update();
+	ApplyGlobalVariables();
+	//デバッグ
+	playerModel_->ModelDebug("player");
+
+
+
+	BehaviorRootUpdate();
+	BehaviorAttackUpdate();
+
+	//速度加算
+	//playerModel->GetWorldTransform()->translation_ = Add(playerModel->GetWorldTransform()->translation_, velocity_);
+
+
+	collisionMapInfo_.move = velocity_;
+	//マップ衝突チェック
+	CollisionMap(collisionMapInfo_);
+
+	CollisionMove(collisionMapInfo_);
+	HitTop(collisionMapInfo_);
+	CollisionWall(collisionMapInfo_);
+	SwitchGround(collisionMapInfo_);
+
+#ifdef _DEBUG
+	ImGui::Text("x %d", collisionMapInfo_.move.x);
+	ImGui::Text("y %d", collisionMapInfo_.move.y);
+	ImGui::Text("z %d", collisionMapInfo_.move.z);
+	ImGui::Text("isTop %d", collisionMapInfo_.isTop);
+	ImGui::Text("isGround %d", collisionMapInfo_.isGround);
+	ImGui::Text("isWall %d", collisionMapInfo_.isWall);
+	ImGui::Text("grand %d", onGround_);
+	ImGui::Text("HP %d", hp_);
+#endif // _DEBUG
+
+	//無敵時間
+	if (isInvincible_)
+	{
+		invincibilityTimer_ -= 1.0f / 60.0f;
+		if (invincibilityTimer_ <= 0.0f)
+		{
+			isInvincible_ = false;
+		}
+	}
+
+	if (hp_ == 0)
+	{
+		//// アルファ値を段々と減少させる
+		//alpha_ -= fadeSpeed_;
+		//if (alpha_ < 0.0f) {
+		//	alpha_ = 0.0f;  // アルファ値が負にならないように制限
+		//}
+
+		//playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
+
+		ChangePhase(Phase::kDeath);
+	}
+}
+
+void Player::DeathPhase()
+{
+	GameObject::Update();
+	ApplyGlobalVariables();
+	//デバッグ
+	playerModel_->ModelDebug("player");
+
+	bool isRising = true;
+	float interpolationRate_ = 0.04f;
+
+	Vector3 currentPosition = playerModel_->GetWorldTransform()->translation_;
+
+	// アルファ値を段々と減少させる
+	alpha_ -= fadeSpeed_;
+	if (alpha_ < 0.0f) {
+		alpha_ = 0.0f;  // アルファ値が負にならないように制限
+	}
+
+	playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
+
+	if (isRising)
+	{
+		static Vector3 endPosition = { currentPosition.x,currentPosition.y + 2.0f,currentPosition.z };
+		playerModel_->GetWorldTransform()->translation_ = Lerp(currentPosition, endPosition, interpolationRate_);
+
+	
+
+		// 目標位置に到達したかチェック
+		if (fabs(currentPosition.y - endPosition.y) < 0.1f)
+		{
+			// 目標位置に到達したとみなす
+			//playerModel_->GetWorldTransform()->translation_.y = endPosition.y;
+
+			isRising = false; // 上昇完了
+			endMove_ = true;
+		}
 	}
 }
 
@@ -604,7 +724,7 @@ void Player::SwitchGround(const CollisionMapInfo& info)
 			//着地状態に切り替える
 			onGround_ = true;
 			//着地時にX速度を減衰
-			velocity_.x *= (1.0f- kAttenuationLanding_);
+			velocity_.x *= (1.0f - kAttenuationLanding_);
 			//y座標をゼロにする
 			velocity_.y = 0.0f;
 		}

@@ -179,6 +179,7 @@
       <Filter>Application\Objects\Ground</Filter>
     </ClCompile>
     <ClCompile Include="Application\Effect\TitleEffect.cpp" />
+    <ClCompile Include="Application\Object\Enemy\EnemyBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\Triangle.h">
@@ -356,6 +357,7 @@
       <Filter>Application\Objects\Ground</Filter>
     </ClInclude>
     <ClInclude Include="Application\Effect\TitleEffect.h" />
+    <ClInclude Include="Application\Object\Enemy\EnemyBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

@@ -421,7 +421,10 @@ void GamePlayScene::ChangePhase(Phase phase)
 
 void GamePlayScene::GamePlayPhase()
 {
-	input->TriggerKey(DIK_0);
+	if (input->TriggerKey(DIK_D))
+	{
+		player->SetHP(0);
+	}
 
 #ifdef _DEBUG
 
@@ -442,9 +445,18 @@ void GamePlayScene::GamePlayPhase()
 
 	if (player->GetHP() == 0)
 	{
-		ChangePhase(Phase::kDeath);
-		CreateDeathEffect({ player->GetWorldPosition() });
-		fade_->Start(Fade::Status::FadeOut, 1.5f);
+		
+
+		if(player->GetEndMove())
+		{
+			CreateDeathEffect({ player->GetWorldPosition().x,player->GetWorldPosition().y,player->GetWorldPosition().z - 4.0f });
+			ChangePhase(Phase::kDeath);
+			fade_->Start(Fade::Status::FadeOut, 1.5f);
+		}
+
+		//player->GetWorldTransform()->translation_.y += 1.0f;
+
+		
 	}
 
 	fade_->Update();

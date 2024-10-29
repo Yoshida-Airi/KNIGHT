@@ -42,9 +42,19 @@ public:
 		return hp_;
 	}
 
+	bool GetEndMove()
+	{
+		return endMove_;
+	}
+
 	void SetWeapon(Weapon* weapon)
 	{
 		weapon_ = weapon;
+	}
+
+	void SetHP(int32_t hp)
+	{
+		hp_ = hp;
 	}
 		
 	void SetGround(std::list<Ground*>grounds)
@@ -70,6 +80,18 @@ public:
 
 		kNumCorner		//要素数
 	};
+
+	enum class Phase
+	{
+		kPlay,
+		kDeath,
+	};
+
+	/**
+	* @brief フェーズの変更
+	* @param[in] phase 変更するフェーズ
+	*/
+	void ChangePhase(Phase phase);
 
 	//範囲矩形
 	struct Rect
@@ -143,9 +165,13 @@ private:
 	static constexpr float invincibilityDuration_ = 2.0f; // 無敵時間の長さ（秒）
 
 	float alpha_ = 1.0f;       // 初期のアルファ値（不透明）
-	float fadeSpeed_ = 0.01f;  // 透明になる速度
+	float fadeSpeed_ = 0.005f;  // 透明になる速度
 
 	MapChipField* mapChipField_ = nullptr;
+
+	Phase phase_;
+
+	bool endMove_ = false;
 
 private:
 
@@ -204,6 +230,8 @@ private:
 
 	void CollisionWall(const CollisionMapInfo& info);
 
+	void GamePlayPhase();
+	void DeathPhase();
 
 };
 

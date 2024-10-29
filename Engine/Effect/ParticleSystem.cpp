@@ -421,9 +421,9 @@ Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* em
 	if (isRandomAllVelocity == true)
 	{
 		//ランダムな速度で動かす場合
-		particle.velocity.x = velocity.x + randomTranslate.x;
-		particle.velocity.y = velocity.y + randomTranslate.y;
-		particle.velocity.z = velocity.z + randomTranslate.z;
+		particle.velocity.x = ( randomTranslate.x)* velocity.x;
+		particle.velocity.y = ( randomTranslate.y)* velocity.y;
+		particle.velocity.z = ( randomTranslate.z)*velocity.z;
 	}
 	else
 	{
@@ -434,15 +434,15 @@ Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* em
 	// 各成分が独立してランダムに動く場合の処理
 	if (isRandomVelocityX)
 	{
-		particle.velocity.x = velocity.x + randomTranslate.x;
+		particle.velocity.x = velocity.x * randomTranslate.x;
 	}
 	if (isRandomVelocityY)
 	{
-		particle.velocity.y = velocity.y + randomTranslate.y;
+		particle.velocity.y = velocity.y * randomTranslate.y;
 	}
 	if (isRandomVelocityZ)
 	{
-		particle.velocity.z = velocity.z + randomTranslate.z;
+		particle.velocity.z = velocity.z * randomTranslate.z;
 	}
 
 	if (isRandomColor)

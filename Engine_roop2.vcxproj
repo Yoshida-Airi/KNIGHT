@@ -115,6 +115,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Effect\DeathEffect.cpp" />
     <ClCompile Include="Application\Scene\BossScene.cpp" />
     <ClCompile Include="Application\Object\Enemy\Boss.cpp" />
+    <ClCompile Include="Application\Object\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="Engine\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Animation\Animation.cpp" />
@@ -170,6 +171,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Effect\DeathEffect.h" />
     <ClInclude Include="Application\Scene\BossScene.h" />
     <ClInclude Include="Application\Object\Enemy\Boss.h" />
+    <ClInclude Include="Application\Object\Enemy\EnemyBullet.h" />
     <ClInclude Include="Engine\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Collider\Collider.h" />
     <ClInclude Include="Engine\Animation\Animation.h" />
