@@ -329,7 +329,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 		Vector3 offset = { 0.0f, kHeight_ / 2.0f, 0.0f };
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		float moveY = (rect.bottom - playerModel_->GetWorldTransform()->translation_.y + kBlank_) - (kHeight_ / 2.0f);
+		float moveY = (rect.bottom - playerModel_->GetWorldTransform()->translation_.y) - (kHeight_ / 2.0f) + kBlank_;
 		info.move.y = std::max(0.0f, moveY);
 		info.isTop = true;
 	}
@@ -486,10 +486,10 @@ Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
 
 	Vector3 offsetTable[kNumCorner] =
 	{
-		{+kWidth_ / 2.0f,-kHeight_ / 2.0f,0},
-		{-kWidth_ / 2.0f,-kHeight_ / 2.0f,0},
-		{+kWidth_ / 2.0f,+kHeight_ / 2.0f,0},
-		{-kWidth_ / 2.0f,+kHeight_ / 2.0f,0},
+		{kWidth_ / 2.0f,-kHeight_ / 2.0f,0.0f},
+		{-kWidth_ / 2.0f,-kHeight_ / 2.0f,0.0f},
+		{kWidth_ / 2.0f,kHeight_ / 2.0f,0.0f},
+		{-kWidth_ / 2.0f,kHeight_ / 2.0f,0.0f},
 	};
 
 	return Add(center, offsetTable[static_cast<uint32_t>(corner)]);
@@ -630,14 +630,19 @@ void Player::SwitchGround(const CollisionMapInfo& info)
 		}
 		else
 		{
-			MapChipType mapChipType;
-			bool hit = false;
-			MapChipField::IndexSet indexSet;
-
 			std::array<Vector3, kNumCorner> positionsNew;
 			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
 				positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 			}
+
+			if (info.move.y <= 0)
+			{
+				return;
+			}
+
+			MapChipType mapChipType;
+			bool hit = false;
+			MapChipField::IndexSet indexSet;
 
 			// 左下
 			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
