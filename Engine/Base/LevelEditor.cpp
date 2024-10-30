@@ -183,7 +183,7 @@ void LevelEditor::Draw(Camera* camera)
 		if (model)
 		{
 			//model->SetWorldTransform(objects[i].get());
-			model->GetWorldTransform()->constMap = (objects_[i].get()->constMap);
+			model->GetWorldTransform()->constMap_ = (objects_[i].get()->constMap_);
 			model->GetWorldTransform()->constBuffer_ = (objects_[i].get()->constBuffer_);
 			model->GetWorldTransform()->matWorld_ = objects_[i].get()->matWorld_;
 			model->GetWorldTransform()->parent_ = objects_[i].get()->parent_;
