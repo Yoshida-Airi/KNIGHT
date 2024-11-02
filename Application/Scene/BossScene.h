@@ -101,7 +101,7 @@ private:
 	uint32_t HPTexture_;
 
 
-	Camera* camera_;
+	std::unique_ptr <Camera> camera_;
 
 
 	Input* input_;
@@ -109,15 +109,15 @@ private:
 	std::unique_ptr<Fade> fade_ = nullptr;
 
 	std::unique_ptr <Player> player_;
-	std::list<Enemy*> enemys_;
-	std::list<FlyEnemy*> flyEnemys_;
+	std::list < std::unique_ptr<Enemy>> enemys_;
+	std::list<std::unique_ptr<FlyEnemy>> flyEnemys_;
 	std::unique_ptr<Boss> boss_;
 	std::unique_ptr <Skydome>skydome_;
 	std::unique_ptr <Goal>goal_;
-	CameraController* cameraController_;
+	std::unique_ptr < CameraController> cameraController_;
 	std::unique_ptr<Weapon>weapon_;
-	std::list<Ground*>grounds_;
-	std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
+	//std::list < std::unique_ptr<Ground>>grounds_;
+	std::list < std::unique_ptr<DeathEffect>>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
 	std::unique_ptr<Sprite> config_ = nullptr;

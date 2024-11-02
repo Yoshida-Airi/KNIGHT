@@ -5,27 +5,26 @@
 BossScene::~BossScene()
 {
 
-	delete camera_;
-	delete cameraController_;
+	//delete cameraController_;
 
-	for (Enemy* enemy : enemys_)
-	{
-		delete enemy;
-	}
+	//for (Enemy* enemy : enemys_)
+	//{
+	//	delete enemy;
+	//}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_)
-	{
-		delete flyEnemy;
-	}
+	//for (FlyEnemy* flyEnemy : flyEnemys_)
+	//{
+	//	delete flyEnemy;
+	//}
 
-	for (Ground* ground : grounds_)
-	{
-		delete ground;
-	}
+	//for (Ground* ground : grounds_)
+	//{
+	//	delete ground;
+	//}
 
-	for (DeathEffect* deathEffects : deathEffect_) {
-		delete deathEffects;
-	}
+	//for (DeathEffect* deathEffects : deathEffect_) {
+	//	delete deathEffects;
+	//}
 
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -55,7 +54,7 @@ void BossScene::Initialize()
 	configTexture_ = texture_->LoadTexture("Resources/Scene/config.png");
 	HPTexture_ = texture_->LoadTexture("Resources/Object/Heart.png");
 
-	camera_ = new Camera;
+	//camera_ = new Camera;
 	camera_->Initialize();
 	camera_->transform_.translate={16.0f,66.3f,-42.0f};
 
@@ -70,7 +69,7 @@ void BossScene::Initialize()
 
 	player_ = std::make_unique<Player>();
 	player_->SetWeapon(weapon_.get());
-	player_->SetGround(grounds_);
+	//player_->SetGround(grounds_);
 	player_->Initialize();
 
 	boss_ = std::make_unique<Boss>();
@@ -148,27 +147,27 @@ void BossScene::Draw()
 {
 
 
-	for (Ground* ground : grounds_)
+	/*for (Ground* ground : grounds_)
 	{
-		ground->Draw(camera_);
+		ground->Draw(camera_.get());
+	}*/
+
+
+	skydome_->Draw(camera_.get());
+	player_->Draw(camera_.get());
+	weapon_->Draw(camera_.get());
+	for (const auto& enemy : enemys_)
+	{
+		enemy->Draw(camera_.get());
+	}
+
+	for (const auto& flyEnemy : flyEnemys_)
+	{
+		flyEnemy->Draw(camera_.get());
 	}
 
 
-	skydome_->Draw(camera_);
-	player_->Draw(camera_);
-	weapon_->Draw(camera_);
-	for (Enemy* enemy : enemys_)
-	{
-		enemy->Draw(camera_);
-	}
-
-	for (FlyEnemy* flyEnemy : flyEnemys_)
-	{
-		flyEnemy->Draw(camera_);
-	}
-
-
-	for (DeathEffect* deathEffects : deathEffect_)
+	for (const auto& deathEffects : deathEffect_)
 	{
 		deathEffects->Draw();
 	}
@@ -183,56 +182,56 @@ void BossScene::Draw()
 				continue;
 			}
 
-			block->Draw(camera_);
+			block->Draw(camera_.get());
 		}
 	}
 
-	boss_->Draw(camera_);
+	boss_->Draw(camera_.get());
 
-	goal_->Draw(camera_);
+	goal_->Draw(camera_.get());
 
 	//colliderManager_->Draw(camera);
 
-	config_->Draw(camera_);
+	config_->Draw(camera_.get());
 
 
 	if (player_->GetHP() == 5)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
-		hp4_->Draw(camera_);
-		hp5_->Draw(camera_);
+		hp1_->Draw(camera_.get());
+		hp2_->Draw(camera_.get());
+		hp3_->Draw(camera_.get());
+		hp4_->Draw(camera_.get());
+		hp5_->Draw(camera_.get());
 	}
 	if (player_->GetHP() == 4)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
-		hp4_->Draw(camera_);
+		hp1_->Draw(camera_.get());
+		hp2_->Draw(camera_.get());
+		hp3_->Draw(camera_.get());
+		hp4_->Draw(camera_.get());
 	}
 	if (player_->GetHP() == 3)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
+		hp1_->Draw(camera_.get());
+		hp2_->Draw(camera_.get());
+		hp3_->Draw(camera_.get());
 	}
 	if (player_->GetHP() == 2)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
+		hp1_->Draw(camera_.get());
+		hp2_->Draw(camera_.get());
 	}
 	if (player_->GetHP() == 1)
 	{
 
-		hp1_->Draw(camera_);
+		hp1_->Draw(camera_.get());
 	}
 
-	fade_->Draw(camera_);
+	fade_->Draw(camera_.get());
 }
 
 void BossScene::CheckAllCollisions()
@@ -272,18 +271,18 @@ void BossScene::SpawnBlock(const Vector3& position, const Vector3& scale)
 	ground->SetScale(scale);
 
 	// リストに登録
-	grounds_.push_back(ground);
+	//grounds_.push_back(ground);
 }
 
 void BossScene::CreateDeathEffect(Vector3 position)
 {
-	DeathEffect* newDeathEffect = new DeathEffect();
-	newDeathEffect->Initialize(camera_);
+	std::unique_ptr < DeathEffect> newDeathEffect = std::make_unique<DeathEffect>();
+	newDeathEffect->Initialize(camera_.get());
 	newDeathEffect->SetFlag(true);
 
 	newDeathEffect->SetPosition(position);
 
-	deathEffect_.push_back(newDeathEffect);
+	deathEffect_.push_back(std::move(newDeathEffect));
 }
 
 void BossScene::ChangePhase(Phase phase)
@@ -348,57 +347,57 @@ void BossScene::GamePlayPhase()
 	}
 
 
-	deathEffect_.remove_if([](DeathEffect* hitEffects) {
-		if (hitEffects->IsDead())
-		{
-			//実行時間をすぎたらメモリ削除
-			delete hitEffects;
-			return true;
-		}
-		return false;
-		});
+	//deathEffect_.remove_if([](DeathEffect* hitEffects) {
+	//	if (hitEffects->IsDead())
+	//	{
+	//		//実行時間をすぎたらメモリ削除
+	//		delete hitEffects;
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
-		});
+	//enemys_.remove_if([](Enemy* enemys) {
+	//	if (enemys->GetIsAlive() == false) {
+	//		delete enemys;
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
-	flyEnemys_.remove_if([](FlyEnemy* flyEnemys) {
-		if (flyEnemys->GetIsAlive() == false) {
-			delete flyEnemys;
-			return true;
-		}
-		return false;
-		});
+	//flyEnemys_.remove_if([](FlyEnemy* flyEnemys) {
+	//	if (flyEnemys->GetIsAlive() == false) {
+	//		delete flyEnemys;
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
 
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
+	//int i = 0;
+	//for (Ground* ground : grounds_)
+	//{
+	//	i++;
+	//	ground->Update();
+	//	ground->Debug("ground" + i);
+	//}
 
 
 	player_->Update();
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_)
+	for (const auto&  flyEnemy : flyEnemys_)
 	{
 		flyEnemy->Update();
 	}
@@ -459,12 +458,12 @@ void BossScene::GameClearPhase()
 	hp4_->Update();
 	hp5_->Update();
 
-	for (Enemy* enemy : enemys_) {
-		enemy->Update();
-		if (enemy->GetIsAlive() == false) {
-			CreateDeathEffect({ enemy->GetWorldPosition() });
-		}
-	}
+	//for (const auto& enemy : enemys_) {
+	//	enemy->Update();
+	//	if (enemy->GetIsAlive() == false) {
+	//		CreateDeathEffect({ enemy->GetWorldPosition() });
+	//	}
+	//}
 
 	//deathEffect_.remove_if([](DeathEffect* hitEffects) {
 	//	if (hitEffects->IsDead())
@@ -476,34 +475,34 @@ void BossScene::GameClearPhase()
 	//	return false;
 	//	});
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
-		});
+	//enemys_.remove_if([](Enemy* enemys) {
+	//	if (enemys->GetIsAlive() == false) {
+	//		delete enemys;
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
 
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
+	//int i = 0;
+	//for (Ground* ground : grounds_)
+	//{
+	//	i++;
+	//	ground->Update();
+	//	ground->Debug("ground" + i);
+	//}
 
 
 	player_->Update();
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}
@@ -564,7 +563,7 @@ void BossScene::GameOverPhase()
 	hp4_->Update();
 	hp5_->Update();
 
-	for (Enemy* enemy : enemys_) {
+	for (const auto& enemy : enemys_) {
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
 			CreateDeathEffect({ enemy->GetWorldPosition() });
@@ -581,33 +580,33 @@ void BossScene::GameOverPhase()
 	//	return false;
 	//	});
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
-		});
+	//enemys_.remove_if([](Enemy* enemys) {
+	//	if (enemys->GetIsAlive() == false) {
+	//		delete enemys;
+	//		return true;
+	//	}
+	//	return false;
+	//	});
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
+	//int i = 0;
+	//for (Ground* ground : grounds_)
+	//{
+	//	i++;
+	//	ground->Update();
+	//	ground->Debug("ground" + i);
+	//}
 
 
 	player_->Update();
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}
