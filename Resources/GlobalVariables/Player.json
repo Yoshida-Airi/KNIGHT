@@ -3,10 +3,10 @@
         "Acceleration": 0.009999999776482582,
         "Attenuation": 0.029999999329447746,
         "GravityAcceleration": 0.05000000074505806,
-        "JumpAcceleration": 1.2899999618530273,
+        "JumpAcceleration": 0.9200000166893005,
         "LimitFallSpead": 0.5,
         "LimitRunSpeed": 0.10000000149011612,
-        "playerHeight": 5.900000095367432,
-        "playerWidth": 1.9900000095367432
+        "playerHeight": 1.7999999523162842,
+        "playerWidth": 1.7999999523162842
     }
 }

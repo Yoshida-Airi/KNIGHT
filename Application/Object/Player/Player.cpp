@@ -26,7 +26,7 @@ void Player::Initialize()
 	//playerModel->GetWorldTransform()->rotation_.y = std::numbers::pi_v<float> / 2.0f;
 	playerModel_->GetWorldTransform()->translation_.x = 7.2f;
 	playerModel_->GetWorldTransform()->translation_.y = 75.0f;
-	playerModel_->GetWorldTransform()->translation_.y = 10.0f;
+	//playerModel_->GetWorldTransform()->translation_.y = 10.0f;
 	//playerModel->GetWorldTransform()->rotation_.y = 1.5f;
 
 
@@ -155,7 +155,7 @@ void Player::Move()
 		}
 		velocity_ = Add(velocity_, acceleration);
 		velocity_.x = std::clamp(velocity_.x, -kLimitRunSpeed_, kLimitRunSpeed_);
-	} // 非按键时速度衰减
+	} // 
 	else
 	{
 		velocity_.x *= (1.0f - kAttenuation_);
@@ -289,6 +289,7 @@ void Player::CollisionMap(CollisionMapInfo& info)
 	CollisionMapBottom(info);
 	CollisionMapLeft(info);
 	CollisionMapRight(info);
+
 }
 
 void Player::CollisionMapTop(CollisionMapInfo& info)
@@ -329,7 +330,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 		Vector3 offset = { 0.0f, kHeight_ / 2.0f, 0.0f };
 		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
 		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		float moveY = (rect.bottom - playerModel_->GetWorldTransform()->translation_.y) - (kHeight_ / 2.0f) + kBlank_;
+		float moveY = (rect.bottom - playerModel_->GetWorldTransform()->translation_.y) - (kHeight_ / 2.0f) - kBlank_;
 		info.move.y = std::max(0.0f, moveY);
 		info.isTop = true;
 	}

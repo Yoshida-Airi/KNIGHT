@@ -82,11 +82,11 @@ void GamePlayScene::Initialize()
 	player_->Initialize();
 	
 
-	SpawnEnemy({ 20.0f,1.0f,0.0f });
-	SpawnEnemy({ 10.0f,1.0f,0.0f });
+	SpawnEnemy({ 20.0f,5.5f,0.0f });
+	SpawnEnemy({ 10.0f,3.5f,0.0f });
 	//SpawnEnemy({ 30.0f,1.0f,0.0f });
 
-	SpawnFlyEnemy({ 35.0f,5.0f,0.0f });
+	SpawnFlyEnemy({ 35.0f,8.0f,0.0f });
 
 
 	skydome_ = std::make_unique<Skydome>();
@@ -534,7 +534,7 @@ void GamePlayScene::GameClearPhase()
 
 	if (fade_->IsFinished())
 	{
-		sceneManager_->ChangeScene("Boss");
+		sceneManager_->ChangeScene("CLEAR");
 
 	}
 

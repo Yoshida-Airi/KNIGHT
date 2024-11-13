@@ -12,6 +12,7 @@ void Weapon::Initialize()
 	GameObject::SetModel(weaponModels_);
 
 	weaponModel_->GetWorldTransform()->translation_.z += 2.0f;
+	weaponModel_->GetWorldTransform()->translation_.y += 2.0f;
 	weaponModel_->SetMaterial({ 0.0f,0.0,1.0f,1.0f });
 }
 
