@@ -14,6 +14,8 @@ void ClearScene::Initialize()
 	textureManager_ = TextureManager::GetInstance();
 
 	titleTexture_ = textureManager_->LoadTexture("Resources/Scene/clear.png");
+	spaceTexture_ = textureManager_->LoadTexture("Resources/Scene/space.png");
+
 
 	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
@@ -22,6 +24,23 @@ void ClearScene::Initialize()
 	camera_->Initialize();
 
 	title_.reset(Sprite::Create(titleTexture_));
+	title_->GetWorldTransform()->translation_ = { 242.0f,146.0f };
+
+	space_.reset(Sprite::Create(spaceTexture_));
+	space_->GetWorldTransform()->translation_ = { 435.0f,490.0f };
+
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize();
+	skydome_->SetLight(false);
+
+	fade_ = std::make_unique <Fade>();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 2.5f);
+
+	titleEffect_ = std::make_unique <TitleEffect>();
+	titleEffect_->Initialize(camera_);
+	titleEffect_->SetFlag(true);
+	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
 
 }
 
@@ -48,17 +67,23 @@ void ClearScene::Update()
 	}
 	
 	title_->Update();
+	space_->Update();
+	fade_->Update();
+	titleEffect_->Update();
 
-
-
-
+	skydome_->Update();
 
 }
 
 void ClearScene::Draw()
 {
-	title_->Draw(camera_);
+	skydome_->Draw(camera_);
 
+	titleEffect_->Draw();
+	title_->Draw(camera_);
+	space_->Draw(camera_);
+	fade_->Draw(camera_);
+	
 
 }
 

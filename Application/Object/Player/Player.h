@@ -85,6 +85,7 @@ public:
 	{
 		kPlay,
 		kDeath,
+		kClear,
 	};
 
 	/**
@@ -232,6 +233,7 @@ private:
 
 	void GamePlayPhase();
 	void DeathPhase();
+	void ClearPhase();
 
 };
 

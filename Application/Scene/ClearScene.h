@@ -17,8 +17,11 @@
 #include"Sphere.h"
 #include"Model.h"
 #include"Camera.h"
+#include"Effect/Fade.h"
 
 #include"EffectManager.h"
+#include"Effect/TitleEffect.h"
+#include"Object/Skydome/Skydome.h"
 
 /**
 *   @class ClearScene
@@ -46,11 +49,17 @@ private:
 	Camera* camera_;
 
 	uint32_t titleTexture_;
+	uint32_t spaceTexture_;
 
 	uint32_t soundData_;
 
+
+	std::unique_ptr<Sprite> space_ = nullptr;
+
 	std::unique_ptr<Sprite> title_ = nullptr;
 
-
+	std::unique_ptr <Skydome>skydome_;
+	std::unique_ptr<Fade> fade_ = nullptr;
+	std::unique_ptr<TitleEffect> titleEffect_ = nullptr;
 };
 

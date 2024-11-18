@@ -57,6 +57,8 @@ void Player::Update()
 	case Player::Phase::kDeath:
 		//自キャラ死亡時の処理
 		DeathPhase();
+	case Player::Phase::kClear:
+		ClearPhase();
 		break;
 	}
 
@@ -577,6 +579,11 @@ void Player::GamePlayPhase()
 
 		ChangePhase(Phase::kDeath);
 	}
+
+	if (hitGoal_)
+	{
+		ChangePhase(Phase::kClear);
+	}
 }
 
 void Player::DeathPhase()
@@ -608,6 +615,45 @@ void Player::DeathPhase()
 
 		// 目標位置に到達したかチェック
 		if (fabs(currentPosition.y - endPosition.y) < 0.1f)
+		{
+			// 目標位置に到達したとみなす
+			//playerModel_->GetWorldTransform()->translation_.y = endPosition.y;
+
+			isRising = false; // 上昇完了
+			endMove_ = true;
+		}
+	}
+}
+
+void Player::ClearPhase()
+{
+	GameObject::Update();
+	ApplyGlobalVariables();
+	//デバッグ
+	playerModel_->ModelDebug("player");
+
+	bool isRising = true;
+	float interpolationRate_ = 0.04f;
+
+	Vector3 currentPosition = playerModel_->GetWorldTransform()->scale_;
+
+	// アルファ値を段々と減少させる
+	alpha_ -= fadeSpeed_;
+	if (alpha_ < 0.0f) {
+		alpha_ = 0.0f;  // アルファ値が負にならないように制限
+	}
+
+	playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,alpha_ });
+
+	if (isRising)
+	{
+		static Vector3 endPosition = { 0.0f,0.0f,0.0f };
+		//playerModel_->GetWorldTransform()->translation_ = Lerp(currentPosition, endPosition, interpolationRate_);
+		playerModel_->GetWorldTransform()->scale_ = Lerp(currentPosition, endPosition, interpolationRate_);
+
+		playerModel_->GetWorldTransform()->rotation_.y += 3.0f;
+
+		if (alpha_ < 0.0f)
 		{
 			// 目標位置に到達したとみなす
 			//playerModel_->GetWorldTransform()->translation_.y = endPosition.y;
