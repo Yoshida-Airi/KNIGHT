@@ -61,13 +61,13 @@ public:
 	* @brief 敵をスポーンします
 	* @param[in] position 敵の位置
 	*/
-	void SpawnEnemy(const Vector3& position);
+	//void SpawnEnemy(const Vector3& position);
 
 	/**
 	* @brief 空飛ぶ敵をスポーンします
 	* @param[in] position 敵の位置
 	*/
-	void SpawnFlyEnemy(const Vector3& position);
+	//void SpawnFlyEnemy(const Vector3& position);
 
 	/**
 	* @brief ブロックをスポーンします
@@ -80,7 +80,7 @@ public:
 	* @brief 敵の消滅エフェクトを作成します
 	* @param[in] position エフェクトの位置
 	*/
-	void CreateDeathEffect(Vector3 position);
+	//void CreateDeathEffect(Vector3 position);
 
 	enum class Phase
 	{
@@ -112,32 +112,32 @@ private:
 	Input* input_;
 
 
-	std::unique_ptr<Fade> fade_ = nullptr;
+	//std::unique_ptr<Fade> fade_ = nullptr;
 
 	//LevelEditor* levelEditor = nullptr;
 
 	std::unique_ptr <Player> player_;
-	std::list<Enemy*> enemys_;
-	std::list<FlyEnemy*> flyEnemys_;
-	std::unique_ptr <Skydome>skydome_;
-	std::unique_ptr <Goal>goal_;
+	//std::list<Enemy*> enemys_;
+	//std::list<FlyEnemy*> flyEnemys_;
+	//std::unique_ptr <Skydome>skydome_;
+	//std::unique_ptr <Goal>goal_;
 	CameraController* cameraController_;
 	std::unique_ptr<Weapon>weapon_;
 	std::list<Ground*>grounds_;
-	std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
+	//std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
-	std::unique_ptr<Sprite> config_ = nullptr;
-	std::unique_ptr<Sprite> hp1_ = nullptr;
-	std::unique_ptr<Sprite> hp2_ = nullptr;
-	std::unique_ptr<Sprite> hp3_ = nullptr;
-	std::unique_ptr<Sprite> hp4_ = nullptr;
-	std::unique_ptr<Sprite> hp5_ = nullptr;
+	//std::unique_ptr<Sprite> config_ = nullptr;
+	//std::unique_ptr<Sprite> hp1_ = nullptr;
+	//std::unique_ptr<Sprite> hp2_ = nullptr;
+	//std::unique_ptr<Sprite> hp3_ = nullptr;
+	//std::unique_ptr<Sprite> hp4_ = nullptr;
+	//std::unique_ptr<Sprite> hp5_ = nullptr;
 
 	Phase phase_;
 
 	std::vector<std::vector<Model*>>blocks_;
-	MapChipField* mapChipField_;
+	//MapChipField* mapChipField_;
 
 private:
 
@@ -148,6 +148,6 @@ private:
 	/// @brief ゲームオーバーフェーズ
 	void GameOverPhase();
 	/// @brief ブロック生成
-	void GenerateBlocks();
+	//void GenerateBlocks();
 };
 

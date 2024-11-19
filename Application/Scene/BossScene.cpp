@@ -120,7 +120,7 @@ void BossScene::Initialize()
 
 	GenerateBlocks();
 
-	player_->SetMapChipField(mapChipField_);
+	//player_->SetMapChipField(mapChipField_);
 }
 
 void BossScene::Update()

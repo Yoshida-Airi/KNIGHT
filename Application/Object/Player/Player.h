@@ -103,10 +103,10 @@ public:
 		float top;
 	};
 
-	void SetMapChipField(MapChipField* mapChipField)
-	{
-		mapChipField_ = mapChipField;
-	}
+	//void SetMapChipField(MapChipField* mapChipField)
+	//{
+		//mapChipField_ = mapChipField;
+	//}
 
 private:
 
@@ -144,6 +144,12 @@ private:
 	float kAttenuationLanding_ = 0.1f;//着地時の速度減衰率
 	float kAttenuationWall_ = 0.05f;	
 
+	//bool onGround_ = true;	//接地状態フラグ
+	bool landing_ = false;	//接地フラグ
+	//static inline const float kGravityAcceleration = 9.8f;	//重力加速度（下方向
+	//static inline const float kLimitFallSpead = 0.2f;		//最大落下速度（下方向
+	//static inline const float kJumpAcceleration = 3.0f;	//ジャンプ初速（上方向
+
 	Weapon* weapon_;
 	std::list<Ground*> ground_;
 
@@ -168,7 +174,7 @@ private:
 	float alpha_ = 1.0f;       // 初期のアルファ値（不透明）
 	float fadeSpeed_ = 0.005f;  // 透明になる速度
 
-	MapChipField* mapChipField_ = nullptr;
+	//MapChipField* mapChipField_ = nullptr;
 
 	Phase phase_;
 
@@ -206,17 +212,17 @@ private:
 	/// </summary>
 	void BehaviorAttackUpdate();
 
-	/// <summary>
-	/// マップ衝突判定
-	/// </summary>
-	/// <param name="info"></param>
-	void CollisionMap(CollisionMapInfo& info);
+	///// <summary>
+	///// マップ衝突判定
+	///// </summary>
+	///// <param name="info"></param>
+	//void CollisionMap(CollisionMapInfo& info);
 
-	//各方向のマップ衝突判定
-	void CollisionMapTop(CollisionMapInfo& info);
-	void CollisionMapBottom(CollisionMapInfo& info);
-	void CollisionMapLeft(CollisionMapInfo& info);
-	void CollisionMapRight(CollisionMapInfo& info);
+	////各方向のマップ衝突判定
+	//void CollisionMapTop(CollisionMapInfo& info);
+	//void CollisionMapBottom(CollisionMapInfo& info);
+	//void CollisionMapLeft(CollisionMapInfo& info);
+	//void CollisionMapRight(CollisionMapInfo& info);
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	void CollisionMove(const CollisionMapInfo& info);
@@ -227,7 +233,7 @@ private:
 	/// <summary>
 	/// 設置状態の切り替え処理
 	/// </summary>
-	void SwitchGround(const CollisionMapInfo& info);
+	//void SwitchGround(const CollisionMapInfo& info);
 
 	void CollisionWall(const CollisionMapInfo& info);
 
