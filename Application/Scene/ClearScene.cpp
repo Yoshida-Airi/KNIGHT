@@ -42,11 +42,13 @@ void ClearScene::Initialize()
 	titleEffect_->SetFlag(true);
 	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
 
+	isFadeStart_ = false;
 }
 
 void ClearScene::Update()
 {
 	camera_->CameraDebug();
+	UpdateSpriteBlink();
 
 	//ゲームパットの状態を得る変数(XINPUT)
 	XINPUT_STATE joyState;
@@ -60,10 +62,18 @@ void ClearScene::Update()
 		}
 	}
 
-	if (input_->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE) && isFadeStart_ == false)
+	{
+		isFadeStart_ = true;
+		//sceneManager_->ChangeScene("TITLE");
+		//Audio::GetInstance()->SoundStopWave(soundData);
+		fade_->Start(Fade::Status::FadeOut, 1.5f);
+		
+	}
+	
+	if (fade_->IsFinished())
 	{
 		sceneManager_->ChangeScene("TITLE");
-		//Audio::GetInstance()->SoundStopWave(soundData);
 	}
 	
 	title_->Update();
@@ -87,3 +97,13 @@ void ClearScene::Draw()
 
 }
 
+void ClearScene::UpdateSpriteBlink()
+{
+	frameCount_++;
+
+	if (frameCount_ >= blinkFrames_)
+	{
+		space_->SetisInvisible(!space_->GetisInvisible());
+		frameCount_ = 0;
+	}
+}

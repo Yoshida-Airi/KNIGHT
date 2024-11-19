@@ -39,6 +39,8 @@ public:
 	/// @brief 描画処理
 	void Draw()override;
 
+	void UpdateSpriteBlink();
+
 private:
 
 	EffectManager* effect_ = nullptr;
@@ -53,6 +55,7 @@ private:
 
 	uint32_t soundData_;
 
+	bool isFadeStart_ = false;
 
 	std::unique_ptr<Sprite> space_ = nullptr;
 
@@ -61,5 +64,9 @@ private:
 	std::unique_ptr <Skydome>skydome_;
 	std::unique_ptr<Fade> fade_ = nullptr;
 	std::unique_ptr<TitleEffect> titleEffect_ = nullptr;
+
+	const float kDeltaTime_ = 1.0f / 60.0f;
+	int frameCount_ = 0;
+	int blinkFrames_ = 50;  // 30フレームごとに点滅
 };
 
