@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <functional>
 #include<numbers>
-#include <algorithm>
 
 class MapChipField;
 class Ground;
@@ -59,7 +58,12 @@ public:
 		
 	void SetGround(std::list<Ground*>grounds)
 	{
-		ground_ = grounds;
+		grounds_ = grounds;
+	}
+
+	void SetGround(Ground* ground)
+	{
+		ground_ = ground;
 	}
 
 	struct CollisionMapInfo
@@ -151,7 +155,9 @@ private:
 	//static inline const float kJumpAcceleration = 3.0f;	//ジャンプ初速（上方向
 
 	Weapon* weapon_;
-	std::list<Ground*> ground_;
+	std::list<Ground*> grounds_;
+	Ground* ground_ = nullptr;
+
 
 	CollisionMapInfo collisionMapInfo_;
 
@@ -179,6 +185,8 @@ private:
 	Phase phase_;
 
 	bool endMove_ = false;
+
+	bool isHitGround_ = false;
 
 private:
 
@@ -212,17 +220,17 @@ private:
 	/// </summary>
 	void BehaviorAttackUpdate();
 
-	///// <summary>
-	///// マップ衝突判定
-	///// </summary>
-	///// <param name="info"></param>
-	//void CollisionMap(CollisionMapInfo& info);
+	/// <summary>
+	/// マップ衝突判定
+	/// </summary>
+	/// <param name="info"></param>
+	void CollisionMap(CollisionMapInfo& info);
 
 	////各方向のマップ衝突判定
-	//void CollisionMapTop(CollisionMapInfo& info);
-	//void CollisionMapBottom(CollisionMapInfo& info);
-	//void CollisionMapLeft(CollisionMapInfo& info);
-	//void CollisionMapRight(CollisionMapInfo& info);
+	void CollisionMapTop(CollisionMapInfo& info);
+	void CollisionMapBottom(CollisionMapInfo& info);
+	void CollisionMapLeft(CollisionMapInfo& info);
+	void CollisionMapRight(CollisionMapInfo& info);
 
 	Vector3 CornerPosition(const Vector3& center, Corner corner);
 	void CollisionMove(const CollisionMapInfo& info);
@@ -233,7 +241,7 @@ private:
 	/// <summary>
 	/// 設置状態の切り替え処理
 	/// </summary>
-	//void SwitchGround(const CollisionMapInfo& info);
+	void SwitchGround(const CollisionMapInfo& info);
 
 	void CollisionWall(const CollisionMapInfo& info);
 
@@ -241,6 +249,7 @@ private:
 	void DeathPhase();
 	void ClearPhase();
 
+	
 };
 
 

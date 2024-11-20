@@ -121,21 +121,25 @@ void CollisionManager::CheakCollisionPair(Collider* colliderA, Collider* collide
 		SphereData sphere;
 		AABB aabb;
 
+		//もしコライダーAが球だったら
 		if (colliderA->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::SPHERE))
 		{
 			sphere.center = colliderA->GetWorldPosition();
 			sphere.radius = colliderA->GetRadius();
 		}
+		//コライダーBが球だったら
 		else if (colliderB->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::SPHERE))
 		{
 			sphere.center = colliderB->GetWorldPosition();
 			sphere.radius = colliderB->GetRadius();
 		}
 
+		//コライダーAがAABBだったら
 		if (colliderA->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::AABB))
 		{
 			aabb = colliderA->GetAABB();
 		}
+		//コライダーBがAABBだったら
 		else if (colliderB->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::AABB))
 		{
 			aabb = colliderB->GetAABB();
@@ -150,6 +154,26 @@ void CollisionManager::CheakCollisionPair(Collider* colliderA, Collider* collide
 		}
 	}
 
+	//四角と四角の当たり判定
+	if (colliderA->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::AABB) &&
+		colliderB->GetColliderTypeID() == static_cast<uint32_t>(ColliderType::AABB))
+	{
+
+		AABB aabb1;
+		AABB aabb2;
+
+
+		aabb1 = colliderA->GetAABB();
+		aabb2 = colliderB->GetAABB();
+
+		if (IsCollision(aabb1, aabb2))
+		{
+			// コライダーAの衝突時コールバックを呼び出す
+			colliderA->OnCollision(colliderB);
+			// コライダーBの衝突時コールバックを呼び出す
+			colliderB->OnCollision(colliderA);
+		}
+	}
 
 }
 

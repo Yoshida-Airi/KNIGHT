@@ -30,8 +30,15 @@ public:
 	/// @param models モデルベクター
 	virtual void SetModel(const std::vector<Model*>& models)
 	{
-		models_ = models;
+		models_.insert(models_.end(), models.begin(), models.end());
 	}
+	/// @brief モデルを追加する
+	/// @param model 追加するモデル
+	virtual void SetModel(Model* model)
+	{
+		models_.push_back(model);
+	}
+
 
 	/// @brief ワールド座標を取得
 	/// @return ワールド座標

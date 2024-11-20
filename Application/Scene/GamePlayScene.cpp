@@ -1,8 +1,6 @@
 #include "GamePlayScene.h"
 
 
-
-
 GamePlayScene::~GamePlayScene()
 {
 
@@ -29,15 +27,15 @@ GamePlayScene::~GamePlayScene()
 	//	delete deathEffects;
 	//}
 
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			delete block;
-		}
-	}
+	//for (std::vector<Model*>& blockLine : blocks_)
+	//{
+	//	for (Model* block : blockLine)
+	//	{
+	//		delete block;
+	//	}
+	//}
 
-	blocks_.clear();
+	//blocks_.clear();
 
 	//delete mapChipField_;
 
@@ -70,14 +68,20 @@ void GamePlayScene::Initialize()
 	weapon_->Initialize();
 
 
-	//SpawnBlock({ 47.8f, -1.0f, 0 }, {50.31f, 1.0f, 1.0f});
-	//SpawnBlock({ 6.7f, 4.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	//SpawnBlock({ 8.7f, 6.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	//SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
-	//SpawnBlock({ 50.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	SpawnBlock({ 47.8f, -1.0f, 0 }, {50.31f, 1.0f, 1.0f});
+	SpawnBlock({ 6.7f, 4.5f, 0 }, { 1.0f, 1.0f, 1.0f });
+	SpawnBlock({ 8.7f, 6.5f, 0 }, { 1.0f, 1.0f, 1.0f });
+	SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	SpawnBlock({ 50.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize();
+	//ground_->SetPosition({ 47.8f, -1.0f, 0 });
+	//ground_->SetScale({ 50.31f, 1.0f, 1.0f });
 
 	player_ = std::make_unique<Player>();
 	player_->SetWeapon(weapon_.get());
+	//player_->SetGround(ground_.get());
 	player_->SetGround(grounds_);
 	player_->Initialize();
 	
@@ -186,6 +190,9 @@ void GamePlayScene::Draw()
 	//particle2->Draw();
 
 	//skydome_->Draw(camera_);
+
+	ground_->Draw(camera_);
+
 	player_->Draw(camera_);
 	weapon_->Draw(camera_);
 	//for (Enemy* enemy : enemys_) 
@@ -205,18 +212,18 @@ void GamePlayScene::Draw()
 	//}
 
 	// ブロックの描画処理
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
+	//for (std::vector<Model*>& blockLine : blocks_)
+	//{
+	//	for (Model* block : blockLine)
+	//	{
+	//		if (!block)
+	//		{
+	//			continue;
+	//		}
 
-			block->Draw(camera_);
-		}
-	}
+	//		block->Draw(camera_);
+	//	}
+	//}
 
 
 	//goal_->Draw(camera_);
@@ -282,6 +289,13 @@ void GamePlayScene::CheckAllCollisions()
 	{
 		//攻撃中のみ
 		colliderManager_->AddColliders(weapon_.get());
+	}
+
+	//colliderManager_->AddColliders(ground_.get());
+
+	for (Ground* ground : grounds_)
+	{
+		colliderManager_->AddColliders(ground);
 	}
 	//for (Enemy* enemy : enemys_) 
 	//{
@@ -403,6 +417,8 @@ void GamePlayScene::GamePlayPhase()
 		
 	}
 
+	ground_->Update();
+
 	//fade_->Update();
 
 	//if (fade_->IsFinished())
@@ -473,6 +489,7 @@ void GamePlayScene::GamePlayPhase()
 		ground->Debug("ground" + i);
 	}
 
+	ground_->Debug("ground");
 
 	player_->Update();
 	//武器の更新
@@ -497,19 +514,19 @@ void GamePlayScene::GamePlayPhase()
 	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
 	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
 
-	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
+	//// ブロックの更新処理
+	//for (std::vector<Model*>& blockLine : blocks_)
+	//{
+	//	for (Model* block : blockLine)
+	//	{
+	//		if (!block)
+	//		{
+	//			continue;
+	//		}
 
-			block->Update();
-		}
-	}
+	//		block->Update();
+	//	}
+	//}
 
 }
 
@@ -578,13 +595,13 @@ void GamePlayScene::GameClearPhase()
 
 	////levelEditor->Update();
 
-	//int i = 0;
-	//for (Ground* ground : grounds_)
-	//{
-	//	i++;
-	//	ground->Update();
-	//	ground->Debug("ground" + i);
-	//}
+	int i = 0;
+	for (Ground* ground : grounds_)
+	{
+		i++;
+		ground->Update();
+		ground->Debug("ground" + i);
+	}
 
 
 	//player_->Update();
@@ -684,13 +701,13 @@ void GamePlayScene::GameOverPhase()
 
 	////levelEditor->Update();
 
-	//int i = 0;
-	//for (Ground* ground : grounds_)
-	//{
-	//	i++;
-	//	ground->Update();
-	//	ground->Debug("ground" + i);
-	//}
+	int i = 0;
+	for (Ground* ground : grounds_)
+	{
+		i++;
+		ground->Update();
+		ground->Debug("ground" + i);
+	}
 
 
 	//player_->Update();
@@ -720,18 +737,18 @@ void GamePlayScene::GameOverPhase()
 	//}
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
+	//for (std::vector<Model*>& blockLine : blocks_)
+	//{
+	//	for (Model* block : blockLine)
+	//	{
+	//		if (!block)
+	//		{
+	//			continue;
+	//		}
 
-			block->Update();
-		}
-	}
+	//		block->Update();
+	//	}
+	//}
 
 }
 

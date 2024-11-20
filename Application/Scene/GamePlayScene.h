@@ -124,6 +124,8 @@ private:
 	CameraController* cameraController_;
 	std::unique_ptr<Weapon>weapon_;
 	std::list<Ground*>grounds_;
+
+	std::unique_ptr<Ground>ground_;
 	//std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
