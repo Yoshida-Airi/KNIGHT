@@ -15,7 +15,7 @@ void Collider::UpdateWorldTransform()
 
 }
 
-void Collider::Draw(Camera* camera)
+void Collider::Draw(const Camera& camera)
 {
 	model_->Draw(camera);
 }

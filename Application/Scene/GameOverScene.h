@@ -49,7 +49,7 @@ private:
 
 	uint32_t soundData_;
 
-	std::unique_ptr<Sprite> title_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> title_ = nullptr;
 
 
 

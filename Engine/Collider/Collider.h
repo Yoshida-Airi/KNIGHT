@@ -19,7 +19,7 @@ public:
 
 	void Initialize();
 	void UpdateWorldTransform();
-	void Draw(Camera* camera);
+	void Draw(const Camera& camera);
 
 	//ワールド座標を取得
 	virtual Vector3 GetWorldPosition() = 0;

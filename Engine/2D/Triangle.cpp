@@ -5,12 +5,12 @@
 /* 　　　　   パブリックメソッド　　　	　 */
 /*=====================================*/
 
-Triangle::~Triangle()
+AobaraEngine::Triangle::~Triangle()
 {
 	delete worldTransform_;
 }
 
-void Triangle::Initialize(uint32_t textureHandle)
+void AobaraEngine::Triangle::Initialize(const uint32_t& textureHandle)
 {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -53,13 +53,13 @@ void Triangle::Initialize(uint32_t textureHandle)
 
 }
 
-void Triangle::Update()
+void AobaraEngine::Triangle::Update()
 {
 	worldTransform_->UpdateWorldMatrix();
 
 }
 
-void Triangle::Draw(Camera* camera)
+void AobaraEngine::Triangle::Draw(const Camera& camera)
 {
 	if (isInvisible_ == true)
 	{
@@ -79,7 +79,7 @@ void Triangle::Draw(Camera* camera)
 	//wvp用のCbufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_->constBuffer_->GetGPUVirtualAddress());
 	//カメラ用のCBufferの場所を設定
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera->constBuffer_->GetGPUVirtualAddress());
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera.constBuffer_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。3はrootParamater[3]である。
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(3, texture_->GetSrvGPUHandle(textureHandle_));
 	//ライト用のCBufferの場所を設定
@@ -89,12 +89,12 @@ void Triangle::Draw(Camera* camera)
 }
 
 
-void Triangle::SetMaterialData(const Vector4 color)
+void AobaraEngine::Triangle::SetMaterialData(const Vector4& color)
 {
 	materialData_[0].color = color;
 }
 
-Triangle* Triangle::Create(uint32_t textureHandle)
+AobaraEngine::Triangle* AobaraEngine::Triangle::Create(const uint32_t& textureHandle)
 {
 	Triangle* triangle = new Triangle();
 	triangle->Initialize(textureHandle);
@@ -107,7 +107,7 @@ Triangle* Triangle::Create(uint32_t textureHandle)
 /* 　　　　   プライベートメソッド　　　    */
 /*=====================================*/
 
-void Triangle::VertexBuffer()
+void AobaraEngine::Triangle::VertexBuffer()
 {
 	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * 3);	//頂点用のデータ
 
@@ -121,7 +121,7 @@ void Triangle::VertexBuffer()
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 }
 
-void Triangle::MaterialBuffer()
+void AobaraEngine::Triangle::MaterialBuffer()
 {
 	materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));	//マテリアル用のデータ
 
@@ -130,7 +130,7 @@ void Triangle::MaterialBuffer()
 
 }
 
-void Triangle::LightBuffer()
+void AobaraEngine::Triangle::LightBuffer()
 {
 	lightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
 	lightResource_->Map(0, nullptr, reinterpret_cast<void**>(&lightData_));

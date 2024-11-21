@@ -44,21 +44,21 @@ public:
 
 private:
 
-	EffectManager* effect_ = nullptr;
+	std::unique_ptr < EffectManager> effect_ = nullptr;
 	TextureManager* textureManager_ = nullptr;
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera_;
+	std::unique_ptr < Camera> camera_;
 
 	uint32_t titleLogo_;
 	uint32_t backGroundTexture_;
 	uint32_t spaceTexture_;
 	uint32_t soundData_;
 	
-	std::unique_ptr<Sprite> title_ = nullptr;
-	std::unique_ptr<Sprite> backGround_ = nullptr;
-	std::unique_ptr<Sprite> space_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> title_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> backGround_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> space_ = nullptr;
 
 	std::unique_ptr <Skydome>skydome_;
 

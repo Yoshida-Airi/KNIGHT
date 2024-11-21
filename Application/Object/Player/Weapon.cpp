@@ -24,7 +24,7 @@ void Weapon::Update()
 	//weaponModel->GetWorldTransform()->translation_.x += 0.03f;
 }
 
-void Weapon::Draw(Camera* camera)
+void Weapon::Draw(const Camera& camera)
 {
 	if (isAttack_ == false)
 	{

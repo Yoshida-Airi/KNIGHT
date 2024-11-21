@@ -168,7 +168,7 @@ void LevelEditor::Update()
 
 }
 
-void LevelEditor::Draw(Camera* camera)
+void LevelEditor::Draw(const Camera& camera)
 {
 	int i = 0;
 	//レベルデータからオブジェクトを生成、配置

@@ -21,7 +21,7 @@ void GameOverScene::Initialize()
 	camera_ = new Camera;
 	camera_->Initialize();
 
-	title_.reset(Sprite::Create(titleTexture_));
+	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
 
 
 }
@@ -55,6 +55,6 @@ void GameOverScene::Update()
 
 void GameOverScene::Draw()
 {
-	title_->Draw(camera_);
+	title_->Draw(*camera_);
 }
 

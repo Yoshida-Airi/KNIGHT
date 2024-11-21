@@ -33,7 +33,7 @@ public:
 	* @param camera カメラオブジェクト
 	* @details フェードの状態に応じて、画面にフェード効果を描画する
 	*/
-	void Draw(Camera* camera);
+	void Draw(const Camera& camera);
 
 	/**
 	* @enum Status
@@ -70,7 +70,7 @@ public:
 private:
 
 	uint32_t fadeTex_;
-	std::unique_ptr< Sprite> sprite_ = nullptr;
+	std::unique_ptr< AobaraEngine::Sprite> sprite_ = nullptr;
 
 	Status status_ = Status::None;
 

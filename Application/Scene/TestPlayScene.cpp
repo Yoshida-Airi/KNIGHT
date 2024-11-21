@@ -96,12 +96,12 @@ void TestPlayScene::Update()
 
 void TestPlayScene::Draw()
 {
-	levelEditor_->Draw(camera_);
+	levelEditor_->Draw(*camera_);
 
-	walk_->Draw(camera_);
-	model2_->Draw(camera_);
-	model3_->Draw(camera_);
-	model4_->Draw(camera_);
+	walk_->Draw(*camera_);
+	model2_->Draw(*camera_);
+	model3_->Draw(*camera_);
+	model4_->Draw(*camera_);
 
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -112,7 +112,7 @@ void TestPlayScene::Draw()
 				continue;
 			}
 
-			block->Draw(camera_);
+			block->Draw(*camera_);
 		}
 	}
 

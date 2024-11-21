@@ -34,7 +34,7 @@ public:
 	* @param camera カメラ情報
 	* @details モデルをカメラに合わせて描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const Camera& camera)override;
 
 	/**
 	* @brief 飛んでいる敵の位置を設定する

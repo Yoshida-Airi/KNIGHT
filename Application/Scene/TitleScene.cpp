@@ -3,8 +3,7 @@
 
 TitleScene::~TitleScene()
 {
-	delete camera_;
-	delete effect_;
+
 }
 
 void TitleScene::Initialize()
@@ -20,15 +19,15 @@ void TitleScene::Initialize()
 	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera_ = new Camera;
+	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
-	title_.reset(Sprite::Create(titleLogo_));
+	title_.reset(AobaraEngine::Sprite::Create(titleLogo_));
 	title_->GetWorldTransform()->translation_ = { 200.0f,110.0f };
 
-	backGround_.reset(Sprite::Create(backGroundTexture_));
+	backGround_.reset(AobaraEngine::Sprite::Create(backGroundTexture_));
 
-	space_.reset(Sprite::Create(spaceTexture_));
+	space_.reset(AobaraEngine::Sprite::Create(spaceTexture_));
 	space_->GetWorldTransform()->translation_ = { 435.0f,490.0f };
 	
 
@@ -42,7 +41,7 @@ void TitleScene::Initialize()
 	fade_->Start(Fade::Status::FadeIn, 1.5f);
 
 	titleEffect_ = std::make_unique <TitleEffect>();
-	titleEffect_->Initialize(camera_);
+	titleEffect_->Initialize(camera_.get());
 	titleEffect_->SetFlag(true);
 	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
 
@@ -101,14 +100,14 @@ void TitleScene::Draw()
 
 	
 	
-	skydome_->Draw(camera_);
+	skydome_->Draw(*camera_);
 
 	titleEffect_->Draw();
 	//backGround->Draw(camera);
-	title_->Draw(camera_);
-	space_->Draw(camera_);
+	title_->Draw(*camera_);
+	space_->Draw(*camera_);
 
-	fade_->Draw(camera_);
+	fade_->Draw(*camera_);
 
 	
 }

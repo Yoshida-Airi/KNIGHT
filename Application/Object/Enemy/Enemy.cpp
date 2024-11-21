@@ -40,7 +40,7 @@ void Enemy::Update()
 
 }
 
-void Enemy::Draw(Camera* camera)
+void Enemy::Draw(const Camera& camera)
 {
 	if (isAlive_ == false)
 	{

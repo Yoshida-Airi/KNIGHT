@@ -24,7 +24,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Draw(Camera* camera)
+void GameObject::Draw(const Camera& camera)
 {
 	for (Model* model : models_)
 	{

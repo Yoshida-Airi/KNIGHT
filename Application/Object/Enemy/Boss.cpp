@@ -58,7 +58,7 @@ void Boss::Update()
 
 }
 
-void Boss::Draw(Camera* camera)
+void Boss::Draw(const Camera& camera)
 {
 	if (isAlive_ == false)
 	{

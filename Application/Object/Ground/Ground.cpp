@@ -19,7 +19,7 @@ void Ground::Update()
 	groundModel_->Update();
 }
 
-void Ground::Draw(Camera* camera)
+void Ground::Draw(const Camera& camera)
 {
 	groundModel_->Draw(camera);
 }

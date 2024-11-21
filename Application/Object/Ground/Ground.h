@@ -33,7 +33,7 @@ public:
 	* @param camera カメラ情報
 	* @details 地面オブジェクトを画面に描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const Camera& camera)override;
 
 	/**
 	* @brief 地面オブジェクトのワールド座標を取得

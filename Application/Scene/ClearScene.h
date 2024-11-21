@@ -57,9 +57,9 @@ private:
 
 	bool isFadeStart_ = false;
 
-	std::unique_ptr<Sprite> space_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> space_ = nullptr;
 
-	std::unique_ptr<Sprite> title_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> title_ = nullptr;
 
 	std::unique_ptr <Skydome>skydome_;
 	std::unique_ptr<Fade> fade_ = nullptr;

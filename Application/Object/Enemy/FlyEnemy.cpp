@@ -44,9 +44,9 @@ void FlyEnemy::Update()
 
 }
 
-void FlyEnemy::Draw(Camera* camera)
+void FlyEnemy::Draw(const Camera& camera)
 {
-	if (isAlive_ == false)
+	if ( isAlive_ == false)
 	{
 		//死んでいたら描画しない
 		enemyModel_->SetisInvisible(true);

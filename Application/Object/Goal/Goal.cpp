@@ -24,7 +24,7 @@ void Goal::Update()
 	goalModel_->ModelDebug("goal");
 }
 
-void Goal::Draw(Camera* camera)
+void Goal::Draw(const Camera& camera)
 {
 	goalModel_->Draw(camera);
 }

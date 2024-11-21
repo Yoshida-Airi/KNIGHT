@@ -5,12 +5,12 @@
 /* 　　　　   パブリックメソッド　　　	　 */
 /*=====================================*/
 
-Sprite::~Sprite()
+AobaraEngine::Sprite::~Sprite()
 {
 	delete worldTransform_;
 }
 
-void Sprite::Initialize(uint32_t textureHandle)
+void AobaraEngine::Sprite::Initialize(const uint32_t& textureHandle)
 {
 
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -76,7 +76,7 @@ void Sprite::Initialize(uint32_t textureHandle)
 
 }
 
-void Sprite::Update()
+void AobaraEngine::Sprite::Update()
 {
 	worldTransform_->UpdateWorldMatrix();
 	UpdateVertexBuffer();
@@ -93,7 +93,7 @@ void Sprite::Update()
 
 }
 
-void Sprite::Draw(Camera* camera)
+void AobaraEngine::Sprite::Draw(const Camera& camera)
 {
 	if (isInvisible_ == true)
 	{
@@ -116,7 +116,7 @@ void Sprite::Draw(Camera* camera)
 	//wvp用のCbufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_->constBuffer_->GetGPUVirtualAddress());
 	//カメラ用のCBufferの場所を設定
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera->constBuffer_->GetGPUVirtualAddress());
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera.constBuffer_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。3はrootParamater[3]である。
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(3, texture_->GetSrvGPUHandle(textureHandle_));
 	//描画
@@ -124,7 +124,7 @@ void Sprite::Draw(Camera* camera)
 	dxCommon_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::SetVertexData(const float left, const float right, const float top, const float bottom)
+void AobaraEngine::Sprite::SetVertexData(const float& left, const float& right, const float& top, const float& bottom)
 {
 	textureSizeLeft_ = left;
 	textureSizeRight_ = right;
@@ -132,20 +132,20 @@ void Sprite::SetVertexData(const float left, const float right, const float top,
 	textureSizeBottom_ = bottom;
 }
 
-void Sprite::SetMaterialData(const Vector4 color)
+void AobaraEngine::Sprite::SetMaterialData(const Vector4& color)
 {
 	materialData_[0].color = color;
 }
 
 
-Sprite* Sprite::Create(uint32_t textureHandle)
+AobaraEngine::Sprite* AobaraEngine::Sprite::Create(const uint32_t& textureHandle)
 {
 	Sprite* sprite = new Sprite();
 	sprite->Initialize(textureHandle);
 	return sprite;
 }
 
-void Sprite::Debug(const char* name)
+void AobaraEngine::Sprite::Debug(const char& name)
 {
 #ifdef _DEBUG
 	ImGui::Begin("sprite");
@@ -195,7 +195,7 @@ void Sprite::Debug(const char* name)
 /*=====================================*/
 
 
-void Sprite::VertexBuffer()
+void AobaraEngine::Sprite::VertexBuffer()
 {
 	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * 6);	//頂点用のデータ
 
@@ -209,7 +209,7 @@ void Sprite::VertexBuffer()
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 }
 
-void Sprite::MaterialBuffer()
+void AobaraEngine::Sprite::MaterialBuffer()
 {
 	materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));	//マテリアル用のデータ
 
@@ -219,7 +219,7 @@ void Sprite::MaterialBuffer()
 
 }
 
-void Sprite::IndexBuffer()
+void AobaraEngine::Sprite::IndexBuffer()
 {
 	indexResource_ = dxCommon_->CreateBufferResource(sizeof(uint32_t) * 6);
 	//リソースの先頭のアドレスから使う
@@ -232,7 +232,7 @@ void Sprite::IndexBuffer()
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
 }
 
-void Sprite::UpdateVertexBuffer()
+void AobaraEngine::Sprite::UpdateVertexBuffer()
 {
 
 
@@ -266,7 +266,7 @@ void Sprite::UpdateVertexBuffer()
 }
 
 
-void Sprite::AdjustTextureSize() {
+void AobaraEngine::Sprite::AdjustTextureSize() {
 	//テクスチャの情報を取得
 	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
 	//テクスチャサイズの初期化

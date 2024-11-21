@@ -32,7 +32,7 @@ public:
 	 * @param camera カメラ
 	 * @details カメラ情報を使用して天球の描画を行う。
 	 */
-	void Draw(Camera* camera);
+	void Draw(const Camera& camera);
 
 	/**
 	 * @brief ライトの有効化/無効化
@@ -46,5 +46,4 @@ public:
 
 private:
 	std::unique_ptr<Model> skydomeModel_ = nullptr;
-
 };

@@ -60,7 +60,7 @@ public:
 
 	/// @brief モデルの描画処理
 	/// @param camera 使用するカメラ
-	void Draw(Camera* camera);
+	void Draw(const Camera& camera);
 
 	/// @brief 表示切り替え
 	/// @param isInvisible true:表示シない

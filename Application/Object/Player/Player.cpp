@@ -64,7 +64,7 @@ void Player::Update()
 
 }
 
-void Player::Draw(Camera* camera)
+void Player::Draw(const Camera& camera)
 {
 	playerModel_->Draw(camera);
 

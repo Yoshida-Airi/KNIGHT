@@ -15,7 +15,7 @@ void EffectManager::Update(float deltaTime)
 
         texture = TextureManager::GetInstance();  // TextureManager のインスタンスを取得するメソッドが存在すると仮定
         blackTexture_ = texture->LoadTexture("Resources/uvChecker.png");
-        fadeIn_.reset(Sprite::Create(blackTexture_));
+        fadeIn_.reset(AobaraEngine::Sprite::Create(blackTexture_));
         fadeIn_->SetSize({ 1920, 720 });
 
         initialized_ = true;  // 初期化が完了したことを示すフラグを設定
@@ -29,6 +29,6 @@ void EffectManager::Update(float deltaTime)
 
 void EffectManager::Draw(Camera* camera)
 {
-    fadeIn_->Draw(camera);
+    fadeIn_->Draw(*camera);
 }
 

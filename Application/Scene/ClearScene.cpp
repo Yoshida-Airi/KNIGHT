@@ -23,10 +23,10 @@ void ClearScene::Initialize()
 	camera_ = new Camera;
 	camera_->Initialize();
 
-	title_.reset(Sprite::Create(titleTexture_));
+	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
 	title_->GetWorldTransform()->translation_ = { 242.0f,146.0f };
 
-	space_.reset(Sprite::Create(spaceTexture_));
+	space_.reset(AobaraEngine::Sprite::Create(spaceTexture_));
 	space_->GetWorldTransform()->translation_ = { 435.0f,490.0f };
 
 	skydome_ = std::make_unique<Skydome>();
@@ -87,12 +87,12 @@ void ClearScene::Update()
 
 void ClearScene::Draw()
 {
-	skydome_->Draw(camera_);
+	skydome_->Draw(*camera_);
 
 	titleEffect_->Draw();
-	title_->Draw(camera_);
-	space_->Draw(camera_);
-	fade_->Draw(camera_);
+	title_->Draw(*camera_);
+	space_->Draw(*camera_);
+	fade_->Draw(*camera_);
 	
 
 }

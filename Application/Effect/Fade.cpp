@@ -4,7 +4,7 @@ void Fade::Initialize()
 {
 	fadeTex_ = TextureManager::GetInstance()->LoadTexture("Resources/SampleAssets/black.png");
 
-	sprite_ = std::make_unique <Sprite>();
+	sprite_ = std::make_unique <AobaraEngine::Sprite>();
 	sprite_->Initialize(fadeTex_);
 	sprite_->SetSize({ 1280.0f,720.0f });
 	sprite_->SetMaterialData({ 0.0f,0.0f,0.0f,1.0f });
@@ -52,7 +52,7 @@ void Fade::Update()
 
 }
 
-void Fade::Draw(Camera* camera)
+void Fade::Draw(const Camera& camera)
 {
 	if (status_ == Status::None)
 	{

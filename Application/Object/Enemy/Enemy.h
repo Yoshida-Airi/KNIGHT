@@ -34,7 +34,7 @@ public:
 	* @param camera カメラ情報
 	* @details 敵キャラクターを画面に描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const Camera& camera)override;
 
 	/**
 	* @brief 敵キャラクターの位置を設定する

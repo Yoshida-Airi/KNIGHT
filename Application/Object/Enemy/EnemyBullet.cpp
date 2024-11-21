@@ -71,7 +71,7 @@ void EnemyBullet::Update()
 
 }
 
-void EnemyBullet::Draw(Camera*camera)
+void EnemyBullet::Draw(const Camera& camera)
 {
 	bulletModel_->Draw(camera);
 }

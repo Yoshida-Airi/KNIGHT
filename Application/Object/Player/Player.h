@@ -25,7 +25,7 @@ class Player :public GameObject
 public:
 	void Initialize()override;
 	void Update()override;
-	void Draw(Camera* camera)override;
+	void Draw(const Camera& camera)override;
 	WorldTransform* GetWorldTransform() { return playerModel_->GetWorldTransform(); }
 
 	Vector3 GetWorldPosition()override;

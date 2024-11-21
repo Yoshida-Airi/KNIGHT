@@ -100,13 +100,13 @@ void GamePlayScene::Initialize()
 	cameraController_->SetTarget(player_.get());
 	cameraController_->Reset();
 
-	config_.reset(Sprite::Create(configTexture_));
+	config_.reset(AobaraEngine::Sprite::Create(configTexture_));
 
-	hp1_.reset(Sprite::Create(HPTexture_));
-	hp2_.reset(Sprite::Create(HPTexture_));
-	hp3_.reset(Sprite::Create(HPTexture_));
-	hp4_.reset(Sprite::Create(HPTexture_));
-	hp5_.reset(Sprite::Create(HPTexture_));
+	hp1_.reset(AobaraEngine::Sprite::Create(HPTexture_));
+	hp2_.reset(AobaraEngine::Sprite::Create(HPTexture_));
+	hp3_.reset(AobaraEngine::Sprite::Create(HPTexture_));
+	hp4_.reset(AobaraEngine::Sprite::Create(HPTexture_));
+	hp5_.reset(AobaraEngine::Sprite::Create(HPTexture_));
 
 	hp1_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
 	hp2_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
@@ -172,7 +172,7 @@ void GamePlayScene::Draw()
 
 	for (Ground* ground : grounds_)
 	{
-		ground->Draw(camera_);
+		ground->Draw(*camera_);
 	}
 
 	//model->Draw(camera);
@@ -185,17 +185,17 @@ void GamePlayScene::Draw()
 	//particle->Draw();
 	//particle2->Draw();
 
-	skydome_->Draw(camera_);
-	player_->Draw(camera_);
-	weapon_->Draw(camera_);
+	skydome_->Draw(*camera_);
+	player_->Draw(*camera_);
+	weapon_->Draw(*camera_);
 	for (Enemy* enemy : enemys_) 
 	{
-		enemy->Draw(camera_);
+		enemy->Draw(*camera_);
 	}
 
 	for (FlyEnemy* flyEnemy : flyEnemys_)
 	{
-		flyEnemy->Draw(camera_);
+		flyEnemy->Draw(*camera_);
 	}
 
 
@@ -214,55 +214,55 @@ void GamePlayScene::Draw()
 				continue;
 			}
 
-			block->Draw(camera_);
+			block->Draw(*camera_);
 		}
 	}
 
 
-	goal_->Draw(camera_);
+	goal_->Draw(*camera_);
 
 	//colliderManager_->Draw(camera);
 
-	config_->Draw(camera_);
+	config_->Draw(*camera_);
 
 
 	if (player_->GetHP() == 5)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
-		hp4_->Draw(camera_);
-		hp5_->Draw(camera_);
+		hp1_->Draw(*camera_);
+		hp2_->Draw(*camera_);
+		hp3_->Draw(*camera_);
+		hp4_->Draw(*camera_);
+		hp5_->Draw(*camera_);
 	}
 	if (player_->GetHP() == 4)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
-		hp4_->Draw(camera_);
+		hp1_->Draw(*camera_);
+		hp2_->Draw(*camera_);
+		hp3_->Draw(*camera_);
+		hp4_->Draw(*camera_);
 	}
 	if (player_->GetHP() == 3)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
-		hp3_->Draw(camera_);
+		hp1_->Draw(*camera_);
+		hp2_->Draw(*camera_);
+		hp3_->Draw(*camera_);
 	}
 	if (player_->GetHP() == 2)
 	{
 
-		hp1_->Draw(camera_);
-		hp2_->Draw(camera_);
+		hp1_->Draw(*camera_);
+		hp2_->Draw(*camera_);
 	}
 	if (player_->GetHP() == 1)
 	{
 
-		hp1_->Draw(camera_);
+		hp1_->Draw(*camera_);
 	}
 
-	fade_->Draw(camera_);
+	fade_->Draw(*camera_);
 
 
 

@@ -31,7 +31,7 @@ private:
 
 	uint32_t blackTexture_;
 
-	std::unique_ptr<Sprite> fadeIn_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> fadeIn_ = nullptr;
 
 	float deltaTime_ = 0.0f;
 

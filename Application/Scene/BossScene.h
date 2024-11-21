@@ -120,12 +120,12 @@ private:
 	std::list < std::unique_ptr<DeathEffect>>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
-	std::unique_ptr<Sprite> config_ = nullptr;
-	std::unique_ptr<Sprite> hp1_ = nullptr;
-	std::unique_ptr<Sprite> hp2_ = nullptr;
-	std::unique_ptr<Sprite> hp3_ = nullptr;
-	std::unique_ptr<Sprite> hp4_ = nullptr;
-	std::unique_ptr<Sprite> hp5_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> config_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> hp1_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> hp2_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> hp3_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> hp4_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> hp5_ = nullptr;
 
 	Phase phase_;
 
