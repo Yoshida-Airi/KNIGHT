@@ -3,7 +3,7 @@
 void DeathEffect::Initialize(Camera* camera)
 {
 	textureManager_ = TextureManager::GetInstance();
-	circleTexture_ = textureManager_->LoadTexture("Resources/SampleAssets/circle.png");
+	circleTexture_ = textureManager_->LoadTexture("Resources/SampleAssets/dire.png");
 
 	Vector3 velocity = { 20.0f,20.0f,0.0f };
 	hitEffect_.reset(ParticleSystem::Create(circleTexture_, camera, velocity, false));
