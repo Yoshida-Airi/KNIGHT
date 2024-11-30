@@ -145,7 +145,7 @@ AobaraEngine::Sprite* AobaraEngine::Sprite::Create(const uint32_t& textureHandle
 	return sprite;
 }
 
-void AobaraEngine::Sprite::Debug(const char& name)
+void AobaraEngine::Sprite::Debug( char* name)
 {
 #ifdef _DEBUG
 	ImGui::Begin("sprite");

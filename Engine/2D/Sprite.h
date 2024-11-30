@@ -108,7 +108,7 @@ namespace AobaraEngine
 
 		/// @brief ImGuiのデバッグ
 		/// @param name 表示する名前
-		void Debug(const char& name);
+		void Debug(char *name);
 
 	private://プライベート変数
 
