@@ -312,7 +312,7 @@ void Player::CollisionMap(CollisionMapInfo& info)
 {
 	CollisionMapTop(info);
 	CollisionMapBottom(info);
-	CollisionMapLeft(info);
+	//CollisionMapLeft(info);
 	CollisionMapRight(info);
 
 }
@@ -509,21 +509,60 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 	bool hit = false;
 	//MapChipField::IndexSet indexSet;
 
+	//for (Ground* ground : grounds_)
+	//{
+	//	//左上点の判定
+	//	if (IsCollision(positionsNew[kRightTop], ground->GetAABB()))
+	//	{
+	//		hit = true;
+	//	}
+
+
+	//	//右上点の判定
+	//	if (IsCollision(positionsNew[kRightBottom], ground->GetAABB()))
+	//	{
+	//		hit = true;
+	//	}
+	//}
+
+	//MapChipType mapChipType;
+		//bool hit = false;
+	//MapChipField::IndexSet indexSet;
+
 	for (Ground* ground : grounds_)
 	{
-		//左上点の判定
-		if (IsCollision(positionsNew[kLeftTop], ground->GetAABB()))
+		if (positionsNew[kLeftTop].x <= ground->GetAABB().max.x && positionsNew[kLeftTop].x >= ground->GetAABB().min.x &&
+			positionsNew[kLeftTop].y <= ground->GetAABB().max.y && positionsNew[kLeftTop].y >= ground->GetAABB().min.y)
 		{
-			hit = true;
+			//float distanceToTop = std::abs(positionsNew[kLeftBottom].y - ground->GetAABB().max.y);
+			float distanceToBottom = std::abs(positionsNew[kLeftTop].y - ground->GetAABB().min.y);
+			float distanceToLeft = std::abs(positionsNew[kLeftTop].x - ground->GetAABB().min.x);
+			float distanceToRight = std::abs(positionsNew[kLeftTop].x - ground->GetAABB().max.x);
+
+			// 最も近い方向を判定
+			if (distanceToLeft < distanceToRight && distanceToLeft < distanceToBottom)
+			{
+				hit = true; // 壁に接触
+			}
 		}
 
-
-		//右上点の判定
-		if (IsCollision(positionsNew[kLeftBottom], ground->GetAABB()))
+		if (positionsNew[kLeftBottom].x <= ground->GetAABB().max.x && positionsNew[kLeftBottom].x >= ground->GetAABB().min.x &&
+			positionsNew[kLeftBottom].y <= ground->GetAABB().max.y && positionsNew[kLeftBottom].y >= ground->GetAABB().min.y)
 		{
-			hit = true;
+			//float distanceToTop = std::abs(positionsNew[kLeftBottom].y - ground->GetAABB().max.y);
+			float distanceToBottom = std::abs(positionsNew[kLeftBottom].y - ground->GetAABB().min.y);
+			float distanceToLeft = std::abs(positionsNew[kLeftBottom].x - ground->GetAABB().min.x);
+			float distanceToRight = std::abs(positionsNew[kLeftBottom].x - ground->GetAABB().max.x);
+
+			// 最も近い方向を判定
+			if (distanceToLeft < distanceToRight && distanceToLeft < distanceToBottom)
+			{
+				hit = true; // 壁に接触
+			}
 		}
 	}
+
+
 
 	////左上
 	//indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
@@ -546,7 +585,11 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 	//	indexSet = mapChipField_->GetMapChipIndexSetByPosition(Subtract(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
 		//MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		float moveX = playerModel_->GetWorldTransform()->translation_.x + kWidth_ / 2 + kBlank_;
+		//float moveX = playerModel_->GetWorldTransform()->translation_.x + kWidth_ / 2 + kBlank_;
+		//info.move.x = std::min(0.0f, moveX);
+		//info.isWall = true;
+
+		float moveX = playerModel_->GetWorldTransform()->translation_.x - (kWidth_ / 2.0f) - kBlank_;
 		info.move.x = std::min(0.0f, moveX);
 		info.isWall = true;
 	}
@@ -562,14 +605,14 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 		return;
 	}
 
-	if (isHitGround_)
-	{
-		info.isWall = true;
-	}
-	else
-	{
-		info.isWall = false;
-	}
+	//if (isHitGround_)
+	//{
+	//	info.isWall = true;
+	//}
+	//else
+	//{
+	//	info.isWall = false;
+	//}
 
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i)
@@ -594,7 +637,7 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 			// 最も近い方向を判定
 			if (distanceToRight < distanceToLeft && distanceToRight < distanceToBottom)
 			{
-				hit = true; // 地面に接触
+				hit = true; // 壁に接触
 			}
 		}
 
@@ -607,25 +650,31 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 			float distanceToRight = std::abs(positionsNew[kRightBottom].x - ground->GetAABB().max.x);
 
 			// 最も近い方向を判定
-			if (distanceToBottom < distanceToLeft && distanceToBottom < distanceToRight)
+			if (distanceToRight < distanceToLeft && distanceToRight < distanceToBottom)
 			{
-				hit = true; // 地面に接触
+				hit = true; // 壁に接触
 			}
+		}
+
+		if (hit)
+		{
+			Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
+			//indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
+			//MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
+
+		/*	float moveX = playerModel_->GetWorldTransform()->translation_.x - kWidth_ / 2 - kBlank_;
+			info.move.x = std::max(0.0f, moveX);
+			info.isWall = true;*/
+
+			float moveX = (playerModel_->GetWorldTransform()->translation_.x - ground->GetWorldTransform()->scale_.x / 2.0f-8.0f);
+			info.move.x = std::max(0.0f, moveX);
+			info.isWall = true;
 		}
 	}
 
 
 
-	if (hit)
-	{
-		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
-		//indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
-		//MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		float moveX = playerModel_->GetWorldTransform()->translation_.x - kWidth_ / 2 - kBlank_;
-		info.move.x = std::max(0.0f, moveX);
-		info.isWall = true;
-	}
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
