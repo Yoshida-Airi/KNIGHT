@@ -277,6 +277,8 @@ void Player::BehaviorAttackUpdate()
 {
 	float attackTimer = 0.0f; // 攻撃継続時間を追跡するタイマー
 
+	float deltaTime = 1.0f / 60.0f;
+
 	if (Input::GetInstance()->PushKey(DIK_SPACE))
 	{
 		weapon_->SetIsAttack(true);
@@ -284,7 +286,7 @@ void Player::BehaviorAttackUpdate()
 	}
 	else if (attackTimer > 0.0f)
 	{
-		attackTimer -= deltaTime_; // deltaTimeはフレーム時間（秒）
+		attackTimer -= deltaTime; // deltaTimeはフレーム時間（秒）
 		if (attackTimer <= 0.0f)
 		{
 			// タイマーが終了したら攻撃を終了
