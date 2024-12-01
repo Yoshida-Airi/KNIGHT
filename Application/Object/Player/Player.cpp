@@ -207,7 +207,7 @@ void Player::Turn()
 		//角度の取得
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
 		//角度を変更する
-		playerModel_->GetWorldTransform()->rotation_.y = LerpShortTranslate(playerModel_->GetWorldTransform()->rotation_.y, destinationRotationY, turnTimer_);
+		playerModel_->GetWorldTransform()->rotation_.y = destinationRotationY;
 	}
 }
 
@@ -275,12 +275,25 @@ void Player::BehaviorRootUpdate()
 
 void Player::BehaviorAttackUpdate()
 {
+	float attackTimer = 0.0f; // 攻撃継続時間を追跡するタイマー
+
 	if (Input::GetInstance()->PushKey(DIK_SPACE))
 	{
 		weapon_->SetIsAttack(true);
+		attackTimer = 0.05f; // 攻撃を0.05秒間持続
+	}
+	else if (attackTimer > 0.0f)
+	{
+		attackTimer -= deltaTime_; // deltaTimeはフレーム時間（秒）
+		if (attackTimer <= 0.0f)
+		{
+			// タイマーが終了したら攻撃を終了
+			weapon_->SetIsAttack(false);
+		}
 	}
 	else
 	{
+		// 攻撃が終了している状態
 		weapon_->SetIsAttack(false);
 	}
 }
