@@ -10,6 +10,7 @@ public:
 	void Initialize()override;
 	void Update()override;
 	void Draw(const Camera& camera)override;
+	AABB GetAABB()override;
 
 	Vector3 GetWorldPosition()override;
 
@@ -28,6 +29,8 @@ public:
 	{
 		bulletModel_->GetWorldTransform()->translation_ = pos;
 	}
+
+	//void SetPlayer(Player* player) { player_ = player; }
 
 private:
 

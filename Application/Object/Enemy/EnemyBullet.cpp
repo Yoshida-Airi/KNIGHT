@@ -5,7 +5,7 @@
 void EnemyBullet::Initialize()
 {
 
-	bulletModel_.reset(Model::Create("Resources/Object/Player/player.obj"));
+	bulletModel_.reset(Model::Create("Resources/SampleAssets/cube.obj"));
 	bulletModels_ = { bulletModel_.get() };
 
 	Collider::SetTypeID(CollisionTypeDef::kEnemyBullet);
@@ -16,13 +16,13 @@ void EnemyBullet::Initialize()
 
 	//bulletModel_ = Model::Create("enemyBullet.obj");
 	//bulletModel_->worldTransform_->translation_ = pos;
-	//velocity_ = velocity;
+	velocity_ = { -0.5f,0.0f,0.0f };
 
 
 	// Z方向に伸びた形状
 	bulletModel_->GetWorldTransform()->scale_.x = 0.5f;
 	bulletModel_->GetWorldTransform()->scale_.y = 0.5f;
-	bulletModel_->GetWorldTransform()->scale_.z = 3.0f;
+	bulletModel_->GetWorldTransform()->scale_.z = 0.5f;
 
 }
 
@@ -36,22 +36,22 @@ void EnemyBullet::Update()
 	}
 
 
-	//***********************************************//
-	//					　ホーミング					 //
-	//***********************************************//
+	////***********************************************//
+	////					　ホーミング					 //
+	////***********************************************//
 
-	// 敵弾から自キャラへのベクトルを計算
-	Vector3 toPlayer = Subtract(player_->GetWorldPosition(), GetWorldPosition());
+	////// 敵弾から自キャラへのベクトルを計算
+	//Vector3 toPlayer = Subtract(player_->GetWorldPosition(), GetWorldPosition());
 
-	// ベクトルを正規化する
-	toPlayer = Normalize(toPlayer);
-	velocity_ = Normalize(velocity_);
+	////// ベクトルを正規化する
+	//toPlayer = Normalize(toPlayer);
+	//velocity_ = Normalize(velocity_);
 
-	// 球面線形補完により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
-	velocity_ = Slerp(velocity_, toPlayer, 0.009f);
-	velocity_.x *= 2.0f;
-	velocity_.y *= 2.0f;
-	velocity_.z *= 2.0f;
+	//// 球面線形補完により、今の速度と自キャラへのベクトルを内挿し、新たな速度とする
+	//velocity_ = Slerp(velocity_, toPlayer, 0.009f);
+	//velocity_.x *= 2.0f;
+	//velocity_.y *= 2.0f;
+	//velocity_.z *= 2.0f;
 
 	//***********************************************//
 	//			　　　弾を進行方向に向ける				 //
@@ -74,6 +74,11 @@ void EnemyBullet::Update()
 void EnemyBullet::Draw(const Camera& camera)
 {
 	bulletModel_->Draw(camera);
+}
+
+AABB EnemyBullet::GetAABB()
+{
+	return AABB();
 }
 
 Vector3 EnemyBullet::GetWorldPosition()

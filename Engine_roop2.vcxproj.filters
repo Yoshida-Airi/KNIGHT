@@ -184,6 +184,7 @@
     <ClCompile Include="Application\Effect\TitleEffect.cpp">
       <Filter>Application\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Application\Utility\TimedCall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\Triangle.h">
@@ -366,6 +367,7 @@
     <ClInclude Include="Application\Effect\TitleEffect.h">
       <Filter>Application\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Application\Utility\TimedCall.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

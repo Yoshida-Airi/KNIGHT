@@ -7,7 +7,11 @@
 #include"Model.h"
 #include"Collider.h"
 #include"GameObject.h"
+#include"Object/Enemy/EnemyBullet.h"
+#include"Utility/TimedCall.h"
 
+
+class Player;
 /**
 * @class Enemy
 * @brief 敵キャラクターの制御を行うクラス
@@ -65,6 +69,12 @@ public:
 	*/
 	void OnCollision([[maybe_unused]] Collider* other)override;
 
+	void AttackReset();
+
+	void DeleteBullet();
+
+	void Fire();
+
 	/**
 	* @brief 敵キャラクターが生きているかを判定する
 	* @return true 生きている場合、false 死んでいる場合
@@ -74,16 +84,26 @@ public:
 		return isAlive_;
 	}
 
+	void SetPlayer(Player* player) { player_ = player; };
+
 private:
 
 	std::unique_ptr<Model>enemyModel_;
 	std::vector<Model*>enemyModels_;
 
+	////弾
+	std::list<EnemyBullet*> bullets_;
+	//時限発動のリスト
+	std::list<TimedCall*> timedCalls_;
+
 	bool isAlive_ = true;	//生きているか: true 生きている
 	
+	//発射間隔
+	static const int kFireInterval = 180;
 	float moveSpeed_ = 0.03f;  // 移動速度
 	float moveDistance_ = 5.0f;  // 移動する距離
 	float traveledDistance_ = 0.0f;  // 移動した距離
 	bool movingRight_ = true;  // 右方向に移動しているかどうか
+	Player* player_ = nullptr;
 };
 

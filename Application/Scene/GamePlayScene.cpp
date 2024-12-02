@@ -301,6 +301,8 @@ void GamePlayScene::CheckAllCollisions()
 		}
 	}
 
+
+
 	colliderManager_->AddColliders(goal_.get());
 
 	//colliderManager_->AddColliders(levelEditor);
@@ -317,6 +319,9 @@ void GamePlayScene::SpawnEnemy(const Vector3& position)
 	// 敵の初期化
 	enemy->Initialize();
 	enemy->SetPosition(position);
+	enemy->SetPlayer(player_.get());
+
+	enemy->AttackReset();
 
 	// リストに登録
 	enemys_.push_back(enemy);
