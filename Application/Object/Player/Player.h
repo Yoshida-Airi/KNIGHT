@@ -236,7 +236,7 @@ private:
 	void CollisionMove(const CollisionMapInfo& info);
 
 	//Rect GetRect(Ground* ground);
-	void HitTop(const CollisionMapInfo& info);
+	void HitTop(CollisionMapInfo info);
 
 	/// <summary>
 	/// 設置状態の切り替え処理
