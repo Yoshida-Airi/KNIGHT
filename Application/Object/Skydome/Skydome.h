@@ -32,7 +32,7 @@ public:
 	 * @param camera カメラ
 	 * @details カメラ情報を使用して天球の描画を行う。
 	 */
-	void Draw(const Camera& camera);
+	void Draw(const AobaraEngine::Camera& camera);
 
 	/**
 	 * @brief ライトの有効化/無効化

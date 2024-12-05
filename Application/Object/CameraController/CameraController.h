@@ -29,7 +29,7 @@ public:
 	* @param camera カメラオブジェクト
 	* @details カメラの初期位置や動作を設定し、追従機能を有効にする
 	*/
-	void Initialize(Camera* camera);
+	void Initialize(AobaraEngine::Camera* camera);
 
 	/**
 	* @brief カメラの更新処理
@@ -60,7 +60,7 @@ public:
 	void ApplyGlobalVariables();
 
 private:
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 	const char* groupName_;
 	Player* target_ = nullptr;
 	GlobalVariables* globalVariables_ = nullptr;

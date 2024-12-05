@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+using namespace AobaraEngine;
+
 void GameObject::Initialize()
 {
 	Collider::Initialize();

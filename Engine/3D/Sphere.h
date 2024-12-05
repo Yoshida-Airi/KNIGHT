@@ -40,7 +40,7 @@ public:
 
 	/// @brief 描画処理
 	/// @param camera カメラオブジェクト
-	void Draw(Camera* camera);
+	void Draw(AobaraEngine::Camera* camera);
 
 
 

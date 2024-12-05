@@ -1,5 +1,7 @@
 #include "Goal.h"
 
+using namespace AobaraEngine;
+
 void Goal::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kGoal);

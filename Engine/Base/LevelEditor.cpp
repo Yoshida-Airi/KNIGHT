@@ -1,7 +1,7 @@
 #include "LevelEditor.h"
 #include<numbers>
 #include"Object/CollisionConfig.h"
-
+using namespace AobaraEngine;
 LevelEditor::~LevelEditor()
 {
 

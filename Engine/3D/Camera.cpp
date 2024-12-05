@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-void Camera::Initialize()
+void AobaraEngine::Camera::Initialize()
 {
 	winApp_ = WinApp::GetInstance();
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -17,23 +17,23 @@ void Camera::Initialize()
 	UpdateMatrix();
 }
 
-void Camera::CreateConstBuffer()
+void AobaraEngine::Camera::CreateConstBuffer()
 {
 	constBuffer_ = dxCommon_->CreateBufferResource(sizeof(ConstBufferDataViewProjection));
 }
 
-void Camera::Map() {
+void AobaraEngine::Camera::Map() {
 	constBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 }
 
-void Camera::UpdateMatrix()
+void AobaraEngine::Camera::UpdateMatrix()
 {
 	UpdateViewMatrix();
 	UpdateProjectionMatrix();
 	TransferMatrix();
 }
 
-void Camera::TransferMatrix()
+void AobaraEngine::Camera::TransferMatrix()
 {
 	constMap_->view = matView_;
 	constMap_->projection = matProjection_;
@@ -44,20 +44,20 @@ void Camera::TransferMatrix()
 	constMap_->worldPosition = transform_.translate;
 }
 
-void Camera::UpdateViewMatrix()
+void AobaraEngine::Camera::UpdateViewMatrix()
 {
 	cameraMatrix_ = MakeAffinMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	matView_ = Inverse(cameraMatrix_);
 	smatView_ = MakeIdentity4x4();
 }
 
-void Camera::UpdateProjectionMatrix()
+void AobaraEngine::Camera::UpdateProjectionMatrix()
 {
 	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(winApp_->kCilentWidth) / float(winApp_->kCilentHeight), nearZ_, farZ_);
 	smatProjection_ = MakeOrthographicmatrix(0.0f, 0.0f, float(winApp_->kCilentWidth), float(winApp_->kCilentHeight), 0.0f, 100.0f);
 }
 
-void Camera::CameraDebug()
+void AobaraEngine::Camera::CameraDebug()
 {
 #ifdef _DEBUG
 	ImGui::Begin("camera");

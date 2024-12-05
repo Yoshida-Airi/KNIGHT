@@ -49,7 +49,7 @@ private:
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	std::unique_ptr < Camera> camera_;
+	std::unique_ptr < AobaraEngine::Camera> camera_;
 
 	uint32_t titleLogo_;
 	uint32_t backGroundTexture_;

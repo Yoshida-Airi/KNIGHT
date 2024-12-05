@@ -1,7 +1,7 @@
 #include "TestPlayScene.h"
 
 #include"ModelLoader.h"
-
+using namespace AobaraEngine;
 TestPlayScene::~TestPlayScene()
 {
 	delete camera_;

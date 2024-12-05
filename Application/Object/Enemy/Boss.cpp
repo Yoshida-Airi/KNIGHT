@@ -2,6 +2,8 @@
 #include"Object/CollisionConfig.h"
 #include"Object/Player/Player.h"
 
+using namespace AobaraEngine;
+
 void Boss::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kEnemy);

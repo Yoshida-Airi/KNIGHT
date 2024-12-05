@@ -1,4 +1,5 @@
 #include "DeathEffect.h"
+using namespace AobaraEngine;
 
 void DeathEffect::Initialize(Camera* camera)
 {

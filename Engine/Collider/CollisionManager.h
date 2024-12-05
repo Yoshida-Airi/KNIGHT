@@ -19,7 +19,7 @@ public:
 
 	void Initialize();
 	void UpdateWorldTransform();
-	void Draw(Camera* camera);
+	void Draw(AobaraEngine::Camera* camera);
 
 	/// <summary>
 	/// リストをクリアする

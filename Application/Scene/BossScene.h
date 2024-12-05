@@ -101,7 +101,7 @@ private:
 	uint32_t HPTexture_;
 
 
-	std::unique_ptr <Camera> camera_;
+	std::unique_ptr <AobaraEngine::Camera> camera_;
 
 
 	Input* input_;

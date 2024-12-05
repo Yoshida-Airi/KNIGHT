@@ -9,7 +9,7 @@ class EnemyBullet : public GameObject
 public:
 	void Initialize()override;
 	void Update()override;
-	void Draw(const Camera& camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 	AABB GetAABB()override;
 
 	Vector3 GetWorldPosition()override;

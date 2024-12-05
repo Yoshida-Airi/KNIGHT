@@ -25,7 +25,7 @@ public:
 	virtual void Update();
 	/// @brief 描画処理
 	/// @param camera 描画に使用するカメラ
-	virtual void Draw(const Camera& camera);
+	virtual void Draw(const AobaraEngine::Camera& camera);
 	/// @brief モデルの設定
 	/// @param models モデルベクター
 	virtual void SetModel(const std::vector<Model*>& models)

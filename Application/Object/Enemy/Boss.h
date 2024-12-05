@@ -37,7 +37,7 @@ public:
 	* @param camera カメラ情報
 	* @details モデルをカメラに合わせて描画する
 	*/
-	void Draw(const Camera& camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief ボスの位置を設定する

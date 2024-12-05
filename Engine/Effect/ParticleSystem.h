@@ -62,7 +62,7 @@ class ParticleSystem
 public:
 	~ParticleSystem();
 
-	void Initialize(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition);
+	void Initialize(uint32_t textureHandle, AobaraEngine::Camera* camera, Vector3 velocity, bool isRandomPosition);
 	void Update();
 	void Draw();
 
@@ -120,7 +120,7 @@ public:
 	/// <param name="velocity">速度</param>
 	/// <param name="isRandomPosition">ランダムな位置に置くか　true : 置く</param>
 	/// <returns>パーティクル</returns>
-	static ParticleSystem* Create(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition);
+	static ParticleSystem* Create(uint32_t textureHandle, AobaraEngine::Camera* camera, Vector3 velocity, bool isRandomPosition);
 
 	/// <summary>
 	/// 生存時間の設定
@@ -189,7 +189,7 @@ private://プライベート変数
 
 	DirectXCommon* dxCommon_;
 	TextureManager* texture_;
-	Camera* camera_ = nullptr;
+	AobaraEngine::Camera* camera_ = nullptr;
 
 	Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース
 	Microsoft::WRL::ComPtr< ID3D12Resource> materialResource_;	//マテリアルリソース

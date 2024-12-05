@@ -49,7 +49,7 @@ public:
 
 	void Initialize()override;
 	void Update()override;
-	void Draw(const Camera& camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	Vector3 GetWorldPosition()override;
 	AABB GetAABB()override;

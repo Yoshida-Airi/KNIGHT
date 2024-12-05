@@ -1,7 +1,7 @@
 #include "EnemyBullet.h"
 #include"Object/Player/Player.h"
 #include"Object/CollisionConfig.h"
-
+using namespace AobaraEngine;
 void EnemyBullet::Initialize()
 {
 

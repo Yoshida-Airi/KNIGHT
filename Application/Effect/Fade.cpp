@@ -1,5 +1,7 @@
 #include "Fade.h"
 
+using namespace AobaraEngine;
+
 void Fade::Initialize()
 {
 	fadeTex_ = TextureManager::GetInstance()->LoadTexture("Resources/SampleAssets/black.png");

@@ -1,4 +1,5 @@
 #include "Sphere.h"
+using namespace AobaraEngine;
 
 Sphere::~Sphere()
 {

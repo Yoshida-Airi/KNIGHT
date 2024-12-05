@@ -1,6 +1,8 @@
 #include "GameOverScene.h"
 #include"SceneManager.h"
 
+using namespace AobaraEngine;
+
 GameOverScene::~GameOverScene()
 {
 	delete camera_;

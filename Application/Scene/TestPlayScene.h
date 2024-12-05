@@ -36,7 +36,7 @@ public:
 
 
 private:
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 	
 	std::unique_ptr<Model> walk_ = nullptr;
 	std::unique_ptr<Model> model2_ = nullptr;

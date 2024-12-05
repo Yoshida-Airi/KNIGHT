@@ -1,5 +1,5 @@
 #include "GamePlayScene.h"
-
+using namespace AobaraEngine;
 
 
 

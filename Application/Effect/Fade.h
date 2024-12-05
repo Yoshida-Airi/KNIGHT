@@ -33,7 +33,7 @@ public:
 	* @param camera カメラオブジェクト
 	* @details フェードの状態に応じて、画面にフェード効果を描画する
 	*/
-	void Draw(const Camera& camera);
+	void Draw(const AobaraEngine::Camera& camera);
 
 	/**
 	* @enum Status

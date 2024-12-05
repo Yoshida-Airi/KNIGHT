@@ -107,7 +107,7 @@ private:
 	uint32_t HPTexture_;
 	
 
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 	Input* input_;
 
 

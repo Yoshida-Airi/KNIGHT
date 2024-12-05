@@ -32,7 +32,7 @@ public:
 	* @param camera カメラ
 	* @details 武器の描画を行う。
 	*/
-	void Draw(const Camera& camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief ワールド座標を取得

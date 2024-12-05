@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include"Object/CollisionConfig.h"
 #include "Object/Player/Player.h"
-
+using namespace AobaraEngine;
 Enemy::~Enemy()
 {
 	for (EnemyBullet* bullet : bullets_)
@@ -91,7 +91,7 @@ void Enemy::Update()
 
 }
 
-void Enemy::Draw(const Camera& camera)
+void Enemy::Draw(const AobaraEngine::Camera& camera)
 {
 	if (isAlive_ == false)
 	{

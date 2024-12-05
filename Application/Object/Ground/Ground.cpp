@@ -1,5 +1,7 @@
 #include "Ground.h"
 
+using namespace AobaraEngine;
+
 void Ground::Initialize()
 {
 	groundModel_.reset(Model::Create("Resources/Level/Map.obj"));

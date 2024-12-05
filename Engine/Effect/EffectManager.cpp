@@ -1,5 +1,5 @@
 #include "EffectManager.h"
-
+using namespace AobaraEngine;
 void EffectManager::Initialize()
 {
 

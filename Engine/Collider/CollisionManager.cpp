@@ -1,5 +1,6 @@
 #include "CollisionManager.h"
 #include"Object/CollisionConfig.h"
+using namespace AobaraEngine;
 
 void CollisionManager::Initialize()
 {

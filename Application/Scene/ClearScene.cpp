@@ -1,5 +1,6 @@
 #include "ClearScene.h"
 #include"SceneManager.h"
+using namespace AobaraEngine;
 
 ClearScene::~ClearScene()
 {

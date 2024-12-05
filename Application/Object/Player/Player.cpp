@@ -5,7 +5,7 @@
 #include"Object/Player/Weapon.h"
 #include"Object/Ground/Ground.h"
 #include"Object/Ground/MapChipField.h"
-
+using namespace AobaraEngine;
 void Player::Initialize()
 {
 	grobalVariables_ = GlobalVariables::GetInstance();

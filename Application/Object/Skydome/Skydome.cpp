@@ -1,5 +1,7 @@
 #include "Skydome.h"
 
+using namespace AobaraEngine;
+
 void Skydome::Initialize()
 {
 	skydomeModel_.reset(Model::Create("Resources/Object/Skydome/skydome.obj"));

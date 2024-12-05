@@ -1,4 +1,5 @@
 #include "Collider.h"
+using namespace AobaraEngine;
 
 void Collider::Initialize()
 {

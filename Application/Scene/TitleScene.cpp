@@ -1,6 +1,6 @@
 #include "TitleScene.h"
 #include"SceneManager.h"
-
+using namespace AobaraEngine;
 TitleScene::~TitleScene()
 {
 

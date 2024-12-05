@@ -20,7 +20,7 @@ public:
 	* @param camera->カメラ
 	* @details カメラ情報を使用して、パーティクルエフェクトの表示位置や動作を設定する初期化処理を行う。
 	*/
-	void Initialize(Camera* camera);
+	void Initialize(AobaraEngine::Camera* camera);
 
 	/**
 	* @brief デスエフェクトの更新処理

@@ -22,12 +22,12 @@ class EffectManager
 public:
 	void Initialize();
 	void Update(float deltaTime);
-	void Draw(Camera* camera);
+	void Draw(AobaraEngine::Camera* camera);
 
 	
 private:
 	TextureManager* texture;
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 
 	uint32_t blackTexture_;
 

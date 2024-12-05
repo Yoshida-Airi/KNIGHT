@@ -1,6 +1,6 @@
 #include "ParticleSystem.h"
 #include"TextureManager.h"
-
+using namespace AobaraEngine;
 /*=====================================*/
 /* 　　　　   パブリックメソッド　　　	　 */
 /*=====================================*/

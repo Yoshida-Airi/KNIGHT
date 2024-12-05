@@ -1,5 +1,5 @@
 #include "FlyEnemy.h"
-
+using namespace AobaraEngine;
 void FlyEnemy::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kEnemy);

@@ -1,5 +1,7 @@
 #include "CameraController.h"
 #include"Object/Player/Player.h"
+using namespace AobaraEngine;
+
 CameraController::~CameraController()
 {
 	

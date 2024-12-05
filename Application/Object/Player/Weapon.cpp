@@ -1,6 +1,6 @@
 #include "Weapon.h"
 #include"Object/CollisionConfig.h"
-
+using namespace AobaraEngine;
 void Weapon::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kWeapon);

@@ -43,7 +43,7 @@ private:
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 
 	uint32_t titleTexture_;
 
