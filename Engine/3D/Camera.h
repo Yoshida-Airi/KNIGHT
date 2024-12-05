@@ -90,7 +90,7 @@ namespace AobaraEngine
 	private:
 
 
-		WinApp* winApp_;
+		AobaraEngine::WinApp* winApp_;
 		DirectXCommon* dxCommon_;
 
 		// マッピング済みアドレス

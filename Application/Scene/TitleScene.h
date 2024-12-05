@@ -47,7 +47,7 @@ private:
 	std::unique_ptr < EffectManager> effect_ = nullptr;
 	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
-	Input* input_;
+	AobaraEngine::Input* input_;
 	SceneManager* sceneManager_ = nullptr;
 	std::unique_ptr < AobaraEngine::Camera> camera_;
 

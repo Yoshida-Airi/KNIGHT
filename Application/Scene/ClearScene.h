@@ -46,7 +46,7 @@ private:
 	EffectManager* effect_ = nullptr;
 	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
-	Input* input_;
+	AobaraEngine::Input* input_;
 	SceneManager* sceneManager_ = nullptr;
 	AobaraEngine::Camera* camera_;
 

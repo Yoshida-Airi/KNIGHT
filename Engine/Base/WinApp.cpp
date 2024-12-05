@@ -1,5 +1,5 @@
 #include "WinApp.h"
-
+using namespace AobaraEngine;
 
 /*======================================*/
 /* 　　　　   パブリックメソッド　　　 　     */

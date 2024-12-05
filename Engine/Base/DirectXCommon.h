@@ -116,7 +116,7 @@ private:
 
 private:
 	
-	WinApp* winApp_;
+	AobaraEngine::WinApp* winApp_;
 
 	HRESULT hr;
 	Microsoft::WRL::ComPtr< IDXGIFactory7> dxgiFactory_ = nullptr;	//DXGIFactory

@@ -3,6 +3,7 @@
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
 
+using namespace AobaraEngine;
 
 //const uint32_t DirectXCommon::kMaxSRVCount = 512;
 

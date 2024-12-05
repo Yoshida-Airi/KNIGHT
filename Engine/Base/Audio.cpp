@@ -1,5 +1,7 @@
 #include "Audio.h"
 
+using namespace AobaraEngine;
+
 Audio* Audio::GetInstance()
 {
 	if (instance_ == NULL)

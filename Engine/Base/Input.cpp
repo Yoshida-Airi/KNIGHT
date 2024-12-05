@@ -1,5 +1,7 @@
 #include "Input.h"
 
+using namespace AobaraEngine;
+
 Input* Input::GetInstance()
 {
 	if (instance_ == NULL)

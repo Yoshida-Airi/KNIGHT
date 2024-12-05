@@ -14,53 +14,56 @@
 #include"WinApp.h"
 #include<cassert>
 
-/**
-*   @class Input
-*	@brief  入力クラス
-*/
-class Input
+namespace AobaraEngine
 {
-public:
-	static Input* GetInstance();
+	/**
+	*   @class Input
+	*	@brief  入力クラス
+	*/
+	class Input
+	{
+	public:
+		static Input* GetInstance();
 
-	void Initialize();
+		void Initialize();
 
-	void Update();
+		void Update();
 
-	/*void Draw();*/
+		/*void Draw();*/
 
-	/// <summary>
-	/// キーの押下をチェック
-	/// </summary>
-	/// <param name="keyNumber">キー番号</param>
-	/// <returns>押されているか</returns>
-	bool PushKey(BYTE keyNumber);
+		/// <summary>
+		/// キーの押下をチェック
+		/// </summary>
+		/// <param name="keyNumber">キー番号</param>
+		/// <returns>押されているか</returns>
+		bool PushKey(BYTE keyNumber);
 
-	/// <summary>
-	/// キーのトリガーをチェック
-	/// </summary>
-	/// <param name="keyNumber">キー番号</param>
-	/// <returns>トリガーかどうか</returns>
-	bool TriggerKey(BYTE keyNumber);
+		/// <summary>
+		/// キーのトリガーをチェック
+		/// </summary>
+		/// <param name="keyNumber">キー番号</param>
+		/// <returns>トリガーかどうか</returns>
+		bool TriggerKey(BYTE keyNumber);
 
-	// ジョイスティックのデッドゾーンを適用する関数
-	SHORT ApplyDeadzone(SHORT value, SHORT deadzone);
+		// ジョイスティックのデッドゾーンを適用する関数
+		SHORT ApplyDeadzone(SHORT value, SHORT deadzone);
 
-	bool GetJoystickState(int32_t stickNo, XINPUT_STATE& state);
+		bool GetJoystickState(int32_t stickNo, XINPUT_STATE& state);
 
-private:
+	private:
 
-	WinApp* winApp_;
+		WinApp* winApp_;
 
-	IDirectInput8* directInput_ = nullptr;
-	IDirectInputDevice8* keyboard_ = nullptr;	//キーボードデバイス
-	BYTE key_[256] = {};
-	BYTE keyPre_[256] = {};	//前回の全キーの状態
+		IDirectInput8* directInput_ = nullptr;
+		IDirectInputDevice8* keyboard_ = nullptr;	//キーボードデバイス
+		BYTE key_[256] = {};
+		BYTE keyPre_[256] = {};	//前回の全キーの状態
 
-	// デッドゾーンの設定
-	const int DEADZONE_THRESHOLD = 8000;
+		// デッドゾーンの設定
+		const int DEADZONE_THRESHOLD = 8000;
 
 
-	static Input* instance_;
+		static Input* instance_;
 
-};
+	};
+}
