@@ -42,7 +42,7 @@
 *   @class BossScene
 *	@brief  ボスシーンクラス
 */
-class BossScene :public BaseScene
+class BossScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ

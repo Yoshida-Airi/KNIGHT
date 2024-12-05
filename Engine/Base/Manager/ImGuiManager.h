@@ -12,40 +12,43 @@
 #include"imgui_impl_win32.h"
 
 
-/**
-*   @class ImGuiManager
-*	@brief Imgui管理クラス
-*/
-class ImGuiManager
+namespace AobaraEngine
 {
-public:
-	/// @brief シングルトンインスタンスを取得します。
-	/// @return ImGuiManagerのインスタンス
-	static ImGuiManager* GetInstance();
+	/**
+	*   @class ImGuiManager
+	*	@brief Imgui管理クラス
+	*/
+	class ImGuiManager
+	{
+	public:
+		/// @brief シングルトンインスタンスを取得します。
+		/// @return ImGuiManagerのインスタンス
+		static ImGuiManager* GetInstance();
 
-	/// @brief デストラクタ
-	~ImGuiManager();
+		/// @brief デストラクタ
+		~ImGuiManager();
 
-	/// @brief 初期化関数
-	void Initialize();
+		/// @brief 初期化関数
+		void Initialize();
 
-	/// @brief 開始処理
-	void Begin();
+		/// @brief 開始処理
+		void Begin();
 
-	/// @brief 終了処理
-	void End();
+		/// @brief 終了処理
+		void End();
 
-	/// @brief 描画処理
-	void Draw();
+		/// @brief 描画処理
+		void Draw();
 
-private:
-	WinApp* winApp_;
-	DirectXCommon* dxCommon_;
-	SrvManager* srvManager_;
+	private:
+		WinApp* winApp_;
+		DirectXCommon* dxCommon_;
+		SrvManager* srvManager_;
 
-	static ImGuiManager* instance_;
+		static ImGuiManager* instance_;
 
-	Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> srvDescriptorHeap_ = nullptr;
+		Microsoft::WRL::ComPtr< ID3D12DescriptorHeap> srvDescriptorHeap_ = nullptr;
 
-};
+	};
+}
 

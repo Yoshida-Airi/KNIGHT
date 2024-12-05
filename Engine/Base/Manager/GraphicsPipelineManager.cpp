@@ -1,5 +1,7 @@
 #include "GraphicsPipelineManager.h"
 
+using namespace AobaraEngine;
+
 GraphicsPipelineManager* GraphicsPipelineManager::GetInstance()
 {
 	if (instance_ == nullptr)

@@ -27,13 +27,13 @@ public:
 	/// <param name="sceneName">シーン名</param>
 	void ChangeScene(const std::string& sceneName);
 
-	void SetSceneFactory(AbstractSceneFactory* sceneFactory);
+	void SetSceneFactory(AobaraEngine::AbstractSceneFactory* sceneFactory);
 
 private:
 	static SceneManager* instance_;	//シングルトン
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	AobaraEngine::AbstractSceneFactory* sceneFactory_ = nullptr;
 	//今のシーン
-	BaseScene* scene_ = nullptr;
-	BaseScene* nextSscene_ = nullptr;
+	AobaraEngine::BaseScene* scene_ = nullptr;
+	AobaraEngine::BaseScene* nextSscene_ = nullptr;
 };
 

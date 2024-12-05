@@ -1,6 +1,8 @@
 #include "SceneManager.h"
 #include<cassert>
 
+using namespace AobaraEngine;
+
 SceneManager* SceneManager::GetInstance()
 {
 	if (instance_ == nullptr)

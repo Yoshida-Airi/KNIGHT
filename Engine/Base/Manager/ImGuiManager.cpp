@@ -1,5 +1,5 @@
 #include "ImGuiManager.h"
-
+using namespace AobaraEngine;
 
 ImGuiManager* ImGuiManager::GetInstance()
 {

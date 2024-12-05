@@ -6,6 +6,8 @@
 #include"GameOverScene.h"
 #include"BossScene.h"
 
+using namespace AobaraEngine;
+
 BaseScene* SceneFactory::CreateScene(const std::string& sceneName)
 {
 	//次のシーンを生成

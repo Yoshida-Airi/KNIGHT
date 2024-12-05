@@ -66,7 +66,7 @@ public:
 private:
 
 	//! テクスチャ管理用のポインタ
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 	//! パーティクルシステムのインスタンス 
 	std::unique_ptr<ParticleSystem> hitEffect_ = nullptr;
 	//! 使用する円形テクスチャのID 

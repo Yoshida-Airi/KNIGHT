@@ -1,4 +1,5 @@
 #include "SrvManager.h"
+using namespace AobaraEngine;
 
 const uint32_t SrvManager::kMaxSRVCount = 512;
 

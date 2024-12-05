@@ -181,14 +181,14 @@ public:
 	Emitter* emitter_ = new Emitter();
 private://プライベート変数
 
-	GraphicsPipelineManager* psoManager_ = nullptr;
-	SrvManager* srvManager_ = nullptr;
+	AobaraEngine::GraphicsPipelineManager* psoManager_ = nullptr;
+	AobaraEngine::SrvManager* srvManager_ = nullptr;
 
 	static const uint32_t kNumMaxInstance_ = 500;
 	uint32_t numInstance_ = 0;
 
 	DirectXCommon* dxCommon_;
-	TextureManager* texture_;
+	AobaraEngine::TextureManager* texture_;
 	AobaraEngine::Camera* camera_ = nullptr;
 
 	Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース

@@ -24,7 +24,7 @@
 *   @class GameOverScene
 *	@brief  ゲームオーバーシーンクラス
 */
-class GameOverScene :public BaseScene
+class GameOverScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -39,7 +39,7 @@ public:
 private:
 
 	EffectManager* effect_ = nullptr;
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;

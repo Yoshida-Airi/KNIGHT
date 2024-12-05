@@ -1,5 +1,7 @@
 #include "Framework.h"
 
+using namespace AobaraEngine;
+
 Framework::~Framework()
 {
 

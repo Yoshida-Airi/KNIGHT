@@ -65,7 +65,7 @@ public:
 
 private:
 
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	std::unique_ptr<ParticleSystem> risingEffect_ = nullptr;
 	uint32_t circleTexture_;

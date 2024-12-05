@@ -26,7 +26,7 @@ public:
 
 	
 private:
-	TextureManager* texture;
+	AobaraEngine::TextureManager* texture;
 	AobaraEngine::Camera* camera_;
 
 	uint32_t blackTexture_;

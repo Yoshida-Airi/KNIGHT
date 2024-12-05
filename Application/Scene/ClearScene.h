@@ -27,7 +27,7 @@
 *   @class ClearScene
 *	@brief  クリアシーンクラス
 */
-class ClearScene :public BaseScene
+class ClearScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -44,7 +44,7 @@ public:
 private:
 
 	EffectManager* effect_ = nullptr;
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;

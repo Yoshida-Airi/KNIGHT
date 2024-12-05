@@ -41,7 +41,7 @@
 *   @class GamePlayScene
 *	@brief  ゲームプレイシーンクラス
 */
-class GamePlayScene:public BaseScene
+class GamePlayScene:public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ

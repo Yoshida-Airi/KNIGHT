@@ -22,7 +22,7 @@
 *   @class TestPlayScene
 *	@brief  テストシーンクラス
 */
-class TestPlayScene:public BaseScene
+class TestPlayScene:public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -45,7 +45,7 @@ private:
 
 	
 
-	AnimationData walkAnimation_;
+	AobaraEngine::AnimationData walkAnimation_;
 
 	LevelEditor* levelEditor_;
 

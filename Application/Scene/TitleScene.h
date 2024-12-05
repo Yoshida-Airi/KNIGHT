@@ -27,7 +27,7 @@
 *   @class TitleScene
 *	@brief タイトルシーンクラス
 */
-class TitleScene :public BaseScene
+class TitleScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -45,7 +45,7 @@ public:
 private:
 
 	std::unique_ptr < EffectManager> effect_ = nullptr;
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	Input* input_;
 	SceneManager* sceneManager_ = nullptr;

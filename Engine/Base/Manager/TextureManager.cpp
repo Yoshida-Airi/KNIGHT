@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+using namespace AobaraEngine;
 
 uint32_t TextureManager::kSRVIndexTop_ = 1;
 
