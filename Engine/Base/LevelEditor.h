@@ -40,7 +40,7 @@ struct LevelData
 *   @class LevelEditor
 *	@brief  レベルエディタークラス
 */
-class LevelEditor :public GameObject
+class LevelEditor :public AobaraEngine::GameObject
 {
 public:
 

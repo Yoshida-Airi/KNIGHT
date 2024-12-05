@@ -13,7 +13,7 @@
 * @brief ゴールオブジェクトの管理を行うクラス
 * @details ゴールの初期化、更新、描画、および衝突判定を行う
 */
-class Goal :public GameObject
+class Goal :public AobaraEngine::GameObject
 {
 public:
 

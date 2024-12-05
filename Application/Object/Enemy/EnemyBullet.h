@@ -4,7 +4,7 @@
 #include"GameObject.h"
 
 class Player;
-class EnemyBullet : public GameObject
+class EnemyBullet : public AobaraEngine::GameObject
 {
 public:
 	void Initialize()override;

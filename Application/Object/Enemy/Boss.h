@@ -16,7 +16,7 @@ class Player;
 * @brief ボスキャラクターを制御するクラス
 * @details ボスの移動、描画、衝突処理、HP管理などを担当する
 */
-class Boss : public GameObject
+class Boss : public AobaraEngine::GameObject
 {
 public:
 

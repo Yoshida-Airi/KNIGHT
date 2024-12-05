@@ -11,7 +11,7 @@
 * @brief 武器クラス
 * @details 武器の動作と描画を管理し、攻撃状態や親オブジェクトとの関連を設定する。
 */
-class Weapon :public GameObject
+class Weapon :public AobaraEngine::GameObject
 {
 public:
 

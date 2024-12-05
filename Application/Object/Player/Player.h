@@ -20,7 +20,7 @@
 class MapChipField;
 class Ground;
 class Weapon;
-class Player :public GameObject
+class Player :public AobaraEngine::GameObject
 {
 public:
 	void Initialize()override;

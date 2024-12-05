@@ -12,7 +12,7 @@
 * @brief 地面オブジェクトの管理を行うクラス
 * @details 地面の初期化、更新、描画、および衝突判定を行う
 */
-class Ground :public GameObject
+class Ground :public AobaraEngine::GameObject
 {
 public:
 

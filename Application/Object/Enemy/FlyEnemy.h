@@ -13,7 +13,7 @@
 * @brief 飛んでいる敵キャラクターを制御するクラス
 * @details 敵の移動、描画、衝突処理、浮遊アニメーションを管理する
 */
-class FlyEnemy : public GameObject
+class FlyEnemy : public AobaraEngine::GameObject
 {
 public:
 

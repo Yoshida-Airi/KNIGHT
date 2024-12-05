@@ -13,35 +13,38 @@
 *   @class GameObject
 *	@brief  ゲームオブジェクトクラス
 */
-class GameObject : public Collider
+
+namespace AobaraEngine
 {
-protected:
-	std::vector<Model*>models_;
-
-public:
-	/// @brief 初期化処理
-	virtual void Initialize();
-	/// @brief 更新処理
-	virtual void Update();
-	/// @brief 描画処理
-	/// @param camera 描画に使用するカメラ
-	virtual void Draw(const AobaraEngine::Camera& camera);
-	/// @brief モデルの設定
-	/// @param models モデルベクター
-	virtual void SetModel(const std::vector<Model*>& models)
+	class GameObject : public Collider
 	{
-		models_ = models;
-	}
+	protected:
+		std::vector<Model*>models_;
 
-	/// @brief ワールド座標を取得
-	/// @return ワールド座標
-	virtual Vector3 GetWorldPosition() override = 0;
-	/// @brief AABBを取得
-	/// @return AABB
-	virtual AABB GetAABB() override = 0;
-	/// @brief 衝突時に呼ばれる関数
-	/// @param other 衝突した他のCollider
-	virtual void OnCollision([[maybe_unused]] Collider* other) override = 0;
+	public:
+		/// @brief 初期化処理
+		virtual void Initialize();
+		/// @brief 更新処理
+		virtual void Update();
+		/// @brief 描画処理
+		/// @param camera 描画に使用するカメラ
+		virtual void Draw(const AobaraEngine::Camera& camera);
+		/// @brief モデルの設定
+		/// @param models モデルベクター
+		virtual void SetModel(const std::vector<Model*>& models)
+		{
+			models_ = models;
+		}
 
-};
+		/// @brief ワールド座標を取得
+		/// @return ワールド座標
+		virtual Vector3 GetWorldPosition() override = 0;
+		/// @brief AABBを取得
+		/// @return AABB
+		virtual AABB GetAABB() override = 0;
+		/// @brief 衝突時に呼ばれる関数
+		/// @param other 衝突した他のCollider
+		virtual void OnCollision([[maybe_unused]] Collider* other) override = 0;
 
+	};
+}

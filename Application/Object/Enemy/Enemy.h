@@ -17,7 +17,7 @@ class Player;
 * @brief 敵キャラクターの制御を行うクラス
 * @details 敵キャラクターの描画、移動、衝突判定などの処理を管理する
 */
-class Enemy : public GameObject
+class Enemy : public AobaraEngine::GameObject
 {
 public:
 	~Enemy();
