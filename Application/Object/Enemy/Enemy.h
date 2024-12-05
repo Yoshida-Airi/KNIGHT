@@ -89,8 +89,8 @@ public:
 
 private:
 
-	std::unique_ptr<Model>enemyModel_;
-	std::vector<Model*>enemyModels_;
+	std::unique_ptr<AobaraEngine::Model>enemyModel_;
+	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	////弾
 	std::list<EnemyBullet*> bullets_;

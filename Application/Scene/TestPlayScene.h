@@ -38,10 +38,10 @@ public:
 private:
 	AobaraEngine::Camera* camera_;
 	
-	std::unique_ptr<Model> walk_ = nullptr;
-	std::unique_ptr<Model> model2_ = nullptr;
-	std::unique_ptr<Model> model3_ = nullptr;
-	std::unique_ptr<Model> model4_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> walk_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model2_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model3_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model4_ = nullptr;
 
 	
 
@@ -50,7 +50,7 @@ private:
 	LevelEditor* levelEditor_;
 
 
-	std::vector<std::vector<Model*>>blocks_;
+	std::vector<std::vector<AobaraEngine::Model*>>blocks_;
 
 	MapChipField* mapChipField_;
 

@@ -71,6 +71,6 @@ private:
 	uint32_t collisionType_ = 0u;
 
 
-	std::unique_ptr<Model>model_;
+	std::unique_ptr<AobaraEngine::Model>model_;
 
 };

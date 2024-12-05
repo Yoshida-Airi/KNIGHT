@@ -45,5 +45,5 @@ public:
 	}
 
 private:
-	std::unique_ptr<Model> skydomeModel_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> skydomeModel_ = nullptr;
 };

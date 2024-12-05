@@ -113,8 +113,8 @@ private:
 	GlobalVariables* grobalVariables_;
 	const char* groupName_;
 
-	std::unique_ptr<Model>playerModel_;
-	std::vector<Model*>playerModels_;
+	std::unique_ptr<AobaraEngine::Model>playerModel_;
+	std::vector<AobaraEngine::Model*>playerModels_;
 
 
 	Vector3 velocity_ = {  };

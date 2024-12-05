@@ -34,8 +34,8 @@ public:
 
 private:
 
-	std::unique_ptr<Model>bulletModel_;
-	std::vector<Model*>bulletModels_;
+	std::unique_ptr<AobaraEngine::Model>bulletModel_;
+	std::vector<AobaraEngine::Model*>bulletModels_;
 
 	//速度
 	Vector3 velocity_;

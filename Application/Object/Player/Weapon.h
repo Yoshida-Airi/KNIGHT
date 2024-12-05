@@ -6,6 +6,8 @@
 #pragma once
 #include"GameObject.h"
 
+using namespace AobaraEngine;
+
 /**
 * @class Weapon
 * @brief 武器クラス
@@ -83,8 +85,8 @@ public:
 	}
 
 private:
-	std::unique_ptr<Model>weaponModel_;
-	std::vector<Model*>weaponModels_;
+	std::unique_ptr<AobaraEngine::Model>weaponModel_;
+	std::vector<AobaraEngine::Model*>weaponModels_;
 
 	bool isAttack_ = false; //攻撃中かどうか : ture 攻撃中
 };

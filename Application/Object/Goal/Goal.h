@@ -56,6 +56,6 @@ public:
 	void OnCollision(Collider* other)override;
 
 private:
-	std::unique_ptr<Model>goalModel_;
-	std::vector<Model*>goalModels_;
+	std::unique_ptr<AobaraEngine::Model>goalModel_;
+	std::vector<AobaraEngine::Model*>goalModels_;
 };

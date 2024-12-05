@@ -129,7 +129,7 @@ private:
 
 	Phase phase_;
 
-	std::vector<std::vector<Model*>>blocks_;
+	std::vector<std::vector<AobaraEngine::Model*>>blocks_;
 	MapChipField* mapChipField_;
 
 

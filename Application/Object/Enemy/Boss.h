@@ -106,8 +106,8 @@ public:
 
 private:
 
-	std::unique_ptr<Model>enemyModel_;
-	std::vector<Model*>enemyModels_;
+	std::unique_ptr<AobaraEngine::Model>enemyModel_;
+	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
 

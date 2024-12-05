@@ -92,7 +92,7 @@ private:
 	
 
 
-	std::unique_ptr<Model>groundModel_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model>groundModel_ = nullptr;
 
 };
 
