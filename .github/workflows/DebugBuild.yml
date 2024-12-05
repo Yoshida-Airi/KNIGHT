@@ -7,7 +7,7 @@ on:
 
 env:
   #リポジトリのルートディレクトリを基点としたソリューションファイルのパス
-  SOLUTION_FILE_PATH: KNIGHT/Engine_roop2.sln
+  SOLUTION_FILE_PATH: Engine_roop2.sln
   #Visual Studio の構成（Debug / Release)
   CONFIGURATION: Debug
 
