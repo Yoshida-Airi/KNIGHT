@@ -1,6 +1,8 @@
 #include "ModelLoader.h"
 #include"MathUtilty.h"
 
+using namespace AobaraEngine;
+
 ModelLoader* ModelLoader::GetInstance()
 {
 	if (instance_ == nullptr)
