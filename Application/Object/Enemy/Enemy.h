@@ -20,6 +20,7 @@ class Player;
 class Enemy : public GameObject
 {
 public:
+	~Enemy();
 
 	/**
 	* @brief 敵キャラクターの初期化処理

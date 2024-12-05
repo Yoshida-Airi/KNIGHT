@@ -2,6 +2,19 @@
 #include"Object/CollisionConfig.h"
 #include "Object/Player/Player.h"
 
+Enemy::~Enemy()
+{
+	for (EnemyBullet* bullet : bullets_)
+	{
+		delete bullet;
+	}
+
+	for (TimedCall* timeCall : this->timedCalls_)
+	{
+		delete timeCall;
+	}
+}
+
 void Enemy::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kEnemy);
@@ -13,15 +26,7 @@ void Enemy::Initialize()
 	GameObject::SetModel(enemyModels_);
 	enemyModel_->SetMaterial({ 1.0f,0.0,0.0f,1.0f });
 
-	for (EnemyBullet* bullet : bullets_)
-	{
-		delete bullet;
-	}
 
-	for (TimedCall* timeCall : this->timedCalls_)
-	{
-		delete timeCall;
-	}
 
 	
 }
