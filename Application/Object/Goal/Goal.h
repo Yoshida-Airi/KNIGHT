@@ -53,7 +53,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details プレイヤーや他のオブジェクトとゴールが衝突した際の処理を行う
 	*/
-	void OnCollision(Collider* other)override;
+	void OnCollision(AobaraEngine::Collider* other)override;
 
 private:
 	std::unique_ptr<AobaraEngine::Model>goalModel_;

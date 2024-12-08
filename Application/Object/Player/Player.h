@@ -30,7 +30,7 @@ public:
 
 	Vector3 GetWorldPosition()override;
 	AABB GetAABB()override;
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	bool GetHitGoal()
 	{

@@ -75,7 +75,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 他のオブジェクトとの衝突時に呼び出される処理
 	*/
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief 生存状態を取得する

@@ -52,7 +52,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 衝突した際の処理を行う。今回は処理が必要ないため [[maybe_unused]] を付与
 	*/
-	[[maybe_unused]] void OnCollision([[maybe_unused]] Collider* other)override;
+	[[maybe_unused]] void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief デバッグ用処理

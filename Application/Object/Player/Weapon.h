@@ -53,7 +53,7 @@ public:
 	* @param other 衝突相手のコライダー
 	* @details 衝突が発生した際の処理を定義する。
 	*/
-	[[maybe_unused]] void OnCollision([[maybe_unused]] Collider* other)override;
+	[[maybe_unused]] void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief 親オブジェクトを設定

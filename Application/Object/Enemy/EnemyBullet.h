@@ -23,7 +23,7 @@ public:
 	//セッター
 	void SetPlayer(Player* player) { player_ = player; };
 
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	void SetPosition(Vector3 pos)
 	{

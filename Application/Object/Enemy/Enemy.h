@@ -68,7 +68,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 敵キャラクターが他のオブジェクトと衝突した際の処理を行う
 	*/
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	void AttackReset();
 

@@ -35,7 +35,7 @@ public:
 	/// コライダーをリストに登録する
 	/// </summary>
 	/// <param name="collider">オブジェクト</param>
-	void AddColliders(Collider* collider);
+	void AddColliders(AobaraEngine::Collider* collider);
 
 
 private:
@@ -44,12 +44,12 @@ private:
 	/// </summary>
 	/// <param name="colliderA">コライダーA</param>
 	/// <param name="colliderB">コライダーB</param>
-	void CheakCollisionPair(Collider* colliderA, Collider* colliderB);
+	void CheakCollisionPair(AobaraEngine::Collider* colliderA, AobaraEngine::Collider* colliderB);
 
 	void CheackSphereCollision();
 
 	// コライダーリスト
-	std::list<Collider*> colliders_;
+	std::list<AobaraEngine::Collider*> colliders_;
 
 	
 
