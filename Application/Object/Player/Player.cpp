@@ -14,6 +14,9 @@ void Player::Initialize()
 	playerModel_.reset(Model::Create("Resources/Object/Player/player.obj"));
 	playerModels_ = { playerModel_.get() };
 
+	playerTexture = TextureManager::GetInstance()->LoadTexture("Resources/Object/Player/player.png");
+	redTexture = TextureManager::GetInstance()->LoadTexture("Resources/Object/Player/player_damage.png");
+
 	Collider::SetTypeID(CollisionTypeDef::kPlayer);
 	Collider::SetColliderTypeID(ColliderType::SPHERE);
 
@@ -101,13 +104,25 @@ void Player::OnCollision(Collider* other)
 	{
 		hitGoal_ = true;
 	}
-	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kEnemy))
-	{
-		if (!isInvincible_)
-		{
+	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kEnemy)) {
+		if (!isInvincible_) {
+			// ダメージを受けたときの処理
 			hp_ -= 1;
 			isInvincible_ = true;
 			invincibilityTimer_ = invincibilityDuration_;
+
+			// 赤いテクスチャを設定
+			playerModel_->SetTexture(redTexture);
+			playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,0.3f });
+		}
+
+		else
+		{
+			
+				// インビンシブルが終了したら元のテクスチャに戻す
+				//isInvincible_ = false;
+				playerModel_->SetTexture(playerTexture);
+				playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,1.0f });
 		}
 	}
 }

@@ -123,6 +123,16 @@ namespace AobaraEngine
 			materialData_->color = material;
 		}
 
+		void SetTexture(uint32_t texture)
+		{
+			textureHandle_ = texture;
+		}
+
+		uint32_t GetTexture()
+		{
+			return textureHandle_;
+		}
+
 		/// @brief ライトの設定
 		/// @param isLight ライトを有効にする場合は true
 		void SetLight(uint32_t isLight)

@@ -174,6 +174,9 @@ private:
 
 	bool endMove_ = false;
 
+	uint32_t redTexture;
+	uint32_t playerTexture;
+
 private:
 
 	/// <summary>
