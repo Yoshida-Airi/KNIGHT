@@ -98,7 +98,9 @@ private:
 	std::list<TimedCall*> timedCalls_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
-	
+	bool isHit = false;
+
+
 	//発射間隔
 	static const int kFireInterval = 180;
 	float moveSpeed_ = 0.03f;  // 移動速度

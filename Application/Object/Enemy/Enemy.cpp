@@ -89,14 +89,29 @@ void Enemy::Update()
 		bullet->Update();
 	}
 
+	if (isHit == true)
+	{
+		enemyModel_->GetWorldTransform()->translation_.z += 0.3f;
+		enemyModel_->GetWorldTransform()->translation_.y += 0.1f;
+
+		if (enemyModel_->GetWorldTransform()->translation_.y >= 10.0f)
+		{
+			isAlive_ = false;
+			isHit = false;
+		}
+	}
+
 }
 
 void Enemy::Draw(const AobaraEngine::Camera& camera)
 {
 	if (isAlive_ == false)
 	{
+
+
+
 		//死んでいたら描画しない
-		enemyModel_->SetisInvisible(true);
+		//enemyModel_->SetisInvisible(true);
 	}
 
 	enemyModel_->Draw(camera);
@@ -138,7 +153,7 @@ void Enemy::OnCollision(Collider* other)
 	uint32_t typeID = other->GetTypeID();
 	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kWeapon))
 	{
-		isAlive_ = false;
+		isHit = true;
 	}
 }
 
