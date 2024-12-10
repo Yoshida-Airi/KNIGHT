@@ -93,6 +93,7 @@ void Enemy::Update()
 	{
 		enemyModel_->GetWorldTransform()->translation_.z += 0.3f;
 		enemyModel_->GetWorldTransform()->translation_.y += 0.1f;
+		enemyModel_->GetWorldTransform()->rotation_.y += 0.1f;
 
 		if (enemyModel_->GetWorldTransform()->translation_.y >= 10.0f)
 		{

@@ -83,6 +83,7 @@ private:
 	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
+	bool isHit_ = false;
 
 	float moveSpeed_ = 0.01f;  // 移動速度
 	float moveDistance_ = 5.0f;  // 移動する距離
