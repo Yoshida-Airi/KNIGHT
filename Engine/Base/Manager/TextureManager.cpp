@@ -154,9 +154,10 @@ DirectX::ScratchImage TextureManager::ImageFileOpen(const std::string& filePath)
 	else {
 		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
 	}
-
-
 	assert(SUCCEEDED(hr));
+
+
+
 	//ミップマップの作成
 	DirectX::ScratchImage mipImage{};
 
