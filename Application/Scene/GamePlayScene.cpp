@@ -24,8 +24,8 @@ void GamePlayScene::Initialize()
 	camera->Initialize();
 
 	
-	player = new Player();
-	player->Initialize();
+	//player = new Player();
+	//player->Initialize();
 
 	
 
@@ -52,11 +52,11 @@ void GamePlayScene::Initialize()
 	//sphere->GetWorldTransform()->translation_.y = -1.0f;
 	////sphere->SetisInvisible(true);
 
-	//model.reset(Model::Create("Resources/SampleAssets/plane.gltf"));
-	model2.reset(Model::Create("Resources/SampleAssets/terrain.obj"));
+	model.reset(Model::Create("Resources/SampleAssets/plane.gltf"));
+	//model2.reset(Model::Create("Resources/SampleAssets/fence.obj"));
 
-	//model->GetWorldTransform()->rotation_.y = 3.14f;
-	model2->GetWorldTransform()->rotation_.y = 3.14f;
+	model->GetWorldTransform()->rotation_.y = 3.14f;
+	//model2->GetWorldTransform()->rotation_.y = 3.14f;
 
 	//model2->GetWorldTransform()->translation_ =
 	//{
@@ -115,11 +115,11 @@ void GamePlayScene::Update()
 	//sphere->Update();
 	//sphere->GetWorldTransform()->rotation_.y += 0.01f;
 
-	//model->ModelDebug("plane");
-	model2->ModelDebug("plane2");
+	model->ModelDebug("plane");
+	//model2->ModelDebug("plane2");
 
-	//model->Update();
-	model2->Update();
+	model->Update();
+	//model2->Update();
 	//model->GetWorldTransform()->translation_.x = 3.0f;
 
 	//particle->Debug("circleParticle");
@@ -128,7 +128,7 @@ void GamePlayScene::Update()
 	//particle->Update();
 	//particle2->Update();
 
-	player->Update();
+	//player->Update();
 	camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
 
 }
@@ -144,8 +144,8 @@ void GamePlayScene::Draw()
 	//sphere->Draw(camera);
 
 
-	//model->Draw(camera);
-	model2->Draw(camera);
+	model->Draw(camera);
+	//model2->Draw(camera);
 
 
 	//sprite->Draw(camera);
@@ -155,5 +155,5 @@ void GamePlayScene::Draw()
 	//particle2->Draw();
 
 
-	player->Draw(camera);
+	//player->Draw(camera);
 }

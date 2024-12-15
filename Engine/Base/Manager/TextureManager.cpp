@@ -13,7 +13,7 @@ TextureManager* TextureManager::GetInstance()
 
 TextureManager::~TextureManager()
 {
-	
+
 }
 
 /// <summary>
@@ -82,7 +82,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 	//Textureを読んで転送する
 	DirectX::ScratchImage mipImages = ImageFileOpen(filePath);
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-	
+
 	//テクスチャデータを追加して書き込む
 	//textureDatas.resize(textureDatas.size() + 1);
 	//TextureData& textureData = textureDatas.back();
@@ -91,9 +91,6 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 
 
 	textureData.filename = filePath;
-	textureData.textureResource = CreateTextureResource(dxCommon_->GetDevice(), metadata);
-
-
 	textureData.textureResource = CreateTextureResource(dxCommon_->GetDevice(), metadata);
 	intermediateResource.at(index) = UploadTextureData(textureData.textureResource.Get(), mipImages);
 
@@ -109,7 +106,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 	textureData.textureSrvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 	textureData.textureHandle = index;
 
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex,textureData.textureResource.Get(), metadata.format, UINT(metadata.mipLevels));
+	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.textureResource.Get(), metadata, UINT(metadata.mipLevels));
 
 	return index;
 }
@@ -149,11 +146,31 @@ DirectX::ScratchImage TextureManager::ImageFileOpen(const std::string& filePath)
 	//テクスチャファイルを読み込みプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString(filePath);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+
+	HRESULT hr;
+	if (filePathW.ends_with(L".dds")) {
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+	}
+	else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	}
+
+
 	assert(SUCCEEDED(hr));
 	//ミップマップの作成
 	DirectX::ScratchImage mipImage{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImage);
+
+	//圧縮フォーマットかどうかを調べる
+	if (DirectX::IsCompressed(image.GetMetadata().format))
+	{
+		mipImage = std::move(image);//圧縮フォーマットならそのまま使うのでmoveする
+	}
+	else
+	{
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImage);
+
+	}
+	assert(SUCCEEDED(hr));
 
 	return mipImage;
 }
@@ -161,21 +178,23 @@ DirectX::ScratchImage TextureManager::ImageFileOpen(const std::string& filePath)
 //ダイレクト12のテクスチャリソースを作る
 Microsoft::WRL::ComPtr< ID3D12Resource> TextureManager::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata)
 {
+	const DirectX::TexMetadata& metadata_ = metadata;
+
 	//1.metadataを基にリソースの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Width = UINT(metadata.width);		//Textureの幅
-	resourceDesc.Height = UINT(metadata.height);	//Textureの高さ
-	resourceDesc.MipLevels = UINT16(metadata.mipLevels);	//mipmapの数
-	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);	//奥行きor配列Textureの配列数
-	resourceDesc.Format = metadata.format;	//TextureのFormat
+	resourceDesc.Width = UINT(metadata_.width);		//Textureの幅
+	resourceDesc.Height = UINT(metadata_.height);	//Textureの高さ
+	resourceDesc.MipLevels = UINT16(metadata_.mipLevels);	//mipmapの数
+	resourceDesc.DepthOrArraySize = UINT16(metadata_.arraySize);	//奥行きor配列Textureの配列数
+	resourceDesc.Format = metadata_.format;	//TextureのFormat
 	resourceDesc.SampleDesc.Count = 1;	//サンプリングカウント。1固定。
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);	//Textureの次元数。普段使っているのは二次元
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata_.dimension);	//Textureの次元数。普段使っているのは二次元
 
 
 	//2.利用するヒープの設定
 	D3D12_HEAP_PROPERTIES heapProperties{};
 	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT;	//細かい設定を行う
-	
+
 
 	//3.リソースを生成する
 	Microsoft::WRL::ComPtr< ID3D12Resource> resource = nullptr;
