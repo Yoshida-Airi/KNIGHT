@@ -107,7 +107,7 @@ private:
 	uint32_t HPTexture_;
 	
 
-	AobaraEngine::Camera* camera_;
+	std::unique_ptr< AobaraEngine::Camera> camera_;
 	Input* input_;
 
 
@@ -120,7 +120,7 @@ private:
 	std::list<FlyEnemy*> flyEnemys_;
 	std::unique_ptr <Skydome>skydome_;
 	std::unique_ptr <Goal>goal_;
-	CameraController* cameraController_;
+	std::unique_ptr<CameraController> cameraController_;
 	std::unique_ptr<Weapon>weapon_;
 	std::list<Ground*>grounds_;
 	std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
@@ -136,7 +136,7 @@ private:
 	Phase phase_;
 
 	std::vector<std::vector<Model*>>blocks_;
-	MapChipField* mapChipField_;
+	std::unique_ptr<MapChipField> mapChipField_;
 
 private:
 

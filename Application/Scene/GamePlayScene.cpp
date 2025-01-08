@@ -6,9 +6,9 @@ using namespace AobaraEngine;
 GamePlayScene::~GamePlayScene()
 {
 
-	delete camera_;
+	//delete camera_;
 	//delete levelEditor;
-	delete cameraController_;
+	//delete cameraController_;
 
 	for (Enemy* enemy : enemys_)
 	{
@@ -39,7 +39,7 @@ GamePlayScene::~GamePlayScene()
 
 	blocks_.clear();
 
-	delete mapChipField_;
+	//delete mapChipField_;
 
 }
 
@@ -58,7 +58,7 @@ void GamePlayScene::Initialize()
 	configTexture_ = texture_->LoadTexture("Resources/Scene/config.png");
 	HPTexture_ = texture_->LoadTexture("Resources/Object/Heart.png");
 
-	camera_ = new Camera;
+	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
 	
@@ -95,8 +95,8 @@ void GamePlayScene::Initialize()
 	goal_ = std::make_unique<Goal>();
 	goal_->Initialize();
 
-	cameraController_ = new CameraController;
-	cameraController_->Initialize(camera_);
+	cameraController_ = std::make_unique<CameraController>();
+	cameraController_->Initialize(camera_.get());
 	cameraController_->SetTarget(player_.get());
 	cameraController_->Reset();
 
@@ -128,12 +128,12 @@ void GamePlayScene::Initialize()
 
 	phase_ = Phase::kPlay;
 
-	mapChipField_ = new MapChipField;
+	mapChipField_ = std::make_unique<MapChipField>();
 	mapChipField_->LoadMapChipCsv("Resources/CSV/field.csv");
 
 	GenerateBlocks();
 
-	player_->SetMapChipField(mapChipField_);
+	player_->SetMapChipField(mapChipField_.get());
 	
 }
 
@@ -355,7 +355,7 @@ void GamePlayScene::SpawnBlock(const Vector3& position, const Vector3& scale)
 void GamePlayScene::CreateDeathEffect(Vector3 position)
 {
 	DeathEffect* newDeathEffect = new DeathEffect();
-	newDeathEffect->Initialize(camera_);
+	newDeathEffect->Initialize(camera_.get());
 	newDeathEffect->SetFlag(true);
 
 	newDeathEffect->SetPosition(position);
