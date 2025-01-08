@@ -61,11 +61,6 @@ void GamePlayScene::Initialize()
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
-	
-	//levelEditor = new LevelEditor();
-	//levelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
-	//levelEditor->Initialize();
-
 	weapon_ = std::make_unique<Weapon>();
 	weapon_->Initialize();
 
@@ -102,23 +97,17 @@ void GamePlayScene::Initialize()
 
 	config_.reset(AobaraEngine::Sprite::Create(configTexture_));
 
-	hp1_.reset(AobaraEngine::Sprite::Create(HPTexture_));
-	hp2_.reset(AobaraEngine::Sprite::Create(HPTexture_));
-	hp3_.reset(AobaraEngine::Sprite::Create(HPTexture_));
-	hp4_.reset(AobaraEngine::Sprite::Create(HPTexture_));
-	hp5_.reset(AobaraEngine::Sprite::Create(HPTexture_));
+	//初期化
+	for (int i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i].reset(AobaraEngine::Sprite::Create(HPTexture_));
+	}
 
-	hp1_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp2_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp3_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp4_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
-	hp5_->GetWorldTransform()->scale_ = { 2.0f,2.0f,2.0f };
+	// スケールと位置を一括設定
+	for (size_t i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i]->GetWorldTransform()->scale_ = { 2.0f, 2.0f, 2.0f };
+		hpTextures_[i]->GetWorldTransform()->translation_ = { 20.0f + static_cast<float>(i) * 20.0f, 20.0f, 0.0f };
+	}
 
-	hp1_->GetWorldTransform()->translation_ = { 20.0f,20.0f,0.0f };
-	hp2_->GetWorldTransform()->translation_ = { 40.0f,20.0f,0.0f };
-	hp3_->GetWorldTransform()->translation_ = { 60.0f,20.0f,0.0f };
-	hp4_->GetWorldTransform()->translation_ = { 80.0f,20.0f,0.0f };
-	hp5_->GetWorldTransform()->translation_ = { 100.0f,20.0f,0.0f };
 
 	fade_ = std::make_unique <Fade>();
 	fade_->Initialize();
@@ -226,40 +215,12 @@ void GamePlayScene::Draw()
 	config_->Draw(*camera_);
 
 
-	if (player_->GetHP() == 5)
-	{
-
-		hp1_->Draw(*camera_);
-		hp2_->Draw(*camera_);
-		hp3_->Draw(*camera_);
-		hp4_->Draw(*camera_);
-		hp5_->Draw(*camera_);
-	}
-	if (player_->GetHP() == 4)
-	{
-
-		hp1_->Draw(*camera_);
-		hp2_->Draw(*camera_);
-		hp3_->Draw(*camera_);
-		hp4_->Draw(*camera_);
-	}
-	if (player_->GetHP() == 3)
-	{
-
-		hp1_->Draw(*camera_);
-		hp2_->Draw(*camera_);
-		hp3_->Draw(*camera_);
-	}
-	if (player_->GetHP() == 2)
-	{
-
-		hp1_->Draw(*camera_);
-		hp2_->Draw(*camera_);
-	}
-	if (player_->GetHP() == 1)
-	{
-
-		hp1_->Draw(*camera_);
+	// HP に応じて描画
+	int hp = player_->GetHP();
+	for (int i = 0; i < hp; ++i) {
+		if (hpTextures_[i]) {
+			hpTextures_[i]->Draw(*camera_);
+		}
 	}
 
 	fade_->Draw(*camera_);
@@ -270,8 +231,6 @@ void GamePlayScene::Draw()
 
 void GamePlayScene::CheckAllCollisions()
 {
-
-
 	//コライダーのリストをクリア
 	colliderManager_->ListClear();
 
@@ -301,11 +260,7 @@ void GamePlayScene::CheckAllCollisions()
 		}
 	}
 
-
-
 	colliderManager_->AddColliders(goal_.get());
-
-	//colliderManager_->AddColliders(levelEditor);
 	//当たり判定
 	colliderManager_->ChackAllCollisions();
 
@@ -394,18 +349,12 @@ void GamePlayScene::GamePlayPhase()
 
 	if (player_->GetHP() == 0)
 	{
-		
-
 		if(player_->GetEndMove())
 		{
 			CreateDeathEffect({ player_->GetWorldPosition().x,player_->GetWorldPosition().y,player_->GetWorldPosition().z - 4.0f });
 			ChangePhase(Phase::kDeath);
 			fade_->Start(Fade::Status::FadeOut, 1.5f);
 		}
-
-		//player->GetWorldTransform()->translation_.y += 1.0f;
-
-		
 	}
 
 	fade_->Update();
@@ -416,11 +365,11 @@ void GamePlayScene::GamePlayPhase()
 	}
 
 	config_->Update();
-	hp1_->Update();
-	hp2_->Update();
-	hp3_->Update();
-	hp4_->Update();
-	hp5_->Update();
+
+	//HP(UI)の更新
+	for (int i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i]->Update();
+	}
 
 
 	for (Enemy* enemy : enemys_) {
@@ -498,10 +447,6 @@ void GamePlayScene::GamePlayPhase()
 
 	CheckAllCollisions();
 
-
-	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
-	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
-
 	// ブロックの更新処理
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
@@ -530,8 +475,6 @@ void GamePlayScene::GameClearPhase()
 
 	cameraController_->Update();
 
-	//colliderManager_->UpdateWorldTransform();
-
 
 	fade_->Update();
 
@@ -544,11 +487,11 @@ void GamePlayScene::GameClearPhase()
 	}
 
 	config_->Update();
-	hp1_->Update();
-	hp2_->Update();
-	hp3_->Update();
-	hp4_->Update();
-	hp5_->Update();
+
+	//HP（UI）の更新
+	for (int i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i]->Update();
+	}
 
 	for (Enemy* enemy : enemys_)
 	{
@@ -558,15 +501,6 @@ void GamePlayScene::GameClearPhase()
 		}
 	}
 
-	//deathEffect_.remove_if([](DeathEffect* hitEffects) {
-	//	if (hitEffects->IsDead())
-	//	{
-	//		//実行時間をすぎたらメモリ削除
-	//		delete hitEffects;
-	//		return true;
-	//	}
-	//	return false;
-	//	});
 
 	enemys_.remove_if([](Enemy* enemys) {
 		if (enemys->GetIsAlive() == false) {
@@ -620,9 +554,6 @@ void GamePlayScene::GameClearPhase()
 		}
 	}
 
-	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
-	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
-
 }
 
 void GamePlayScene::GameOverPhase()
@@ -637,9 +568,6 @@ void GamePlayScene::GameOverPhase()
 
 	cameraController_->Update();
 
-	//colliderManager_->UpdateWorldTransform();
-
-
 	fade_->Update();
 
 	
@@ -651,11 +579,11 @@ void GamePlayScene::GameOverPhase()
 	}
 
 	config_->Update();
-	hp1_->Update();
-	hp2_->Update();
-	hp3_->Update();
-	hp4_->Update();
-	hp5_->Update();
+
+	//HP（UI）の更新
+	for (int i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i]->Update();
+	}
 
 	for (Enemy* enemy : enemys_) {
 		enemy->Update();
@@ -664,15 +592,6 @@ void GamePlayScene::GameOverPhase()
 		}
 	}
 
-	//deathEffect_.remove_if([](DeathEffect* hitEffects) {
-	//	if (hitEffects->IsDead())
-	//	{
-	//		//実行時間をすぎたらメモリ削除
-	//		delete hitEffects;
-	//		return true;
-	//	}
-	//	return false;
-	//	});
 
 	enemys_.remove_if([](Enemy* enemys) {
 		if (enemys->GetIsAlive() == false) {
@@ -687,7 +606,6 @@ void GamePlayScene::GameOverPhase()
 		deathEffects->Update();
 	}
 
-	//levelEditor->Update();
 
 	int i = 0;
 	for (Ground* ground : grounds_)
@@ -712,17 +630,6 @@ void GamePlayScene::GameOverPhase()
 
 	CheckAllCollisions();
 
-
-	//camera->transform.translate.x = LerpShortTranslate(camera->transform.translate.x, player->GetWorldTransform()->translation_.x, 0.04f);
-	//camera->transform.translate.y = LerpShortTranslate(camera->transform.translate.y, player->GetWorldTransform()->translation_.y, 0.04f);
-
-	//for (std::vector<Model*>& worldTransforBlockLine : Block_) {
-	//	for (Model* Block : worldTransforBlockLine) {
-	//		if (!Block)
-	//			continue;
-	//		Block->Update();
-	//	}
-	//}
 
 	// ブロックの更新処理
 	for (std::vector<Model*>& blockLine : blocks_)

@@ -127,11 +127,8 @@ private:
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
 	std::unique_ptr<AobaraEngine::Sprite> config_ = nullptr;
-	std::unique_ptr<AobaraEngine::Sprite> hp1_ = nullptr;
-	std::unique_ptr<AobaraEngine::Sprite> hp2_ = nullptr;
-	std::unique_ptr<AobaraEngine::Sprite> hp3_ = nullptr;
-	std::unique_ptr<AobaraEngine::Sprite> hp4_ = nullptr;
-	std::unique_ptr<AobaraEngine::Sprite> hp5_ = nullptr;
+	std::array<std::unique_ptr<AobaraEngine::Sprite>, 5> hpTextures_;
+
 
 	Phase phase_;
 
