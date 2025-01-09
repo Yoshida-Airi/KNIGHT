@@ -6,7 +6,7 @@ using namespace AobaraEngine;
 
 Model::~Model()
 {
-	delete worldTransform_;
+	//delete worldTransform_;
 }
 
 void Model::Initialize(const std::string& filename)
@@ -18,7 +18,7 @@ void Model::Initialize(const std::string& filename)
 	animation_ = Animation::GetInstance();
 	srvManager_ = SrvManager::GetInstance();
 
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique<WorldTransform>();
 	worldTransform_->Initialize();
 
 
@@ -222,7 +222,7 @@ void Model::ModelDebug(const char* name)
 
 void Model::Parent(Model* model)
 {
-	this->worldTransform_->parent_ = model->worldTransform_;
+	this->worldTransform_->parent_ = model->worldTransform_.get();
 }
 
 SkinCluster Model::CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton/*, const ModelData& modelData*/)

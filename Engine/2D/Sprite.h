@@ -98,7 +98,7 @@ namespace AobaraEngine
 
 		/// @brief ワールド変換を取得
 		/// @return ワールドトランスフォーム
-		WorldTransform* GetWorldTransform()const { return worldTransform_; };
+		WorldTransform* GetWorldTransform()const { return worldTransform_.get(); };
 
 
 		/// @brief スプライトの生成
@@ -116,7 +116,7 @@ namespace AobaraEngine
 		GraphicsPipelineManager* psoManager_;
 		TextureManager* texture_;
 
-		WorldTransform* worldTransform_;
+		std::unique_ptr< WorldTransform> worldTransform_;
 
 		Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース
 		Microsoft::WRL::ComPtr< ID3D12Resource> materialResource_;	//マテリアルリソース

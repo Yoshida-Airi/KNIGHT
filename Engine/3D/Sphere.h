@@ -56,7 +56,7 @@ namespace AobaraEngine
 
 		/// @brief ワールドトランスフォームを取得
 		/// @return ワールドトランスフォームへのポインタ
-		WorldTransform* GetWorldTransform()const { return worldTransform_; };
+		WorldTransform* GetWorldTransform()const { return worldTransform_.get(); };
 
 		/// @brief 球体の生成
 		/// @param textureHandle テクスチャ番号
@@ -83,7 +83,7 @@ namespace AobaraEngine
 
 		uint32_t textureHandle_;
 
-		WorldTransform* worldTransform_ = {};
+		std::unique_ptr< WorldTransform> worldTransform_ = {};
 
 		//分割数
 		const uint32_t kSubdivision_ = 16;

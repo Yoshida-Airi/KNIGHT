@@ -93,13 +93,13 @@ namespace AobaraEngine
 
 		/// @brief ワールドトランスフォームを取得
 		/// @return ワールドトランスフォーム
-		WorldTransform* GetWorldTransform()const { return worldTransform_; };
+		WorldTransform* GetWorldTransform()const { return worldTransform_.get(); };
 
 		/// @brief ワールドトランスフォームを設定
 		/// @param worldTransform 設定するワールドトランスフォーム
 		void SetWorldTransform(WorldTransform* worldTransform)
 		{
-			worldTransform_ = worldTransform;
+			worldTransform_.reset(worldTransform);
 		}
 
 		/// @brief アニメーションデータを設定
@@ -148,7 +148,7 @@ namespace AobaraEngine
 		Animation* animation_;
 		SrvManager* srvManager_;
 
-		WorldTransform* worldTransform_;
+		std::unique_ptr< WorldTransform> worldTransform_;
 
 		ModelData modelData_;
 

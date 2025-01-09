@@ -66,7 +66,7 @@ namespace AobaraEngine
 
 		/// @brief ワールドトランスフォームを取得
 		/// @return ワールドトランスフォーム
-		WorldTransform* GetWorldTransform()const { return worldTransform_; };
+		WorldTransform* GetWorldTransform()const { return worldTransform_.get(); };
 
 		/// @brief 三角形の生成
 		/// @param textureHandle テクスチャ番号
@@ -97,7 +97,7 @@ namespace AobaraEngine
 
 		uint32_t textureHandle_;
 
-		WorldTransform* worldTransform_;
+		std::unique_ptr< WorldTransform> worldTransform_;
 
 		bool isInvisible_ = false;
 

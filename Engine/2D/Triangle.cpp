@@ -7,7 +7,7 @@
 
 AobaraEngine::Triangle::~Triangle()
 {
-	delete worldTransform_;
+	//delete worldTransform_;
 }
 
 void AobaraEngine::Triangle::Initialize(const uint32_t& textureHandle)
@@ -16,7 +16,7 @@ void AobaraEngine::Triangle::Initialize(const uint32_t& textureHandle)
 	dxCommon_ = DirectXCommon::GetInstance();
 	psoManager_ = GraphicsPipelineManager::GetInstance();
 	texture_ = TextureManager::GetInstance();
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique< WorldTransform>();
 	worldTransform_->Initialize();
 	textureHandle_ = textureHandle;
 

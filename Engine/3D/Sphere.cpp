@@ -3,7 +3,7 @@ using namespace AobaraEngine;
 
 Sphere::~Sphere()
 {
-	delete worldTransform_;
+	//delete worldTransform_;
 }
 
 void Sphere::Initialize(uint32_t textureHandle)
@@ -16,7 +16,7 @@ void Sphere::Initialize(uint32_t textureHandle)
 	MaterialBuffer();
 	LightBuffer();
 
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique< WorldTransform>();
 	worldTransform_->Initialize();
 	textureHandle_ = textureHandle;
 

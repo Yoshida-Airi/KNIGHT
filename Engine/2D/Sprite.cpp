@@ -7,7 +7,6 @@
 
 AobaraEngine::Sprite::~Sprite()
 {
-	delete worldTransform_;
 }
 
 void AobaraEngine::Sprite::Initialize(const uint32_t& textureHandle)
@@ -17,7 +16,7 @@ void AobaraEngine::Sprite::Initialize(const uint32_t& textureHandle)
 	psoManager_ = GraphicsPipelineManager::GetInstance();
 	texture_ = TextureManager::GetInstance();
 
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique< WorldTransform>();
 	worldTransform_->Initialize();
 	textureHandle_ = textureHandle;
 
