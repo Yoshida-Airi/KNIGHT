@@ -7,8 +7,6 @@ using namespace AobaraEngine;
 
 ParticleSystem::~ParticleSystem()
 {
-//	delete emitter_;
-
 }
 
 void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition)
@@ -23,8 +21,6 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 	camera_ = camera;
 	isRandomPosition_ = isRandomPosition;
 	velocity_ = velocity;
-
-	//emitter_ = emitter;
 
 	uvTransform_ =
 	{
@@ -68,11 +64,10 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 	vertexData_[RT].position = { right_,top_,0.0f,1.0f };
 	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
-
 	SetMaterialData(color);
 	SetAnchorPoint({ 0.5f,0.5f });
 
-
+	//インデックスデータの処理
 	indexData_[0] = 0;
 	indexData_[1] = 1;
 	indexData_[2] = 2;
@@ -80,6 +75,7 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 	indexData_[4] = 3;
 	indexData_[5] = 2;
 
+	//エミッターの初期設定
 	emitter_->count = 10;
 	emitter_->frequency = 1.0f;
 	emitter_->frequencyTime = 0.0f;

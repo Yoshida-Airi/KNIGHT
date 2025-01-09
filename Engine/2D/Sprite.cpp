@@ -63,7 +63,6 @@ void AobaraEngine::Sprite::Initialize(const uint32_t& textureHandle)
 
 	SetMaterialData(color);
 
-
 	indexData_[0] = 0;
 	indexData_[1] = 1;
 	indexData_[2] = 2;
@@ -80,15 +79,10 @@ void AobaraEngine::Sprite::Update()
 	worldTransform_->UpdateWorldMatrix();
 	UpdateVertexBuffer();
 
-
-
-
 	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
-
-
 
 }
 
@@ -99,8 +93,6 @@ void AobaraEngine::Sprite::Draw(const Camera& camera)
 		return;
 	}
 
-
-	
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(psoManager_->GetPsoMember().sprite.rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(psoManager_->GetPsoMember().sprite.graphicPipelineState.Get());
 
