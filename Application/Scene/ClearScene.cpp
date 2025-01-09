@@ -4,8 +4,6 @@ using namespace AobaraEngine;
 
 ClearScene::~ClearScene()
 {
-	delete camera_;
-	delete effect_;
 }
 
 void ClearScene::Initialize()
@@ -21,7 +19,7 @@ void ClearScene::Initialize()
 	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera_ = new Camera;
+	camera_ = std::make_unique< Camera>();
 	camera_->Initialize();
 
 	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
@@ -39,7 +37,7 @@ void ClearScene::Initialize()
 	fade_->Start(Fade::Status::FadeIn, 2.5f);
 
 	titleEffect_ = std::make_unique <TitleEffect>();
-	titleEffect_->Initialize(camera_);
+	titleEffect_->Initialize(camera_.get());
 	titleEffect_->SetFlag(true);
 	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
 

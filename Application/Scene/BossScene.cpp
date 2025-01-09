@@ -4,28 +4,6 @@
 
 BossScene::~BossScene()
 {
-
-	//delete cameraController_;
-
-	//for (Enemy* enemy : enemys_)
-	//{
-	//	delete enemy;
-	//}
-
-	//for (FlyEnemy* flyEnemy : flyEnemys_)
-	//{
-	//	delete flyEnemy;
-	//}
-
-	//for (Ground* ground : grounds_)
-	//{
-	//	delete ground;
-	//}
-
-	//for (DeathEffect* deathEffects : deathEffect_) {
-	//	delete deathEffects;
-	//}
-
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
 		for (Model* block : blockLine)
@@ -35,8 +13,6 @@ BossScene::~BossScene()
 	}
 
 	blocks_.clear();
-
-	delete mapChipField_;
 }
 
 void BossScene::Initialize()
@@ -115,12 +91,12 @@ void BossScene::Initialize()
 
 	phase_ = Phase::kPlay;
 
-	mapChipField_ = new MapChipField;
+	mapChipField_ = std::make_unique< MapChipField>();
 	mapChipField_->LoadMapChipCsv("Resources/CSV/bossField.csv");
 
 	GenerateBlocks();
 
-	player_->SetMapChipField(mapChipField_);
+	player_->SetMapChipField(mapChipField_.get());
 }
 
 void BossScene::Update()

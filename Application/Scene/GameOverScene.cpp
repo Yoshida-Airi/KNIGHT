@@ -5,8 +5,6 @@ using namespace AobaraEngine;
 
 GameOverScene::~GameOverScene()
 {
-	delete camera_;
-	delete effect_;
 }
 
 void GameOverScene::Initialize()
@@ -20,12 +18,10 @@ void GameOverScene::Initialize()
 	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera_ = new Camera;
+	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
 	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
-
-
 }
 
 void GameOverScene::Update()
@@ -51,8 +47,6 @@ void GameOverScene::Update()
 	}
 
 	title_->Update();
-
-
 }
 
 void GameOverScene::Draw()

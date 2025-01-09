@@ -38,12 +38,12 @@ public:
 
 private:
 
-	EffectManager* effect_ = nullptr;
+	std::unique_ptr<EffectManager> effect_ = nullptr;
 	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	AobaraEngine::Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	AobaraEngine::Camera* camera_;
+	std::unique_ptr<AobaraEngine::Camera> camera_;
 
 	uint32_t titleTexture_;
 

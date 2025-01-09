@@ -3,8 +3,6 @@
 
 MyGame::~MyGame()
 {
-	delete scene_;
-
 }
 
 void MyGame::Initialize()
@@ -26,10 +24,6 @@ void MyGame::Initialize()
 	sceneManager_->ChangeScene("TITLE");
 #endif // _NDEBUG
 
-
-
-
-	
 }
 
 void MyGame::Update()

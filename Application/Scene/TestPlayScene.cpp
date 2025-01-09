@@ -4,9 +4,6 @@
 using namespace AobaraEngine;
 TestPlayScene::~TestPlayScene()
 {
-	delete camera_;
-	delete levelEditor_;
-
 	for (std::vector<Model*>& blockLine : blocks_)
 	{
 		for (Model* block : blockLine)
@@ -16,14 +13,11 @@ TestPlayScene::~TestPlayScene()
 	}
 
 	blocks_.clear();
-
-	delete mapChipField_;
-
 }
 
 void TestPlayScene::Initialize()
 {
-	camera_ = new Camera;
+	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
 
 	walkAnimation_ = Animation::GetInstance()->LoadAnimationFile("Resources/SampleAssets/human/walk.gltf");
@@ -46,12 +40,12 @@ void TestPlayScene::Initialize()
 
 
 
-	levelEditor_ = new LevelEditor();
+	levelEditor_ = std::make_unique<LevelEditor>();
 	levelEditor_->LoaderJsonFile("Resources/Level/levelEditor.json");
 
 
 
-	mapChipField_ = new MapChipField();
+	mapChipField_ = std::make_unique<MapChipField>();
 	mapChipField_->LoadMapChipCsv("Resources/CSV/field.csv");
 
 
