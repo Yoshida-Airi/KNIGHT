@@ -15,7 +15,7 @@ SceneManager* SceneManager::GetInstance()
 SceneManager::~SceneManager()
 {
 	//最後のシーンの解放
-	delete scene_;
+	//delete scene_;
 }
 
 void SceneManager::Update()
@@ -26,11 +26,11 @@ void SceneManager::Update()
 		//旧シーンの終了
 		if (scene_)
 		{
-			delete scene_;
+			scene_.reset();
 		}
 
 		//シーン切り替え
-		scene_ = nextSscene_;
+		scene_.reset(nextSscene_);
 		nextSscene_ = nullptr;
 		scene_->Initialize();
 	}

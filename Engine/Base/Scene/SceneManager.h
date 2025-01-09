@@ -6,6 +6,7 @@
 #pragma once
 #include"BaseScene.h"
 #include"AbstractSceneFactory.h"
+#include<memory>
 
 /**
 *   @class SceneManager
@@ -33,7 +34,7 @@ private:
 	static SceneManager* instance_;	//シングルトン
 	AobaraEngine::AbstractSceneFactory* sceneFactory_ = nullptr;
 	//今のシーン
-	AobaraEngine::BaseScene* scene_ = nullptr;
+	std::unique_ptr<AobaraEngine::BaseScene> scene_ = nullptr;
 	AobaraEngine::BaseScene* nextSscene_ = nullptr;
 };
 

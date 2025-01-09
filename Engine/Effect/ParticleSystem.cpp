@@ -7,7 +7,7 @@ using namespace AobaraEngine;
 
 ParticleSystem::~ParticleSystem()
 {
-	delete emitter_;
+//	delete emitter_;
 
 }
 
@@ -101,7 +101,7 @@ void ParticleSystem::Update()
 	{
 		if (emitter_->frequency <= emitter_->frequencyTime)
 		{
-			particles_.splice(particles_.end(), Emission(emitter_, randomEngine, velocity_, isRandomPosition_));
+			particles_.splice(particles_.end(), Emission(emitter_.get(), randomEngine, velocity_, isRandomPosition_));
 			emitter_->frequencyTime -= emitter_->frequency;
 		}
 	}

@@ -178,7 +178,7 @@ public:
 
 	void SetParitcleScale(Vector3 scale);
 
-	Emitter* emitter_ = new Emitter();
+	std::unique_ptr< Emitter> emitter_ = std::make_unique< Emitter>();
 private://プライベート変数
 
 	AobaraEngine::GraphicsPipelineManager* psoManager_ = nullptr;
