@@ -6,12 +6,14 @@
 #pragma once
 #include"GameObject.h"
 
+using namespace AobaraEngine;
+
 /**
 * @class Weapon
 * @brief 武器クラス
 * @details 武器の動作と描画を管理し、攻撃状態や親オブジェクトとの関連を設定する。
 */
-class Weapon :public GameObject
+class Weapon :public AobaraEngine::GameObject
 {
 public:
 
@@ -32,7 +34,7 @@ public:
 	* @param camera カメラ
 	* @details 武器の描画を行う。
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief ワールド座標を取得
@@ -51,7 +53,7 @@ public:
 	* @param other 衝突相手のコライダー
 	* @details 衝突が発生した際の処理を定義する。
 	*/
-	[[maybe_unused]] void OnCollision([[maybe_unused]] Collider* other)override;
+	[[maybe_unused]] void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief 親オブジェクトを設定
@@ -60,7 +62,7 @@ public:
 	*/
 	void SetParent(Model* model)
 	{
-		weaponModel->Parent(model);
+		weaponModel_->Parent(model);
 	};
 
 	/**
@@ -83,8 +85,8 @@ public:
 	}
 
 private:
-	std::unique_ptr<Model>weaponModel;
-	std::vector<Model*>weaponModels;
+	std::unique_ptr<AobaraEngine::Model>weaponModel_;
+	std::vector<AobaraEngine::Model*>weaponModels_;
 
 	bool isAttack_ = false; //攻撃中かどうか : ture 攻撃中
 };

@@ -46,152 +46,165 @@ struct SkinCluster
 *   @class DeathEffect
 *	@brief  モデルクラス
 */
-class Model
+namespace AobaraEngine
 {
-public:
-	~Model(); ///< デストラクタ
-
-	/// @brief モデルの初期化
-	/// @param filename モデルファイルのパス
-	void Initialize(const std::string& filename);
-
-	/// @brief モデルの更新処理
-	void Update();
-
-	/// @brief モデルの描画処理
-	/// @param camera 使用するカメラ
-	void Draw(Camera* camera);
-
-	/// @brief 表示切り替え
-	/// @param isInvisible true:表示シない
-	void SetisInvisible(bool isInvisible)
+	class Model
 	{
-		isInvisible_ = isInvisible;
-	}
+	public:
+		~Model(); ///< デストラクタ
 
-	/// @brief アニメーションの使用設定
-	/// @param isUse true:アニメーション使用する
-	void UseAnimation(bool isUse)
-	{
-		animation.isValid = isUse;
-	}
+		/// @brief モデルの初期化
+		/// @param filename モデルファイルのパス
+		void Initialize(const std::string& filename);
 
-	/// @brief モデルを生成
-	/// @param filename モデルファイルのパス
-	/// @return 生成したモデル
-	static Model* Create(const std::string& filename);
+		/// @brief モデルの更新処理
+		void Update();
 
-	/// @brief デバッグ情報の表示
-	/// @param name モデル名
-	void ModelDebug(const char* name);
+		/// @brief モデルの描画処理
+		/// @param camera 使用するカメラ
+		void Draw(const AobaraEngine::Camera& camera);
 
-	/// @brief 親子関係を結ぶ
-	/// @param model 親のモデル
-	void Parent(Model* model);
+		/// @brief 表示切り替え
+		/// @param isInvisible true:表示シない
+		void SetisInvisible(bool isInvisible)
+		{
+			isInvisible_ = isInvisible;
+		}
 
-	/// @brief ワールドトランスフォームを取得
-	/// @return ワールドトランスフォーム
-	WorldTransform* GetWorldTransform()const { return worldTransform_; };
+		/// @brief アニメーションの使用設定
+		/// @param isUse true:アニメーション使用する
+		void UseAnimation(bool isUse)
+		{
+			animationData_.isValid = isUse;
+		}
 
-	/// @brief ワールドトランスフォームを設定
-	/// @param worldTransform 設定するワールドトランスフォーム
-	void SetWorldTransform(WorldTransform* worldTransform)
-	{
-		worldTransform_ = worldTransform;
-	}
-	
-	/// @brief アニメーションデータを設定
-	/// @param animationData アニメーションデータ
-	void SetAnimation(AnimationData animationData)
-	{
-		animation = animationData;
-	}
+		/// @brief モデルを生成
+		/// @param filename モデルファイルのパス
+		/// @return 生成したモデル
+		static Model* Create(const std::string& filename);
 
-	/// @brief アニメーションを移動させるフラグの設定
-	/// @param isActive アニメーションが有効な場合は true
-	void MoveAnimation(bool isActive)
-	{
-		isActiveAnimation = isActive;
-	}
+		/// @brief デバッグ情報の表示
+		/// @param name モデル名
+		void ModelDebug(const char* name);
 
-	/// @brief マテリアルデータを設定
-	/// @param material マテリアルの色
-	void SetMaterial(Vector4 material)
-	{
-		materialData_->color = material;
-	}
+		/// @brief 親子関係を結ぶ
+		/// @param model 親のモデル
+		void Parent(Model* model);
 
-	/// @brief ライトの設定
-	/// @param isLight ライトを有効にする場合は true
-	void SetLight(uint32_t isLight)
-	{
-		materialData_->enableLighting = isLight;
-	}
+		/// @brief ワールドトランスフォームを取得
+		/// @return ワールドトランスフォーム
+		WorldTransform* GetWorldTransform()const { return worldTransform_.get(); };
 
-private:
-	DirectXCommon* dxCommon_;
-	GraphicsPipelineManager* psoManager_;
-	TextureManager* texture_;
-	ModelLoader* modelLoader_;
-	Animation* animation_;
-	SrvManager* srvManager_;
+		/// @brief ワールドトランスフォームを設定
+		/// @param worldTransform 設定するワールドトランスフォーム
+		void SetWorldTransform(WorldTransform* worldTransform)
+		{
+			worldTransform_.reset(worldTransform);
+		}
 
-	WorldTransform* worldTransform_;
+		/// @brief アニメーションデータを設定
+		/// @param animationData アニメーションデータ
+		void SetAnimation(AnimationData animationData)
+		{
+			animationData_ = animationData;
+		}
 
-	ModelData modelData_;
+		/// @brief アニメーションを移動させるフラグの設定
+		/// @param isActive アニメーションが有効な場合は true
+		void MoveAnimation(bool isActive)
+		{
+			isActiveAnimation_ = isActive;
+		}
 
-	Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース
-	Microsoft::WRL::ComPtr< ID3D12Resource> materialResource_;	//マテリアルリソース
-	Microsoft::WRL::ComPtr < ID3D12Resource> lightResource_;
-	Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
+		/// @brief マテリアルデータを設定
+		/// @param material マテリアルの色
+		void SetMaterial(Vector4 material)
+		{
+			materialData_->color = material;
+		}
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
+		void SetTexture(uint32_t texture)
+		{
+			textureHandle_ = texture;
+		}
+
+		uint32_t GetTexture()
+		{
+			return textureHandle_;
+		}
+
+		/// @brief ライトの設定
+		/// @param isLight ライトを有効にする場合は true
+		void SetLight(uint32_t isLight)
+		{
+			materialData_->enableLighting = isLight;
+		}
+
+	private:
+		DirectXCommon* dxCommon_;
+		GraphicsPipelineManager* psoManager_;
+		TextureManager* texture_;
+		ModelLoader* modelLoader_;
+		Animation* animation_;
+		SrvManager* srvManager_;
+
+		std::unique_ptr< WorldTransform> worldTransform_;
+
+		ModelData modelData_;
+
+		Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース
+		Microsoft::WRL::ComPtr< ID3D12Resource> materialResource_;	//マテリアルリソース
+		Microsoft::WRL::ComPtr < ID3D12Resource> lightResource_;
+		Microsoft::WRL::ComPtr < ID3D12Resource> indexResource_;
+
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 
 
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
-	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+		D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
+		D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-	VertexData* vertexData_ = nullptr;
-	Material* materialData_ = nullptr;	//マテリアルデータ
-	DirectionalLight* lightData_ = nullptr;
-	uint32_t* indexData_ = nullptr;
+		VertexData* vertexData_ = nullptr;
+		Material* materialData_ = nullptr;	//マテリアルデータ
+		DirectionalLight* lightData_ = nullptr;
+		uint32_t* indexData_ = nullptr;
 
-	uint32_t textureHandle_;
-	bool isInvisible_ = false;
+		uint32_t textureHandle_;
+		bool isInvisible_ = false;
 
 
-	AnimationData animation;
-	Skeleton skelton;
-	SkinCluster skinCluster;
-	float animationTime = 0.0f;
+		AnimationData animationData_;
+		Skeleton skelton_;
+		SkinCluster skinCluster_;
+		float animationTime_ = 0.0f;
 
-	bool isActiveAnimation = true;
+		bool isActiveAnimation_ = true;
 
-	
-private:
 
-	/// @brief 頂点のバッファを取得
-	void VertexBuffer();
+	private:
 
-	/// @brief マテリアルのバッファを取得
-	void MaterialBuffer();
+		/// @brief 頂点のバッファを取得
+		void VertexBuffer();
 
-	/// @brief ライトのバッファを取得
-	void LightBuffer();
+		/// @brief マテリアルのバッファを取得
+		void MaterialBuffer();
 
-	/// @brief インデックスバッファを取得
-	void IndexBuffer();
+		/// @brief ライトのバッファを取得
+		void LightBuffer();
 
-	/// @brief スキンクラスターを生成
-	/// @param device DirectXデバイス
-	/// @param skeleton スケルトンデータ
-	/// @return 生成したスキンクラスター
-	SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton/*, const ModelData& modelData*/);
+		/// @brief インデックスバッファを取得
+		void IndexBuffer();
 
-	/// @brief クラスターを更新
-	/// @param skinCluster 更新するスキンクラスター
-	/// @param skelton スケルトンデータ
-	void ClasterUpdate(SkinCluster& skinCluster, const Skeleton& skeltion);
+		/// @brief スキンクラスターを生成
+		/// @param device DirectXデバイス
+		/// @param skeleton スケルトンデータ
+		/// @return 生成したスキンクラスター
+		SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton/*, const ModelData& modelData*/);
 
-};
+		/// @brief クラスターを更新
+		/// @param skinCluster 更新するスキンクラスター
+		/// @param skelton スケルトンデータ
+		void ClasterUpdate(SkinCluster& skinCluster, const Skeleton& skeltion);
 
+	};
+
+}

@@ -27,12 +27,12 @@ void WorldTransform::CreateConstBuffer()
 
 void WorldTransform::Map()
 {
-	constBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&constMap));
+	constBuffer_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 }
 
 void WorldTransform::TransferMatrix()
 {
-	constMap->matWorld = matWorld_;
+	constMap_->matWorld = matWorld_;
 }
 
 void WorldTransform::UpdateWorldMatrix()

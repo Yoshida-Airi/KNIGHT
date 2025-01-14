@@ -1,14 +1,12 @@
 #include "ParticleSystem.h"
 #include"TextureManager.h"
-
+using namespace AobaraEngine;
 /*=====================================*/
 /* 　　　　   パブリックメソッド　　　	　 */
 /*=====================================*/
 
 ParticleSystem::~ParticleSystem()
 {
-	delete emitter_;
-
 }
 
 void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition)
@@ -24,9 +22,7 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 	isRandomPosition_ = isRandomPosition;
 	velocity_ = velocity;
 
-	//emitter_ = emitter;
-
-	uvTransform =
+	uvTransform_ =
 	{
 		{1.0f,1.0f,1.0f,},
 		{0.0f,0.0f,0.0f,},
@@ -42,37 +38,36 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 
 	SetSRV();
 
-	left = 0.0f * textureSize_.x;
-	right = 1.0f * textureSize_.x;
-	top = 0.0f * textureSize_.y;
-	bottom = 1.0f * textureSize_.y;
+	left_ = 0.0f * textureSize_.x;
+	right_ = 1.0f * textureSize_.x;
+	top_ = 0.0f * textureSize_.y;
+	bottom_ = 1.0f * textureSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
 
 
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
 	//頂点の設定
-	vertexData_[LB].position = { left,bottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { left_,bottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { left,top,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { left_,top_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { right,bottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { right_,bottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { right,top,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
-
+	vertexData_[RT].position = { right_,top_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 	SetMaterialData(color);
 	SetAnchorPoint({ 0.5f,0.5f });
 
-
+	//インデックスデータの処理
 	indexData_[0] = 0;
 	indexData_[1] = 1;
 	indexData_[2] = 2;
@@ -80,6 +75,7 @@ void ParticleSystem::Initialize(uint32_t textureHandle, Camera* camera, Vector3 
 	indexData_[4] = 3;
 	indexData_[5] = 2;
 
+	//エミッターの初期設定
 	emitter_->count = 10;
 	emitter_->frequency = 1.0f;
 	emitter_->frequencyTime = 0.0f;
@@ -96,19 +92,19 @@ void ParticleSystem::Update()
 	std::random_device seedGenerator;
 	std::mt19937 randomEngine(seedGenerator());
 
-	emitter_->frequencyTime += kDeltaTime;
-	if (isMakeParticle == true)
+	emitter_->frequencyTime += kDeltaTime_;
+	if (isMakeParticle_ == true)
 	{
 		if (emitter_->frequency <= emitter_->frequencyTime)
 		{
-			particles.splice(particles.end(), Emission(emitter_, randomEngine, velocity_, isRandomPosition_));
+			particles_.splice(particles_.end(), Emission(emitter_.get(), randomEngine, velocity_, isRandomPosition_));
 			emitter_->frequencyTime -= emitter_->frequency;
 		}
 	}
 
-	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform.translate));
+	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	if (isInvisible_ == true)
@@ -117,17 +113,17 @@ void ParticleSystem::Update()
 	}
 
 	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
-	Matrix4x4 cameraMatrix = Inverse(camera_->matView);
+	Matrix4x4 cameraMatrix = Inverse(camera_->matView_);
 
 	Matrix4x4 billboardMatrix;
 
 
-	numInstance = 0;
-	for (std::list<Particle>::iterator particleIterator = particles.begin(); particleIterator != particles.end(); )
+	numInstance_ = 0;
+	for (std::list<Particle>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end(); )
 	{
 		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime)
 		{
-			particleIterator = particles.erase(particleIterator);
+			particleIterator = particles_.erase(particleIterator);
 			continue;
 		}
 
@@ -154,19 +150,19 @@ void ParticleSystem::Update()
 
 
 
-		particleIterator->transform.translate.x += (*particleIterator).velocity.x * kDeltaTime;
-		particleIterator->transform.translate.y += (*particleIterator).velocity.y * kDeltaTime;
-		particleIterator->transform.translate.z += (*particleIterator).velocity.z * kDeltaTime;
+		particleIterator->transform.translate.x += (*particleIterator).velocity.x * kDeltaTime_;
+		particleIterator->transform.translate.y += (*particleIterator).velocity.y * kDeltaTime_;
+		particleIterator->transform.translate.z += (*particleIterator).velocity.z * kDeltaTime_;
 
-		particleIterator->currentTime += kDeltaTime;
+		particleIterator->currentTime += kDeltaTime_;
 
 
-		if (numInstance < kNumMaxInstance)
+		if (numInstance_ < kNumMaxInstance_)
 		{
-			instancingData[numInstance].WVP = worldMatrix;
-			instancingData[numInstance].color = (*particleIterator).color;
-			instancingData[numInstance].color.w = alpha;
-			++numInstance;
+			instancingData_[numInstance_].WVP = worldMatrix;
+			instancingData_[numInstance_].color = (*particleIterator).color;
+			instancingData_[numInstance_].color.w = alpha;
+			++numInstance_;
 		}
 
 		++particleIterator;
@@ -190,14 +186,14 @@ void ParticleSystem::Draw()
 	//マテリアルCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCbufferの場所を設定
-	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
 	//カメラ用のCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera_->constBuffer_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。3はrootParamater[3]である。
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(3, texture_->GetSrvGPUHandle(textureHandle_));
 	//描画
 	/*dxCommon_->GetCommandList()->DrawInstanced(6, 1, 0, 0);*/
-	dxCommon_->GetCommandList()->DrawIndexedInstanced(6, numInstance, 0, 0, 0);
+	dxCommon_->GetCommandList()->DrawIndexedInstanced(6, numInstance_, 0, 0, 0);
 }
 
 
@@ -221,9 +217,9 @@ void ParticleSystem::Debug(const char* name)
 	{
 		if (ImGui::TreeNode("uv"))
 		{
-			ImGui::DragFloat2("UVTransform", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
-			ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-			ImGui::SliderAngle("UVRotate", &uvTransform.rotate.z);
+			ImGui::DragFloat2("UVTransform", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
+			ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
+			ImGui::SliderAngle("UVRotate", &uvTransform_.rotate.z);
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("emitter"))
@@ -242,23 +238,23 @@ void ParticleSystem::Debug(const char* name)
 
 			ImGui::Checkbox("isRandomPosition", &isRandomPosition_);
 			ImGui::Checkbox("isBillboard", &isBillboard_);
-			ImGui::Checkbox("isRandomAllVelocity", &isRandomAllVelocity);
-			ImGui::Checkbox("isRandomVelocityX", &isRandomVelocityX);
-			ImGui::Checkbox("isRandomVelocityY", &isRandomVelocityY);
-			ImGui::Checkbox("isRandomVelocityZ", &isRandomVelocityZ);
+			ImGui::Checkbox("isRandomAllVelocity", &isRandomAllVelocity_);
+			ImGui::Checkbox("isRandomVelocityX", &isRandomVelocityX_);
+			ImGui::Checkbox("isRandomVelocityY", &isRandomVelocityY_);
+			ImGui::Checkbox("isRandomVelocityZ", &isRandomVelocityZ_);
 
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("color"))
 		{
-			float color[3] = { particleColor.x,particleColor.y,particleColor.z };
+			float color[3] = { particleColor_.x,particleColor_.y,particleColor_.z };
 			ImGui::DragFloat3("particleColor", color, 0.01f, 0.0f, 1.0f);
 
-			particleColor.x = color[0];
-			particleColor.y = color[1];
-			particleColor.z = color[2];
+			particleColor_.x = color[0];
+			particleColor_.y = color[1];
+			particleColor_.z = color[2];
 
-			ImGui::Checkbox("isRandomColor", &isRandomColor);
+			ImGui::Checkbox("isRandomColor", &isRandomColor_);
 
 			ImGui::TreePop();
 		}
@@ -320,30 +316,30 @@ void ParticleSystem::UpdateVertexBuffer()
 
 
 	//テクスチャのサイズを合わせる
-	left = (0.0f - anchorPoint_.x) * cutSize_.x;
-	right = (1.0f - anchorPoint_.x) * cutSize_.x;
-	top = (0.0f - anchorPoint_.y) * cutSize_.y;
-	bottom = (1.0f - anchorPoint_.y) * cutSize_.y;
+	left_ = (0.0f - anchorPoint_.x) * cutSize_.x;
+	right_ = (1.0f - anchorPoint_.x) * cutSize_.x;
+	top_ = (0.0f - anchorPoint_.y) * cutSize_.y;
+	bottom_ = (1.0f - anchorPoint_.y) * cutSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
 
 
 
 	//頂点の設定
-	vertexData_[LB].position = { left,bottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { left_,bottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { left,top,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { left_,top_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { right,bottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { right_,bottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { right,top,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
+	vertexData_[RT].position = { right_,top_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 
 }
@@ -361,27 +357,27 @@ void ParticleSystem::AdjustTextureSize() {
 
 void ParticleSystem::InstancingBuffer()
 {
-	instancingResources_ = dxCommon_->CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance);
-	instancingResources_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+	instancingResources_ = dxCommon_->CreateBufferResource(sizeof(ParticleForGPU) * kNumMaxInstance_);
+	instancingResources_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
 
-	for (uint32_t index = 0; index < kNumMaxInstance; ++index)
+	for (uint32_t index = 0; index < kNumMaxInstance_; ++index)
 	{
-		instancingData[index].WVP = MakeIdentity4x4();
-		instancingData[index].color = { 1.0f,1.0f,1.0f,1.0f };
+		instancingData_[index].WVP = MakeIdentity4x4();
+		instancingData_[index].color = { 1.0f,1.0f,1.0f,1.0f };
 	}
 }
 
 void ParticleSystem::SetSRV()
 {
 	uint32_t srvIndex = srvManager_->Allocate();
-	srvManager_->CreateSRVforStructuredBuffer(srvIndex, instancingResources_.Get(), kNumMaxInstance, sizeof(ParticleForGPU));
-	instancingSrvHandleGPU = srvManager_->GetGPUDescriptorHandle(srvIndex);
+	srvManager_->CreateSRVforStructuredBuffer(srvIndex, instancingResources_.Get(), kNumMaxInstance_, sizeof(ParticleForGPU));
+	instancingSrvHandleGPU_ = srvManager_->GetGPUDescriptorHandle(srvIndex);
 }
 
 Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* emitter, Vector3 velocity, bool isRandamTranslate)
 {
 	std::uniform_real_distribution<float>distribution(-1.0f, 1.0f);
-	std::uniform_real_distribution<float>distTime(lifeTime.min, lifeTime.max);
+	std::uniform_real_distribution<float>distTime(lifeTime_.min, lifeTime_.max);
 
 	// エミッターのスケールを取得
 	Vector3 emitterScale = emitter->transform.scale;
@@ -394,7 +390,7 @@ Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* em
 	};
 
 	Particle particle;
-	particle.transform.scale = particleScale;
+	particle.transform.scale = particleScale_;
 	particle.transform.rotate = { 0.0f,3.14f,3.14f };
 
 	if (isRandamTranslate == true)
@@ -418,12 +414,12 @@ Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* em
 		};
 	}
 
-	if (isRandomAllVelocity == true)
+	if (isRandomAllVelocity_ == true)
 	{
 		//ランダムな速度で動かす場合
-		particle.velocity.x = velocity.x + randomTranslate.x;
-		particle.velocity.y = velocity.y + randomTranslate.y;
-		particle.velocity.z = velocity.z + randomTranslate.z;
+		particle.velocity.x = ( randomTranslate.x)* velocity.x;
+		particle.velocity.y = ( randomTranslate.y)* velocity.y;
+		particle.velocity.z = ( randomTranslate.z)*velocity.z;
 	}
 	else
 	{
@@ -432,31 +428,31 @@ Particle ParticleSystem::MakeNewParticle(std::mt19937& randomEngine, Emitter* em
 	}
 
 	// 各成分が独立してランダムに動く場合の処理
-	if (isRandomVelocityX)
+	if (isRandomVelocityX_)
 	{
-		particle.velocity.x = velocity.x + randomTranslate.x;
+		particle.velocity.x = velocity.x * randomTranslate.x;
 	}
-	if (isRandomVelocityY)
+	if (isRandomVelocityY_)
 	{
-		particle.velocity.y = velocity.y + randomTranslate.y;
+		particle.velocity.y = velocity.y * randomTranslate.y;
 	}
-	if (isRandomVelocityZ)
+	if (isRandomVelocityZ_)
 	{
-		particle.velocity.z = velocity.z + randomTranslate.z;
+		particle.velocity.z = velocity.z * randomTranslate.z;
 	}
 
-	if (isRandomColor)
+	if (isRandomColor_)
 	{
-		std::uniform_real_distribution<float>distRedColor(0.0f, particleColor.x);
-		std::uniform_real_distribution<float>distGreenColor(0.0f, particleColor.y);
-		std::uniform_real_distribution<float>distBlueColor(0.0f, particleColor.z);
+		std::uniform_real_distribution<float>distRedColor(0.0f, particleColor_.x);
+		std::uniform_real_distribution<float>distGreenColor(0.0f, particleColor_.y);
+		std::uniform_real_distribution<float>distBlueColor(0.0f, particleColor_.z);
 
 
 		particle.color = { distRedColor(randomEngine) ,distGreenColor(randomEngine) ,distBlueColor(randomEngine) ,1.0f };
 	}
 	else
 	{
-		particle.color = { particleColor.x,particleColor.y,particleColor.z,1.0f };
+		particle.color = { particleColor_.x,particleColor_.y,particleColor_.z,1.0f };
 	}
 	particle.lifeTime = distTime(randomEngine);
 	particle.currentTime = 0;
@@ -472,7 +468,7 @@ std::list<Particle> ParticleSystem::Emission(Emitter* emitter, std::mt19937& ran
 	float emissionRate = 10.0f; // 1フレームに10個のパーティクルを生成
 	float accumulatedTime = 1.0f;
 
-	accumulatedTime += kDeltaTime;
+	accumulatedTime += kDeltaTime_;
 
 	// パーティクルをエミッションレートに応じて生成
 	uint32_t particlesToEmit = static_cast<uint32_t>(accumulatedTime * emissionRate);
@@ -490,7 +486,7 @@ std::list<Particle> ParticleSystem::Emission(Emitter* emitter, std::mt19937& ran
 /// </summary>
 void ParticleSystem::StopMakeParticle()
 {
-	isMakeParticle = false;
+	isMakeParticle_ = false;
 }
 
 /// <summary>
@@ -498,45 +494,45 @@ void ParticleSystem::StopMakeParticle()
 /// </summary>
 void ParticleSystem::MoveMakeParticle()
 {
-	isMakeParticle = true;
+	isMakeParticle_ = true;
 }
 
 void ParticleSystem::SetRandomAllVelocity()
 {
-	isRandomAllVelocity = true;
+	isRandomAllVelocity_ = true;
 }
 
 void ParticleSystem::SetRandomVelocityX(bool isMove)
 {
-	isRandomVelocityX = isMove;
+	isRandomVelocityX_ = isMove;
 }
 
 void ParticleSystem::SetRandomVelocityY(bool isMove)
 {
-	isRandomVelocityY = isMove;
+	isRandomVelocityY_ = isMove;
 }
 
 void ParticleSystem::SetRandomVelocityZ(bool isMove)
 {
-	isRandomVelocityZ = isMove;
+	isRandomVelocityZ_ = isMove;
 }
 
 bool ParticleSystem::GetIsParticleEmpty()
 {
-	return particles.empty();
+	return particles_.empty();
 }
 
 void ParticleSystem::SetColor(Vector3 color)
 {
-	particleColor = color;
+	particleColor_ = color;
 }
 
 void ParticleSystem::SetRandomColor()
 {
-	isRandomColor = true;
+	isRandomColor_ = true;
 }
 
 void ParticleSystem::SetParitcleScale(Vector3 scale)
 {
-	particleScale = scale;
+	particleScale_ = scale;
 }

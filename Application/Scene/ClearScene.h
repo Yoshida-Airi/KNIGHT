@@ -17,14 +17,17 @@
 #include"Sphere.h"
 #include"Model.h"
 #include"Camera.h"
+#include"Effect/Fade.h"
 
 #include"EffectManager.h"
+#include"Effect/TitleEffect.h"
+#include"Object/Skydome/Skydome.h"
 
 /**
 *   @class ClearScene
 *	@brief  クリアシーンクラス
 */
-class ClearScene :public BaseScene
+class ClearScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -36,25 +39,34 @@ public:
 	/// @brief 描画処理
 	void Draw()override;
 
+	void UpdateSpriteBlink();
+
 private:
 
-	EffectManager* efect = nullptr;
-	TextureManager* textureManager = nullptr;
+	std::unique_ptr< EffectManager> effect_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
-	Input* input;
+	AobaraEngine::Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera;
+	std::unique_ptr< AobaraEngine::Camera> camera_;
 
-	uint32_t titleTexture;
+	uint32_t titleTexture_;
+	uint32_t spaceTexture_;
 
-	uint32_t soundData;
+	uint32_t soundData_;
 
-	std::unique_ptr<Sprite> title = nullptr;
+	bool isFadeStart_ = false;
 
-	std::unique_ptr<Model> fence_ = nullptr;
-	std::unique_ptr<Model> cube_ = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> space_ = nullptr;
 
+	std::unique_ptr<AobaraEngine::Sprite> title_ = nullptr;
 
+	std::unique_ptr <Skydome>skydome_;
+	std::unique_ptr<Fade> fade_ = nullptr;
+	std::unique_ptr<TitleEffect> titleEffect_ = nullptr;
 
+	const float kDeltaTime_ = 1.0f / 60.0f;
+	int frameCount_ = 0;
+	int blinkFrames_ = 50;  // 30フレームごとに点滅
 };
 

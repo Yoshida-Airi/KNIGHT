@@ -12,7 +12,7 @@
 * @brief 地面オブジェクトの管理を行うクラス
 * @details 地面の初期化、更新、描画、および衝突判定を行う
 */
-class Ground :public GameObject
+class Ground :public AobaraEngine::GameObject
 {
 public:
 
@@ -33,7 +33,7 @@ public:
 	* @param camera カメラ情報
 	* @details 地面オブジェクトを画面に描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief 地面オブジェクトのワールド座標を取得
@@ -52,7 +52,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 衝突した際の処理を行う。今回は処理が必要ないため [[maybe_unused]] を付与
 	*/
-	[[maybe_unused]] void OnCollision([[maybe_unused]] Collider* other)override;
+	[[maybe_unused]] void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief デバッグ用処理
@@ -92,7 +92,7 @@ private:
 	
 
 
-	std::unique_ptr<Model>groundModel_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model>groundModel_ = nullptr;
 
 };
 

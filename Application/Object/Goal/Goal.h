@@ -13,7 +13,7 @@
 * @brief ゴールオブジェクトの管理を行うクラス
 * @details ゴールの初期化、更新、描画、および衝突判定を行う
 */
-class Goal :public GameObject
+class Goal :public AobaraEngine::GameObject
 {
 public:
 
@@ -34,7 +34,7 @@ public:
 	* @param camera カメラ情報
 	* @details ゴールオブジェクトを画面に描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief ゴールオブジェクトのワールド座標を取得
@@ -53,9 +53,9 @@ public:
 	* @param other 衝突したコライダー
 	* @details プレイヤーや他のオブジェクトとゴールが衝突した際の処理を行う
 	*/
-	void OnCollision(Collider* other)override;
+	void OnCollision(AobaraEngine::Collider* other)override;
 
 private:
-	std::unique_ptr<Model>goalModel_;
-	std::vector<Model*>goalModels_;
+	std::unique_ptr<AobaraEngine::Model>goalModel_;
+	std::vector<AobaraEngine::Model*>goalModels_;
 };

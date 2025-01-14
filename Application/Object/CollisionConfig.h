@@ -18,6 +18,7 @@ enum class CollisionTypeDef : uint32_t
 	kPlayer,   ///< プレイヤーの当たり判定
 	kWeapon,   ///< 武器の当たり判定
 	kEnemy,    ///< 敵の当たり判定
+	kEnemyBullet,    ///< 敵の当たり判定
 	kMap,      ///< マップの当たり判定
 	kGoal,     ///< ゴールの当たり判定
 };

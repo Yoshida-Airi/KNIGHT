@@ -1,37 +1,53 @@
 #include "ClearScene.h"
 #include"SceneManager.h"
+using namespace AobaraEngine;
 
 ClearScene::~ClearScene()
 {
-	delete camera;
-	delete efect;
 }
 
 void ClearScene::Initialize()
 {
-	input = Input::GetInstance();
+	input_ = Input::GetInstance();
 	sceneManager_ = SceneManager::GetInstance();
-	textureManager = TextureManager::GetInstance();
+	textureManager_ = TextureManager::GetInstance();
 
-	titleTexture = textureManager->LoadTexture("Resources/Scene/clear.png");
+	titleTexture_ = textureManager_->LoadTexture("Resources/Scene/clear.png");
+	spaceTexture_ = textureManager_->LoadTexture("Resources/Scene/space.png");
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
+
+	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera = new Camera;
-	camera->Initialize();
+	camera_ = std::make_unique< Camera>();
+	camera_->Initialize();
 
-	title.reset(Sprite::Create(titleTexture));
+	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
+	title_->GetWorldTransform()->translation_ = { 242.0f,146.0f };
 
+	space_.reset(AobaraEngine::Sprite::Create(spaceTexture_));
+	space_->GetWorldTransform()->translation_ = { 435.0f,490.0f };
 
-	fence_.reset(Model::Create("Resources/SampleAssets/fence.obj"));
-	cube_.reset(Model::Create("Resources/SampleAssets/cube.obj"));
-	fence_->GetWorldTransform()->rotation_.y = 3.1f;
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize();
+	skydome_->SetLight(false);
+
+	fade_ = std::make_unique <Fade>();
+	fade_->Initialize();
+	fade_->Start(Fade::Status::FadeIn, 2.5f);
+
+	titleEffect_ = std::make_unique <TitleEffect>();
+	titleEffect_->Initialize(camera_.get());
+	titleEffect_->SetFlag(true);
+	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
+
+	isFadeStart_ = false;
 }
 
 void ClearScene::Update()
 {
-	camera->CameraDebug();
+	camera_->CameraDebug();
+	UpdateSpriteBlink();
 
 	//ゲームパットの状態を得る変数(XINPUT)
 	XINPUT_STATE joyState;
@@ -45,32 +61,48 @@ void ClearScene::Update()
 		}
 	}
 
-	if (input->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE) && isFadeStart_ == false)
 	{
-		sceneManager_->ChangeScene("TITLE");
+		isFadeStart_ = true;
+		//sceneManager_->ChangeScene("TITLE");
 		//Audio::GetInstance()->SoundStopWave(soundData);
+		fade_->Start(Fade::Status::FadeOut, 1.5f);
+		
 	}
 	
-	title->Update();
+	if (fade_->IsFinished())
+	{
+		sceneManager_->ChangeScene("TITLE");
+	}
+	
+	title_->Update();
+	space_->Update();
+	fade_->Update();
+	titleEffect_->Update();
 
-	fence_->Update();
-	cube_->Update();
-
-
-
-	cube_->ModelDebug("cube");
-	fence_->ModelDebug("fence");
-	fence_->Parent(cube_.get());
-
+	skydome_->Update();
 
 }
 
 void ClearScene::Draw()
 {
-	title->Draw(camera);
+	skydome_->Draw(*camera_);
 
-	fence_->Draw(camera);
-	cube_->Draw(camera);
+	titleEffect_->Draw();
+	title_->Draw(*camera_);
+	space_->Draw(*camera_);
+	fade_->Draw(*camera_);
+	
 
 }
 
+void ClearScene::UpdateSpriteBlink()
+{
+	frameCount_++;
+
+	if (frameCount_ >= blinkFrames_)
+	{
+		space_->SetisInvisible(!space_->GetisInvisible());
+		frameCount_ = 0;
+	}
+}

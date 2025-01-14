@@ -1,4 +1,5 @@
 #include "Collider.h"
+using namespace AobaraEngine;
 
 void Collider::Initialize()
 {
@@ -15,7 +16,7 @@ void Collider::UpdateWorldTransform()
 
 }
 
-void Collider::Draw(Camera* camera)
+void Collider::Draw(const Camera& camera)
 {
 	model_->Draw(camera);
 }

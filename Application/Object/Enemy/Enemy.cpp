@@ -1,5 +1,19 @@
 #include "Enemy.h"
 #include"Object/CollisionConfig.h"
+#include "Object/Player/Player.h"
+using namespace AobaraEngine;
+Enemy::~Enemy()
+{
+	for (EnemyBullet* bullet : bullets_)
+	{
+		delete bullet;
+	}
+
+	for (TimedCall* timeCall : this->timedCalls_)
+	{
+		delete timeCall;
+	}
+}
 
 void Enemy::Initialize()
 {
@@ -11,11 +25,36 @@ void Enemy::Initialize()
 	GameObject::Initialize();
 	GameObject::SetModel(enemyModels_);
 	enemyModel_->SetMaterial({ 1.0f,0.0,0.0f,1.0f });
+
+
+
+	
 }
 
 void Enemy::Update()
 {
 	GameObject::Update();
+
+	// 終了したタイマーを削除
+	timedCalls_.remove_if([](TimedCall* timeCall) {
+		if (timeCall->isFinished() == true) {
+			delete timeCall;
+			return true;
+		}
+		return false;
+		});
+
+
+	//デスフラグの立った弾を削除
+	bullets_.remove_if([](EnemyBullet* bullet)
+		{
+			if (bullet->IsDead())
+			{
+				delete bullet;
+				return true;
+			}
+			return false;
+		});
 
 	enemyModel_->ModelDebug("enemy");
 	//enemyModel->GetWorldTransform()->translation_.x += 0.03f;
@@ -38,17 +77,51 @@ void Enemy::Update()
 		movingRight_ = true;
 	}
 
+	//タイマーの更新
+	for (TimedCall* timedCall : this->timedCalls_)
+	{
+		timedCall->Update();
+	}
+
+	//弾の更新
+	for (EnemyBullet* bullet : bullets_)
+	{
+		bullet->Update();
+	}
+
+	if (isHit == true)
+	{
+		enemyModel_->GetWorldTransform()->translation_.z += 0.3f;
+		enemyModel_->GetWorldTransform()->translation_.y += 0.1f;
+		enemyModel_->GetWorldTransform()->rotation_.y += 0.1f;
+
+		if (enemyModel_->GetWorldTransform()->translation_.y >= 10.0f)
+		{
+			isAlive_ = false;
+			isHit = false;
+		}
+	}
+
 }
 
-void Enemy::Draw(Camera* camera)
+void Enemy::Draw(const AobaraEngine::Camera& camera)
 {
 	if (isAlive_ == false)
 	{
+
+
+
 		//死んでいたら描画しない
-		enemyModel_->SetisInvisible(true);
+		//enemyModel_->SetisInvisible(true);
 	}
 
 	enemyModel_->Draw(camera);
+
+	//弾の描画
+	for (EnemyBullet* bullet : bullets_)
+	{
+		bullet->Draw(camera);
+	}
 }
 
 
@@ -81,6 +154,58 @@ void Enemy::OnCollision(Collider* other)
 	uint32_t typeID = other->GetTypeID();
 	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kWeapon))
 	{
-		isAlive_ = false;
+		isHit = true;
 	}
+}
+
+void Enemy::AttackReset()
+{
+
+	Fire();
+	// 発射タイマーをセットする
+	timedCalls_.push_back(new TimedCall(std::bind(&Enemy::AttackReset, this), kFireInterval));
+}
+
+void Enemy::DeleteBullet()
+{
+	timedCalls_.clear();
+}
+
+void Enemy::Fire()
+{
+	assert(player_);
+
+	// 弾の速度
+	const float kBulletSpeed = 1.0f;
+	/*Vector3 velocity(0, 0, kBulletSpeed);*/
+
+	// 自キャラのワールド座標を取得する
+	Vector3 worldPlayer = player_->GetWorldPosition();
+	// 敵キャラのワールド座標を取得する
+	Vector3 worldEnemy = GetWorldPosition();
+
+	// 敵キャラ→自キャラの差分ベクトルを求める
+	Vector3 differenceVector;
+	differenceVector.x = worldPlayer.x - worldEnemy.x;
+	differenceVector.y = worldPlayer.y - worldEnemy.y;
+	differenceVector.z = worldPlayer.z - worldEnemy.z;
+
+	// 正規化
+	Vector3 normarizeVector;
+	normarizeVector = Normalize(differenceVector);
+
+	// ベクトルの長さを速さに合わせる
+	Vector3 velocity;
+	velocity.x = normarizeVector.x * kBulletSpeed;
+	velocity.y = normarizeVector.y * kBulletSpeed;
+	velocity.z = normarizeVector.z * kBulletSpeed;
+	//球を生成し、初期化
+	EnemyBullet* newBullet = new EnemyBullet();
+	newBullet->SetPlayer(player_);
+	newBullet->Initialize();
+	newBullet->SetPosition(GetWorldPosition());
+
+	//弾の登録
+	bullets_.push_back(newBullet);
+
 }

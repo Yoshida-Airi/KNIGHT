@@ -1,5 +1,7 @@
 #include "GameObject.h"
 
+using namespace AobaraEngine;
+
 void GameObject::Initialize()
 {
 	Collider::Initialize();
@@ -24,7 +26,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Draw(Camera* camera)
+void GameObject::Draw(const Camera& camera)
 {
 	for (Model* model : models_)
 	{

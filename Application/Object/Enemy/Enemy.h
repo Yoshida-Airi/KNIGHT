@@ -7,15 +7,20 @@
 #include"Model.h"
 #include"Collider.h"
 #include"GameObject.h"
+#include"Object/Enemy/EnemyBullet.h"
+#include"Utility/TimedCall.h"
 
+
+class Player;
 /**
 * @class Enemy
 * @brief 敵キャラクターの制御を行うクラス
 * @details 敵キャラクターの描画、移動、衝突判定などの処理を管理する
 */
-class Enemy : public GameObject
+class Enemy : public AobaraEngine::GameObject
 {
 public:
+	~Enemy();
 
 	/**
 	* @brief 敵キャラクターの初期化処理
@@ -34,7 +39,7 @@ public:
 	* @param camera カメラ情報
 	* @details 敵キャラクターを画面に描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief 敵キャラクターの位置を設定する
@@ -63,7 +68,13 @@ public:
 	* @param other 衝突したコライダー
 	* @details 敵キャラクターが他のオブジェクトと衝突した際の処理を行う
 	*/
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
+
+	void AttackReset();
+
+	void DeleteBullet();
+
+	void Fire();
 
 	/**
 	* @brief 敵キャラクターが生きているかを判定する
@@ -74,16 +85,28 @@ public:
 		return isAlive_;
 	}
 
+	void SetPlayer(Player* player) { player_ = player; };
+
 private:
 
-	std::unique_ptr<Model>enemyModel_;
-	std::vector<Model*>enemyModels_;
+	std::unique_ptr<AobaraEngine::Model>enemyModel_;
+	std::vector<AobaraEngine::Model*>enemyModels_;
+
+	////弾
+	std::list<EnemyBullet*> bullets_;
+	//時限発動のリスト
+	std::list<TimedCall*> timedCalls_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
-	
+	bool isHit = false;
+
+
+	//発射間隔
+	static const int kFireInterval = 180;
 	float moveSpeed_ = 0.03f;  // 移動速度
 	float moveDistance_ = 5.0f;  // 移動する距離
 	float traveledDistance_ = 0.0f;  // 移動した距離
 	bool movingRight_ = true;  // 右方向に移動しているかどうか
+	Player* player_ = nullptr;
 };
 

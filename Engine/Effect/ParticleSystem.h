@@ -62,7 +62,7 @@ class ParticleSystem
 public:
 	~ParticleSystem();
 
-	void Initialize(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition);
+	void Initialize(uint32_t textureHandle, AobaraEngine::Camera* camera, Vector3 velocity, bool isRandomPosition);
 	void Update();
 	void Draw();
 
@@ -120,7 +120,7 @@ public:
 	/// <param name="velocity">速度</param>
 	/// <param name="isRandomPosition">ランダムな位置に置くか　true : 置く</param>
 	/// <returns>パーティクル</returns>
-	static ParticleSystem* Create(uint32_t textureHandle, Camera* camera, Vector3 velocity, bool isRandomPosition);
+	static ParticleSystem* Create(uint32_t textureHandle, AobaraEngine::Camera* camera, Vector3 velocity, bool isRandomPosition);
 
 	/// <summary>
 	/// 生存時間の設定
@@ -129,8 +129,8 @@ public:
 	/// <param name="timeMax">一番長く存在していい時間</param>
 	void SetLifeTime(float timeMin, float timeMax)
 	{
-		lifeTime.min = timeMin;
-		lifeTime.max = timeMax;
+		lifeTime_.min = timeMin;
+		lifeTime_.max = timeMax;
 	}
 
 	/// <summary>
@@ -178,18 +178,18 @@ public:
 
 	void SetParitcleScale(Vector3 scale);
 
-	Emitter* emitter_ = new Emitter();
+	std::unique_ptr< Emitter> emitter_ = std::make_unique< Emitter>();
 private://プライベート変数
 
-	GraphicsPipelineManager* psoManager_ = nullptr;
-	SrvManager* srvManager_ = nullptr;
+	AobaraEngine::GraphicsPipelineManager* psoManager_ = nullptr;
+	AobaraEngine::SrvManager* srvManager_ = nullptr;
 
-	static const uint32_t kNumMaxInstance = 500;
-	uint32_t numInstance = 0;
+	static const uint32_t kNumMaxInstance_ = 500;
+	uint32_t numInstance_ = 0;
 
 	DirectXCommon* dxCommon_;
-	TextureManager* texture_;
-	Camera* camera_ = nullptr;
+	AobaraEngine::TextureManager* texture_;
+	AobaraEngine::Camera* camera_ = nullptr;
 
 	Microsoft::WRL::ComPtr< ID3D12Resource> vertexResource_;	//頂点リソース
 	Microsoft::WRL::ComPtr< ID3D12Resource> materialResource_;	//マテリアルリソース
@@ -198,7 +198,7 @@ private://プライベート変数
 
 	D3D12_RESOURCE_DESC resourceDesc_{};	//テクスチャの情報
 
-	Matrix4x4* transformationMatrixData = nullptr;
+	Matrix4x4* transformationMatrixData_ = nullptr;
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_;
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_;
@@ -207,9 +207,9 @@ private://プライベート変数
 	VertexData* vertexData_ = nullptr;	//頂点データ
 	Material* materialData_ = nullptr;	//マテリアルデータ
 	uint32_t* indexData_ = nullptr;		//インデックスデータ
-	ParticleForGPU* instancingData = nullptr;
+	ParticleForGPU* instancingData_ = nullptr;
 
-	EulerTransform uvTransform;
+	EulerTransform uvTransform_;
 	Vector2 textureSize_;	//切り出しサイズ
 
 	bool isInvisible_ = false;	//非表示フラグ	true : 消える
@@ -221,42 +221,42 @@ private://プライベート変数
 	Vector2 anchorPoint_ = { 0.0f,0.0f };
 
 	//画像のサイズ
-	float left;
-	float right;
-	float top;
-	float bottom;
+	float left_;
+	float right_;
+	float top_;
+	float bottom_;
 
 	//texcoord用
-	float texLeft;
-	float texRight;
-	float texTop;
-	float texBottom;
+	float texLeft_;
+	float texRight_;
+	float texTop_;
+	float texBottom_;
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
+	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc_{};
 
-	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
-	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_;
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_;
 
-	std::list<Particle> particles;
+	std::list<Particle> particles_;
 
 	bool isRandomPosition_ = false;
 	Vector3 velocity_;
-	Time lifeTime = { 1.0,3.0f };
+	Time lifeTime_ = { 1.0,3.0f };
 	bool isBillboard_ = false;
 
-	bool isMakeParticle = true;	//新しく粒を生成するか。
+	bool isMakeParticle_ = true;	//新しく粒を生成するか。
 
-	const float kDeltaTime = 1.0f / 60.0f;
+	const float kDeltaTime_ = 1.0f / 60.0f;
 
-	bool isRandomAllVelocity = false;
-	bool isRandomVelocityX = false;
-	bool isRandomVelocityY = false;
-	bool isRandomVelocityZ = false;
+	bool isRandomAllVelocity_ = false;
+	bool isRandomVelocityX_ = false;
+	bool isRandomVelocityY_ = false;
+	bool isRandomVelocityZ_ = false;
 
-	Vector3 particleColor = { 1.0f,1.0f,1.0f };
-	bool isRandomColor = false;
+	Vector3 particleColor_ = { 1.0f,1.0f,1.0f };
+	bool isRandomColor_ = false;
 
-	Vector3 particleScale = { 0.005f ,0.005f ,0.005f };
+	Vector3 particleScale_ = { 0.005f ,0.005f ,0.005f };
 
 private://プライベート関数
 

@@ -1,5 +1,5 @@
 #include "WinApp.h"
-
+using namespace AobaraEngine;
 
 /*======================================*/
 /* 　　　　   パブリックメソッド　　　 　     */
@@ -7,11 +7,11 @@
 
 WinApp* WinApp::GetInstance()
 {
-	if (instance == NULL)
+	if (instance_ == NULL)
 	{
-		instance = new WinApp;
+		instance_ = new WinApp;
 	}
-	return instance;
+	return instance_;
 }
 
 /*デストラクタ*/
@@ -126,4 +126,4 @@ void WinApp::SetupWindowClass()
 
 
 //静的メンバ変数の宣言と初期化
-WinApp* WinApp::instance = NULL;
+WinApp* WinApp::instance_ = NULL;

@@ -1,8 +1,9 @@
 #include "Sphere.h"
+using namespace AobaraEngine;
 
 Sphere::~Sphere()
 {
-	delete worldTransform_;
+	//delete worldTransform_;
 }
 
 void Sphere::Initialize(uint32_t textureHandle)
@@ -15,24 +16,24 @@ void Sphere::Initialize(uint32_t textureHandle)
 	MaterialBuffer();
 	LightBuffer();
 
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique< WorldTransform>();
 	worldTransform_->Initialize();
 	textureHandle_ = textureHandle;
 
 	//緯度の方向に分割
-	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex)
+	for (uint32_t latIndex = 0; latIndex < kSubdivision_; ++latIndex)
 	{
-		float lat = static_cast<float>(-std::numbers::pi) / 2.0f + kLatEvery * latIndex;
+		float lat = static_cast<float>(-std::numbers::pi) / 2.0f + kLatEvery_ * latIndex;
 
 		//経度の方向に分割しながら線を書く
-		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex)
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision_; ++lonIndex)
 		{
 			vertexData_[0].normal = { 0.0f,0.0f,-1.0f };
 
 			//最初の頂点位置
-			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
+			uint32_t start = (latIndex * kSubdivision_ + lonIndex) * 6;
 
-			float lon = lonIndex * kLonEvery;
+			float lon = lonIndex * kLonEvery_;
 
 			//頂点にデータを入力する	頂点a
 			vertexData_[start].position.x = std::cos(lat) * std::cos(lon);
@@ -40,8 +41,8 @@ void Sphere::Initialize(uint32_t textureHandle)
 			vertexData_[start].position.z = std::cos(lat) * std::sin(lon);
 			vertexData_[start].position.w = 1.0f;
 
-			vertexData_[start].texcoord.x = float(lonIndex) / float(kSubdivision);
-			vertexData_[start].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
+			vertexData_[start].texcoord.x = float(lonIndex) / float(kSubdivision_);
+			vertexData_[start].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision_);
 
 			vertexData_[start].normal.x = vertexData_[start].position.x;
 			vertexData_[start].normal.y = vertexData_[start].position.y;
@@ -49,65 +50,65 @@ void Sphere::Initialize(uint32_t textureHandle)
 
 
 			//頂点b
-			vertexData_[start + 1].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
-			vertexData_[start + 1].position.y = std::sin(lat + kLatEvery);
-			vertexData_[start + 1].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
+			vertexData_[start + 1].position.x = std::cos(lat + kLatEvery_) * std::cos(lon);
+			vertexData_[start + 1].position.y = std::sin(lat + kLatEvery_);
+			vertexData_[start + 1].position.z = std::cos(lat + kLatEvery_) * std::sin(lon);
 			vertexData_[start + 1].position.w = 1.0f;
 
-			vertexData_[start + 1].texcoord.x = float(lonIndex) / float(kSubdivision);
-			vertexData_[start + 1].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision);
+			vertexData_[start + 1].texcoord.x = float(lonIndex) / float(kSubdivision_);
+			vertexData_[start + 1].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision_);
 
 			vertexData_[start + 1].normal.x = vertexData_[start + 1].position.x;
 			vertexData_[start + 1].normal.y = vertexData_[start + 1].position.y;
 			vertexData_[start + 1].normal.z = vertexData_[start + 1].position.z;
 
 			//頂点c
-			vertexData_[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
+			vertexData_[start + 2].position.x = std::cos(lat) * std::cos(lon + kLonEvery_);
 			vertexData_[start + 2].position.y = std::sin(lat);
-			vertexData_[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
+			vertexData_[start + 2].position.z = std::cos(lat) * std::sin(lon + kLonEvery_);
 			vertexData_[start + 2].position.w = 1.0f;
 
-			vertexData_[start + 2].texcoord.x = float(lonIndex + 1) / float(kSubdivision);
-			vertexData_[start + 2].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
+			vertexData_[start + 2].texcoord.x = float(lonIndex + 1) / float(kSubdivision_);
+			vertexData_[start + 2].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision_);
 
 			vertexData_[start + 2].normal.x = vertexData_[start + 2].position.x;
 			vertexData_[start + 2].normal.y = vertexData_[start + 2].position.y;
 			vertexData_[start + 2].normal.z = vertexData_[start + 2].position.z;
 
 			//頂点d
-			vertexData_[start + 3].position.x = std::cos(lat) * std::cos(lon + kLonEvery);
+			vertexData_[start + 3].position.x = std::cos(lat) * std::cos(lon + kLonEvery_);
 			vertexData_[start + 3].position.y = std::sin(lat);
-			vertexData_[start + 3].position.z = std::cos(lat) * std::sin(lon + kLonEvery);
+			vertexData_[start + 3].position.z = std::cos(lat) * std::sin(lon + kLonEvery_);
 			vertexData_[start + 3].position.w = 1.0f;
 
-			vertexData_[start + 3].texcoord.x = float(lonIndex + 1) / float(kSubdivision);
-			vertexData_[start + 3].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
+			vertexData_[start + 3].texcoord.x = float(lonIndex + 1) / float(kSubdivision_);
+			vertexData_[start + 3].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision_);
 
 			vertexData_[start + 3].normal.x = vertexData_[start + 3].position.x;
 			vertexData_[start + 3].normal.y = vertexData_[start + 3].position.y;
 			vertexData_[start + 3].normal.z = vertexData_[start + 3].position.z;
 
 			//頂点e
-			vertexData_[start + 4].position.x = std::cos(lat + kLatEvery) * std::cos(lon);
-			vertexData_[start + 4].position.y = std::sin(lat + kLatEvery);
-			vertexData_[start + 4].position.z = std::cos(lat + kLatEvery) * std::sin(lon);
+			vertexData_[start + 4].position.x = std::cos(lat + kLatEvery_) * std::cos(lon);
+			vertexData_[start + 4].position.y = std::sin(lat + kLatEvery_);
+			vertexData_[start + 4].position.z = std::cos(lat + kLatEvery_) * std::sin(lon);
 			vertexData_[start + 4].position.w = 1.0f;
 
-			vertexData_[start + 4].texcoord.x = float(lonIndex) / float(kSubdivision);
-			vertexData_[start + 4].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision);
+			vertexData_[start + 4].texcoord.x = float(lonIndex) / float(kSubdivision_);
+			vertexData_[start + 4].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision_);
 
 			vertexData_[start + 4].normal.x = vertexData_[start + 4].position.x;
 			vertexData_[start + 4].normal.y = vertexData_[start + 4].position.y;
 			vertexData_[start + 4].normal.z = vertexData_[start + 4].position.z;
 
 			//頂点f
-			vertexData_[start + 5].position.x = std::cos(lat + kLatEvery) * std::cos(lon + kLonEvery);
-			vertexData_[start + 5].position.y = std::sin(lat + kLatEvery);
-			vertexData_[start + 5].position.z = std::cos(lat + kLatEvery) * std::sin(lon + kLonEvery);
+			vertexData_[start + 5].position.x = std::cos(lat + kLatEvery_) * std::cos(lon + kLonEvery_);
+			vertexData_[start + 5].position.y = std::sin(lat + kLatEvery_);
+			vertexData_[start + 5].position.z = std::cos(lat + kLatEvery_) * std::sin(lon + kLonEvery_);
 			vertexData_[start + 5].position.w = 1.0f;
 
-			vertexData_[start + 5].texcoord.x = float(lonIndex + 1) / float(kSubdivision);
-			vertexData_[start + 5].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision);
+			vertexData_[start + 5].texcoord.x = float(lonIndex + 1) / float(kSubdivision_);
+			vertexData_[start + 5].texcoord.y = 1.0f - float(latIndex + 1) / float(kSubdivision_);
 
 			vertexData_[start + 5].normal.x = vertexData_[start + 5].position.x;
 			vertexData_[start + 5].normal.y = vertexData_[start + 5].position.y;
@@ -188,7 +189,7 @@ void Sphere::Draw(Camera* camera)
 	//ライト用のCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, lightResource_->GetGPUVirtualAddress());
 	//描画
-	dxCommon_->GetCommandList()->DrawInstanced(totalVertex, 1, 0, 0);
+	dxCommon_->GetCommandList()->DrawInstanced(totalVertex_, 1, 0, 0);
 }
 
 Sphere* Sphere::Create(uint32_t textureHandle)
@@ -208,11 +209,11 @@ Sphere* Sphere::Create(uint32_t textureHandle)
 /// </summary>
 void Sphere::VertexBuffer()
 {
-	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * totalVertex);	//頂点用のデータ
+	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * totalVertex_);	//頂点用のデータ
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点3つ分のサイズ
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * totalVertex;
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * totalVertex_;
 	//1頂点当たりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 	//書き込むためのアドレスを取得

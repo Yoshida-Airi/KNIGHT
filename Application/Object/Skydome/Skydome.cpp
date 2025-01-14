@@ -1,5 +1,7 @@
 #include "Skydome.h"
 
+using namespace AobaraEngine;
+
 void Skydome::Initialize()
 {
 	skydomeModel_.reset(Model::Create("Resources/Object/Skydome/skydome.obj"));
@@ -18,7 +20,7 @@ void Skydome::Update()
 	skydomeModel_->Update();
 }
 
-void Skydome::Draw(Camera* camera)
+void Skydome::Draw(const Camera& camera)
 {
 	skydomeModel_->Draw(camera);
 }

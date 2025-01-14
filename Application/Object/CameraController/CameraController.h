@@ -29,7 +29,7 @@ public:
 	* @param camera カメラオブジェクト
 	* @details カメラの初期位置や動作を設定し、追従機能を有効にする
 	*/
-	void Initialize(Camera* camera);
+	void Initialize(AobaraEngine::Camera* camera);
 
 	/**
 	* @brief カメラの更新処理
@@ -60,13 +60,13 @@ public:
 	void ApplyGlobalVariables();
 
 private:
-	Camera* camera_;
+	AobaraEngine::Camera* camera_;
 	const char* groupName_;
 	Player* target_ = nullptr;
 	GlobalVariables* globalVariables_ = nullptr;
 
 	//追従対象とカメラの座標の差
-	Vector3 targetOffset_ = { 0,3.0f,-30.0f };
+	Vector3 targetOffset_ = { 0,0.0f,-30.0f };
 	//カメラの目標座標
 	Vector3 targetPosition_ = {};
 	//座標補間割合

@@ -20,7 +20,7 @@ public:
 	* @param camera カメラオブジェクト
 	* @details パーティクルエフェクトの位置や動作を、カメラ情報を基に初期化する
 	*/
-	void Initialize(Camera* camera);
+	void Initialize(AobaraEngine::Camera* camera);
 
 	/**
 	* @brief タイトルエフェクトの更新処理
@@ -65,7 +65,7 @@ public:
 
 private:
 
-	TextureManager* textureManager_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
 	std::unique_ptr<ParticleSystem> risingEffect_ = nullptr;
 	uint32_t circleTexture_;

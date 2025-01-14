@@ -1,5 +1,5 @@
 #include "FlyEnemy.h"
-
+using namespace AobaraEngine;
 void FlyEnemy::Initialize()
 {
 	Collider::SetTypeID(CollisionTypeDef::kEnemy);
@@ -38,15 +38,33 @@ void FlyEnemy::Update()
 		movingRight_ = true;
 	}
 
-	// 垂直方向のふわふわとした動き（サイン波を使用）
-	time_ += speed_; // 時間を進める
-	enemyModel_->GetWorldTransform()->translation_.y = initialY_ + amplitude_ * sin(time_);
+	if (isHit_ == false)
+	{
+		// 垂直方向のふわふわとした動き（サイン波を使用）
+		time_ += speed_; // 時間を進める
+		enemyModel_->GetWorldTransform()->translation_.y = initialY_ + amplitude_ * sin(time_);
+	}
 
+
+	if (isHit_ == true)
+	{
+
+		enemyModel_->GetWorldTransform()->translation_.z += 0.3f;
+		enemyModel_->GetWorldTransform()->translation_.y += 0.1f;
+		enemyModel_->GetWorldTransform()->rotation_.y += 0.1f;
+
+
+		if (enemyModel_->GetWorldTransform()->translation_.y >= 10.0f)
+		{
+			isAlive_ = false;
+			isHit_ = false;
+		}
+	}
 }
 
-void FlyEnemy::Draw(Camera* camera)
+void FlyEnemy::Draw(const Camera& camera)
 {
-	if (isAlive_ == false)
+	if ( isAlive_ == false)
 	{
 		//死んでいたら描画しない
 		enemyModel_->SetisInvisible(true);
@@ -85,6 +103,6 @@ void FlyEnemy::OnCollision(Collider* other)
 	uint32_t typeID = other->GetTypeID();
 	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kWeapon))
 	{
-		isAlive_ = false;
+		isHit_ = true;
 	}
 }

@@ -22,7 +22,7 @@
 *   @class TestPlayScene
 *	@brief  テストシーンクラス
 */
-class TestPlayScene:public BaseScene
+class TestPlayScene:public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -36,23 +36,23 @@ public:
 
 
 private:
-	Camera* camera;
+	std::unique_ptr< AobaraEngine::Camera> camera_;
 	
-	std::unique_ptr<Model> walk = nullptr;
-	std::unique_ptr<Model> model2 = nullptr;
-	std::unique_ptr<Model> model3 = nullptr;
-	std::unique_ptr<Model> model4 = nullptr;
+	std::unique_ptr<AobaraEngine::Model> walk_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model2_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model3_ = nullptr;
+	std::unique_ptr<AobaraEngine::Model> model4_ = nullptr;
 
 	
 
-	AnimationData walkAnimation;
+	AobaraEngine::AnimationData walkAnimation_;
 
-	LevelEditor* levelEditor;
+	std::unique_ptr< LevelEditor> levelEditor_;
 
 
-	std::vector<std::vector<Model*>>blocks_;
+	std::vector<std::vector<AobaraEngine::Model*>>blocks_;
 
-	MapChipField* mapChipField_;
+	std::unique_ptr<MapChipField> mapChipField_;
 
 
 private:

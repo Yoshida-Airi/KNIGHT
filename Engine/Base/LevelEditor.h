@@ -40,7 +40,7 @@ struct LevelData
 *   @class LevelEditor
 *	@brief  レベルエディタークラス
 */
-class LevelEditor :public GameObject
+class LevelEditor :public AobaraEngine::GameObject
 {
 public:
 
@@ -49,7 +49,7 @@ public:
 
 	void Initialize()override;
 	void Update()override;
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	Vector3 GetWorldPosition()override;
 	AABB GetAABB()override;
@@ -58,11 +58,11 @@ public:
 
 private:
 
-	std::map<std::string, std::unique_ptr<Model>> models;
-	std::vector<std::unique_ptr<WorldTransform>> objects;
-	std::unique_ptr<LevelData> levelData;
+	std::map<std::string, std::unique_ptr<AobaraEngine::Model>> modelsData_;
+	std::vector<std::unique_ptr<WorldTransform>> objects_;
+	std::unique_ptr<LevelData> levelData_;
 
-	std::vector<Model*>models_;
+	std::vector<AobaraEngine::Model*>models_;
 
 };
 

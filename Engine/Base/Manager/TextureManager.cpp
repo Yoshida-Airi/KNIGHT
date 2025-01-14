@@ -1,14 +1,15 @@
 #include "TextureManager.h"
+using namespace AobaraEngine;
 
-uint32_t TextureManager::kSRVIndexTop = 1;
+uint32_t TextureManager::kSRVIndexTop_ = 1;
 
 TextureManager* TextureManager::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new TextureManager;
+		instance_ = new TextureManager;
 	}
-	return instance;
+	return instance_;
 }
 
 TextureManager::~TextureManager()
@@ -25,9 +26,9 @@ void TextureManager::Initialize()
 	srvManager_ = SrvManager::GetInstance();
 
 	srvDescriptoHeap_ = srvManager_->GetDescriptorHeap();
-	descriptorSizeSRV = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeSRV_ = dxCommon_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
-	textureDatas.reserve(SrvManager::kMaxSRVCount);
+	textureDatas_.reserve(SrvManager::kMaxSRVCount);
 
 }
 
@@ -57,18 +58,18 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 	//}
 
 	//読み込み済みテクスチャを検索
-	if (textureDatas.contains(filePath))
+	if (textureDatas_.contains(filePath))
 	{
-		uint32_t textureIndex = textureDatas[filePath].textureHandle;
+		uint32_t textureIndex = textureDatas_[filePath].textureHandle;
 		return textureIndex;
 	}
 
 
-	for (int i = 0; i < kMaxTexture; i++)
+	for (int i = 0; i < kMaxTexture_; i++)
 	{
-		if (IsusedTexture[i] == false) {
+		if (isUsedTexture_[i] == false) {
 			index = i;
-			IsusedTexture[i] = true;
+			isUsedTexture_[i] = true;
 			break;
 		}
 	}
@@ -77,7 +78,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 	assert(srvManager_->SrvMaxCountCheck());
 
 	//テクスチャ枚数上限
-	assert(textureDatas.size() + kSRVIndexTop < SrvManager::kMaxSRVCount);
+	assert(textureDatas_.size() + kSRVIndexTop_ < SrvManager::kMaxSRVCount);
 
 	//Textureを読んで転送する
 	DirectX::ScratchImage mipImages = ImageFileOpen(filePath);
@@ -87,7 +88,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 	//textureDatas.resize(textureDatas.size() + 1);
 	//TextureData& textureData = textureDatas.back();
 
-	TextureData& textureData = textureDatas[filePath];
+	TextureData& textureData = textureDatas_[filePath];
 
 
 	textureData.filename = filePath;
@@ -95,7 +96,7 @@ uint32_t TextureManager::LoadTexture(const std::string& filePath)
 
 
 	textureData.textureResource = CreateTextureResource(dxCommon_->GetDevice(), metadata);
-	intermediateResource.at(index) = UploadTextureData(textureData.textureResource.Get(), mipImages);
+	intermediateResource_.at(index) = UploadTextureData(textureData.textureResource.Get(), mipImages);
 
 
 	//テクスチャデータの要素数番号をSRVのインデックスとする
@@ -121,7 +122,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvGPUHandle(uint32_t textureInde
 
 	std::string filePath = SearchFilepath(textureIndex);
 
-	TextureData& textureData = textureDatas[filePath];
+	TextureData& textureData = textureDatas_[filePath];
 	return textureData.textureSrvHandleGPU;
 }
 
@@ -135,7 +136,7 @@ const D3D12_RESOURCE_DESC TextureManager::GetResourceDesc(uint32_t textureHandle
 
 	std::string filePath = SearchFilepath(textureHandle);
 
-	TextureData& textureData = textureDatas[filePath];
+	TextureData& textureData = textureDatas_[filePath];
 
 	//テクスチャの情報を取得
 	D3D12_RESOURCE_DESC resourceDesc{};
@@ -198,8 +199,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::UploadTextureData(ID3D12R
 	std::vector<D3D12_SUBRESOURCE_DATA>subresources;
 	DirectX::PrepareUpload(dxCommon_->GetDevice(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresources.size()));
-	Microsoft::WRL::ComPtr< ID3D12Resource> intermediateResource_ = dxCommon_->CreateBufferResource(intermediateSize);
-	UpdateSubresources(dxCommon_->GetCommandList(), texture, intermediateResource_.Get(), 0, 0, UINT(subresources.size()), subresources.data());
+	Microsoft::WRL::ComPtr< ID3D12Resource> intermediateResource = dxCommon_->CreateBufferResource(intermediateSize);
+	UpdateSubresources(dxCommon_->GetCommandList(), texture, intermediateResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 	//Tetureへの転送後は利用できるようにD3D12_RESOURCE_STATE_COPY_DESTからD3D12_RESOURCE_STATE_GENERIC_READへResourceStateを変更する
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -209,7 +210,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::UploadTextureData(ID3D12R
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 	dxCommon_->GetCommandList()->ResourceBarrier(1, &barrier);
-	return intermediateResource_;
+	return intermediateResource;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>descriptorHeap, uint32_t descriptorSize, uint32_t index)
@@ -228,7 +229,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetGPUDescriptorHandle(Microsoft::WR
 std::string TextureManager::SearchFilepath(uint32_t index)
 {
 
-	for (const auto& pair : textureDatas) {
+	for (const auto& pair : textureDatas_) {
 		if (pair.second.textureHandle == index) {
 			return pair.second.filename;
 		}
@@ -237,4 +238,4 @@ std::string TextureManager::SearchFilepath(uint32_t index)
 	return 0;
 }
 
-TextureManager* TextureManager::instance = NULL;
+TextureManager* TextureManager::instance_ = NULL;

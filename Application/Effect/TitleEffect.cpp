@@ -1,7 +1,7 @@
 #include "TitleEffect.h"
+using namespace AobaraEngine;
 
-
-void TitleEffect::Initialize(Camera* camera)
+void TitleEffect::Initialize(AobaraEngine::Camera* camera)
 {
 	textureManager_ = TextureManager::GetInstance();
 	circleTexture_ = textureManager_->LoadTexture("Resources/SampleAssets/circle.png");

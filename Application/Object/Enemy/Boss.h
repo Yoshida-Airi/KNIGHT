@@ -7,13 +7,16 @@
 #include"Model.h"
 #include"Collider.h"
 #include"GameObject.h"
+#include"Object/Enemy/EnemyBullet.h"
+
+class Player;
 
 /**
 * @class Boss
 * @brief ボスキャラクターを制御するクラス
 * @details ボスの移動、描画、衝突処理、HP管理などを担当する
 */
-class Boss : public GameObject
+class Boss : public AobaraEngine::GameObject
 {
 public:
 
@@ -34,7 +37,7 @@ public:
 	* @param camera カメラ情報
 	* @details モデルをカメラに合わせて描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief ボスの位置を設定する
@@ -44,6 +47,15 @@ public:
 	void SetPosition(Vector3 position)
 	{
 		enemyModel_->GetWorldTransform()->translation_ = position;
+	}
+
+	/**
+	* @brief プレイヤー情報取得
+	* @param player プレイヤー情報
+	*/
+	void SetPlayer(Player* player)
+	{
+		player_ = player;
 	}
 
 	/**
@@ -63,7 +75,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 他のオブジェクトとの衝突時に呼び出される処理
 	*/
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief 生存状態を取得する
@@ -74,15 +86,33 @@ public:
 		return isAlive_;
 	}
 
+	enum class Phase
+	{
+		kWait,
+		kWork,
+		kAttack,
+		kDeath,
+	};
+
+
+	/**
+	* @brief フェーズの変更
+	* @param[in] phase 変更するフェーズ
+	*/
+	void ChangePhase(Phase phase);
+
+
+
+
 private:
 
-	std::unique_ptr<Model>enemyModel_;
-	std::vector<Model*>enemyModels_;
+	std::unique_ptr<AobaraEngine::Model>enemyModel_;
+	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
 
 	float moveSpeed_ = 0.03f;  // 移動速度
-	float moveDistance_ = 5.0f;  // 移動する距離
+	float moveDistance_ = 15.0f;  // 移動する距離
 	float traveledDistance_ = 0.0f;  // 移動した距離
 	bool movingRight_ = true;  // 右方向に移動しているかどうか
 
@@ -90,5 +120,21 @@ private:
 	bool isInvincible_;
 	float invincibilityTimer_;
 	static constexpr float invincibilityDuration_ = 1.0f; // 無敵時間の長さ（秒）
+
+	Phase phase_;
+
+	float amplitude_ = 0.2f;  // 浮く高さを1.0fに設定
+	float speed_ = 0.05f;      // 浮く速度をゆっくりとした0.1fに設定
+	float initialY_;  // 現在のy座標を初期値に設定
+	float time_ = 0.0f;            // 時間の初期値を0に設定
+
+	Player* player_;
+
+private:
+
+	void WaitPhase();
+	void AttackPhase();
+	void WorkPhase();
+	void DeathPhase();
 };
 

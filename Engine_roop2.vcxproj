@@ -16,6 +16,7 @@
     <ProjectGuid>{ff1aff3a-8dfe-4be3-ba67-98dbb1878602}</ProjectGuid>
     <RootNamespace>Engineroop2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>KNIGHT</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -115,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Effect\DeathEffect.cpp" />
     <ClCompile Include="Application\Scene\BossScene.cpp" />
     <ClCompile Include="Application\Object\Enemy\Boss.cpp" />
+    <ClCompile Include="Application\Object\Enemy\EnemyBullet.cpp" />
     <ClCompile Include="Engine\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Animation\Animation.cpp" />
@@ -161,6 +163,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Application\Object\Player\Weapon.cpp" />
     <ClCompile Include="Application\Object\Ground\MapChipField.cpp" />
     <ClCompile Include="Application\Effect\TitleEffect.cpp" />
+    <ClCompile Include="Application\Utility\TimedCall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\Object\CollisionConfig.h" />
@@ -170,6 +173,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Effect\DeathEffect.h" />
     <ClInclude Include="Application\Scene\BossScene.h" />
     <ClInclude Include="Application\Object\Enemy\Boss.h" />
+    <ClInclude Include="Application\Object\Enemy\EnemyBullet.h" />
     <ClInclude Include="Engine\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Collider\Collider.h" />
     <ClInclude Include="Engine\Animation\Animation.h" />
@@ -222,6 +226,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Application\Object\Enemy\FlyEnemy.h" />
     <ClInclude Include="Application\Object\Ground\MapChipField.h" />
     <ClInclude Include="Application\Effect\TitleEffect.h" />
+    <ClInclude Include="Application\Utility\TimedCall.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\Particle.PS.hlsl">

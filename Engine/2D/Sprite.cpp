@@ -5,24 +5,23 @@
 /* 　　　　   パブリックメソッド　　　	　 */
 /*=====================================*/
 
-Sprite::~Sprite()
+AobaraEngine::Sprite::~Sprite()
 {
-	delete worldTransform_;
 }
 
-void Sprite::Initialize(uint32_t textureHandle)
+void AobaraEngine::Sprite::Initialize(const uint32_t& textureHandle)
 {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	psoManager_ = GraphicsPipelineManager::GetInstance();
 	texture_ = TextureManager::GetInstance();
 
-	worldTransform_ = new WorldTransform();
+	worldTransform_ = std::make_unique< WorldTransform>();
 	worldTransform_->Initialize();
 	textureHandle_ = textureHandle;
 
 	
-	uvTransform =
+	uvTransform_ =
 	{
 		{1.0f,1.0f,1.0f,},
 		{0.0f,0.0f,0.0f,},
@@ -35,35 +34,34 @@ void Sprite::Initialize(uint32_t textureHandle)
 
 	AdjustTextureSize();
 	
-	textureSizeLeft = 0.0f * textureSize_.x;
-	textureSizeRight = 1.0f * textureSize_.x;
-	textureSizeTop = 0.0f * textureSize_.y;
-	textureSizeBottom = 1.0f * textureSize_.y;
+	textureSizeLeft_ = 0.0f * textureSize_.x;
+	textureSizeRight_ = 1.0f * textureSize_.x;
+	textureSizeTop_ = 0.0f * textureSize_.y;
+	textureSizeBottom_ = 1.0f * textureSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + textureSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + textureSize_.y) / textureSize_.y;
 
 
 	Vector4 color = { 1.0f,1.0f,1.0f,1.0f };
 
 	//頂点の設定
-	vertexData_[LB].position = { textureSizeLeft,textureSizeBottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { textureSizeLeft_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { textureSizeLeft,textureSizeTop,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { textureSizeLeft_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { textureSizeRight,textureSizeBottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { textureSizeRight_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { textureSizeRight,textureSizeTop,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
+	vertexData_[RT].position = { textureSizeRight_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 
 	SetMaterialData(color);
-
 
 	indexData_[0] = 0;
 	indexData_[1] = 1;
@@ -76,32 +74,25 @@ void Sprite::Initialize(uint32_t textureHandle)
 
 }
 
-void Sprite::Update()
+void AobaraEngine::Sprite::Update()
 {
 	worldTransform_->UpdateWorldMatrix();
 	UpdateVertexBuffer();
 
-
-
-
-	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform.translate));
+	Matrix4x4 uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranselateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
-
-
 
 }
 
-void Sprite::Draw(Camera* camera)
+void AobaraEngine::Sprite::Draw(const Camera& camera)
 {
 	if (isInvisible_ == true)
 	{
 		return;
 	}
 
-
-	
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(psoManager_->GetPsoMember().sprite.rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(psoManager_->GetPsoMember().sprite.graphicPipelineState.Get());
 
@@ -116,7 +107,7 @@ void Sprite::Draw(Camera* camera)
 	//wvp用のCbufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_->constBuffer_->GetGPUVirtualAddress());
 	//カメラ用のCBufferの場所を設定
-	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera->constBuffer_->GetGPUVirtualAddress());
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(2, camera.constBuffer_->GetGPUVirtualAddress());
 	//SRVのDescriptorTableの先頭を設定。3はrootParamater[3]である。
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(3, texture_->GetSrvGPUHandle(textureHandle_));
 	//描画
@@ -124,28 +115,28 @@ void Sprite::Draw(Camera* camera)
 	dxCommon_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
-void Sprite::SetVertexData(const float left, const float right, const float top, const float bottom)
+void AobaraEngine::Sprite::SetVertexData(const float& left, const float& right, const float& top, const float& bottom)
 {
-	textureSizeLeft = left;
-	textureSizeRight = right;
-	textureSizeTop = top;
-	textureSizeBottom = bottom;
+	textureSizeLeft_ = left;
+	textureSizeRight_ = right;
+	textureSizeTop_ = top;
+	textureSizeBottom_ = bottom;
 }
 
-void Sprite::SetMaterialData(const Vector4 color)
+void AobaraEngine::Sprite::SetMaterialData(const Vector4& color)
 {
 	materialData_[0].color = color;
 }
 
 
-Sprite* Sprite::Create(uint32_t textureHandle)
+AobaraEngine::Sprite* AobaraEngine::Sprite::Create(const uint32_t& textureHandle)
 {
 	Sprite* sprite = new Sprite();
 	sprite->Initialize(textureHandle);
 	return sprite;
 }
 
-void Sprite::Debug(const char* name)
+void AobaraEngine::Sprite::Debug( char* name)
 {
 #ifdef _DEBUG
 	ImGui::Begin("sprite");
@@ -153,9 +144,9 @@ void Sprite::Debug(const char* name)
 	{
 		if (ImGui::TreeNode("uvTransform"))
 		{
-			ImGui::DragFloat2("UVTransform", &uvTransform.translate.x, 0.01f);
-			ImGui::DragFloat2("UVScale", &uvTransform.scale.x, 0.01f);
-			ImGui::SliderAngle("UVRotate", &uvTransform.rotate.z);
+			ImGui::DragFloat2("UVTransform", &uvTransform_.translate.x, 0.01f);
+			ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f);
+			ImGui::SliderAngle("UVRotate", &uvTransform_.rotate.z);
 
 			float material[4] = { materialData_->color.x,materialData_->color.y,materialData_->color.z,materialData_->color.w };
 			ImGui::ColorEdit4("material", material);
@@ -195,7 +186,7 @@ void Sprite::Debug(const char* name)
 /*=====================================*/
 
 
-void Sprite::VertexBuffer()
+void AobaraEngine::Sprite::VertexBuffer()
 {
 	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * 6);	//頂点用のデータ
 
@@ -209,7 +200,7 @@ void Sprite::VertexBuffer()
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 }
 
-void Sprite::MaterialBuffer()
+void AobaraEngine::Sprite::MaterialBuffer()
 {
 	materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));	//マテリアル用のデータ
 
@@ -219,7 +210,7 @@ void Sprite::MaterialBuffer()
 
 }
 
-void Sprite::IndexBuffer()
+void AobaraEngine::Sprite::IndexBuffer()
 {
 	indexResource_ = dxCommon_->CreateBufferResource(sizeof(uint32_t) * 6);
 	//リソースの先頭のアドレスから使う
@@ -232,41 +223,41 @@ void Sprite::IndexBuffer()
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
 }
 
-void Sprite::UpdateVertexBuffer()
+void AobaraEngine::Sprite::UpdateVertexBuffer()
 {
 
 
 	//テクスチャのサイズを合わせる
-	textureSizeLeft = (0.0f - anchorPoint_.x) * cutSize_.x;
-	textureSizeRight = (1.0f - anchorPoint_.x) * cutSize_.x;
-	textureSizeTop = (0.0f - anchorPoint_.y) * cutSize_.y;
-	textureSizeBottom = (1.0f - anchorPoint_.y) * cutSize_.y;
+	textureSizeLeft_ = (0.0f - anchorPoint_.x) * cutSize_.x;
+	textureSizeRight_ = (1.0f - anchorPoint_.x) * cutSize_.x;
+	textureSizeTop_ = (0.0f - anchorPoint_.y) * cutSize_.y;
+	textureSizeBottom_ = (1.0f - anchorPoint_.y) * cutSize_.y;
 
-	texLeft = textureLeftTop.x / textureSize_.x;
-	texRight = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
-	texTop = textureLeftTop.y / textureSize_.y;
-	texBottom = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
+	texLeft_ = textureLeftTop.x / textureSize_.x;
+	texRight_ = (textureLeftTop.x + cutSize_.x) / textureSize_.x;
+	texTop_ = textureLeftTop.y / textureSize_.y;
+	texBottom_ = (textureLeftTop.y + cutSize_.y) / textureSize_.y;
 
 
 
 	//頂点の設定
-	vertexData_[LB].position = { textureSizeLeft,textureSizeBottom,0.0f,1.0f };
-	vertexData_[LB].texcoord = { texLeft,texBottom };
+	vertexData_[LB].position = { textureSizeLeft_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[LB].texcoord = { texLeft_,texBottom_ };
 
-	vertexData_[LT].position = { textureSizeLeft,textureSizeTop,0.0f,1.0f };
-	vertexData_[LT].texcoord = { texLeft,texTop };
+	vertexData_[LT].position = { textureSizeLeft_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[LT].texcoord = { texLeft_,texTop_ };
 
-	vertexData_[RB].position = { textureSizeRight,textureSizeBottom,0.0f,1.0f };
-	vertexData_[RB].texcoord = { texRight,texBottom };
+	vertexData_[RB].position = { textureSizeRight_,textureSizeBottom_,0.0f,1.0f };
+	vertexData_[RB].texcoord = { texRight_,texBottom_ };
 
-	vertexData_[RT].position = { textureSizeRight,textureSizeTop,0.0f,1.0f };
-	vertexData_[RT].texcoord = { texRight,texTop };
+	vertexData_[RT].position = { textureSizeRight_,textureSizeTop_,0.0f,1.0f };
+	vertexData_[RT].texcoord = { texRight_,texTop_ };
 
 	
 }
 
 
-void Sprite::AdjustTextureSize() {
+void AobaraEngine::Sprite::AdjustTextureSize() {
 	//テクスチャの情報を取得
 	resourceDesc_ = TextureManager::GetInstance()->GetResourceDesc(textureHandle_);
 	//テクスチャサイズの初期化

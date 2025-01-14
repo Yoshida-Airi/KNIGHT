@@ -1,14 +1,14 @@
 #include "ImGuiManager.h"
-
+using namespace AobaraEngine;
 
 ImGuiManager* ImGuiManager::GetInstance()
 {
-	if (instance == NULL)
+	if (instance_ == NULL)
 	{
-		instance = new ImGuiManager;
+		instance_ = new ImGuiManager;
 	}
 
-	return instance;
+	return instance_;
 }
 
 ImGuiManager::~ImGuiManager()
@@ -62,4 +62,4 @@ void ImGuiManager::Draw()
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
 }
 
-ImGuiManager* ImGuiManager::instance = NULL;
+ImGuiManager* ImGuiManager::instance_ = NULL;

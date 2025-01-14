@@ -24,7 +24,7 @@
 *   @class GameOverScene
 *	@brief  ゲームオーバーシーンクラス
 */
-class GameOverScene :public BaseScene
+class GameOverScene :public AobaraEngine::BaseScene
 {
 public:
 	/// @brief デストラクタ
@@ -38,21 +38,19 @@ public:
 
 private:
 
-	EffectManager* efect = nullptr;
-	TextureManager* textureManager = nullptr;
+	std::unique_ptr<EffectManager> effect_ = nullptr;
+	AobaraEngine::TextureManager* textureManager_ = nullptr;
 
-	Input* input;
+	AobaraEngine::Input* input_;
 	SceneManager* sceneManager_ = nullptr;
-	Camera* camera;
+	std::unique_ptr<AobaraEngine::Camera> camera_;
 
-	uint32_t titleTexture;
+	uint32_t titleTexture_;
 
-	uint32_t soundData;
+	uint32_t soundData_;
 
-	std::unique_ptr<Sprite> title = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> title_ = nullptr;
 
-	std::unique_ptr<Model> fence_ = nullptr;
-	std::unique_ptr<Model> cube_ = nullptr;
 
 
 

@@ -20,31 +20,41 @@
 class MapChipField;
 class Ground;
 class Weapon;
-class Player :public GameObject
+class Player :public AobaraEngine::GameObject
 {
 public:
 	void Initialize()override;
 	void Update()override;
-	void Draw(Camera* camera)override;
-	WorldTransform* GetWorldTransform() { return playerModel->GetWorldTransform(); }
+	void Draw(const AobaraEngine::Camera& camera)override;
+	WorldTransform* GetWorldTransform() { return playerModel_->GetWorldTransform(); }
 
 	Vector3 GetWorldPosition()override;
 	AABB GetAABB()override;
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	bool GetHitGoal()
 	{
-		return hitGoal;
+		return hitGoal_;
 	}
 
 	int GetHP()
 	{
-		return HP;
+		return hp_;
+	}
+
+	bool GetEndMove()
+	{
+		return endMove_;
 	}
 
 	void SetWeapon(Weapon* weapon)
 	{
 		weapon_ = weapon;
+	}
+
+	void SetHP(int32_t hp)
+	{
+		hp_ = hp;
 	}
 		
 	void SetGround(std::list<Ground*>grounds)
@@ -71,6 +81,19 @@ public:
 		kNumCorner		//要素数
 	};
 
+	enum class Phase
+	{
+		kPlay,
+		kDeath,
+		kClear,
+	};
+
+	/**
+	* @brief フェーズの変更
+	* @param[in] phase 変更するフェーズ
+	*/
+	void ChangePhase(Phase phase);
+
 	//範囲矩形
 	struct Rect
 	{
@@ -87,18 +110,18 @@ public:
 
 private:
 
-	GlobalVariables* grobalVariables;
-	const char* groupName;
+	GlobalVariables* grobalVariables_;
+	const char* groupName_;
 
-	std::unique_ptr<Model>playerModel;
-	std::vector<Model*>playerModels;
+	std::unique_ptr<AobaraEngine::Model>playerModel_;
+	std::vector<AobaraEngine::Model*>playerModels_;
 
 
 	Vector3 velocity_ = {  };
 
-	float kAcceleration = 0.01f;	//加速度
-	float kAttenuation = 0.03f;	//速度減衰率
-	float kLimitRunSpeed = 0.1f;	//最大速度
+	float kAcceleration_ = 0.01f;	//加速度
+	float kAttenuation_ = 0.03f;	//速度減衰率
+	float kLimitRunSpeed_ = 0.1f;	//最大速度
 
 	//左右
 	enum class LRDirection
@@ -109,43 +132,50 @@ private:
 
 
 	//向いている方向
-	LRDirection lrDirection = LRDirection::kRight;
-	float turnFirstRotationY = 0.0f;	//旋回開始時の角度
-	float turnTimer = 0.0f;				//旋回タイマー
-	static inline const float kTimeTrun = 0.3f;	//旋回時間<秒>
+	LRDirection lrDirection_ = LRDirection::kRight;
+	float turnFirstRotationY_ = 0.0f;	//旋回開始時の角度
+	float turnTimer_ = 0.0f;				//旋回タイマー
+	static inline const float kTimeTrun_ = 0.3f;	//旋回時間<秒>
 
 	bool onGround_ = false;	//接地状態フラグ
-	float kGravityAcceleration = 0.05f;	//重力加速度（下方向
-	float kLimitFallSpeed = 0.5f;		//最大落下速度（下方向
-	float kJumpAcceleration = 0.5f;	//ジャンプ初速（上方向
-	float kAttenuationLanding = 0.1f;//着地時の速度減衰率
-	float kAttenuationWall = 0.05f;	
+	float kGravityAcceleration_ = 0.05f;	//重力加速度（下方向
+	float kLimitFallSpeed_ = 0.5f;		//最大落下速度（下方向
+	float kJumpAcceleration_ = 0.5f;	//ジャンプ初速（上方向
+	float kAttenuationLanding_ = 0.1f;//着地時の速度減衰率
+	float kAttenuationWall_ = 0.05f;	
 
 	Weapon* weapon_;
 	std::list<Ground*> ground_;
 
-	CollisionMapInfo collisionMapInfo;
+	CollisionMapInfo collisionMapInfo_;
 
-	float kWidth = 0.8f;
-	float kHeight = 0.8f;
-	float kDepth = 0.8f;
+	float kWidth_ = 0.8f;
+	float kHeight_ = 0.8f;
+	float kDepth_ = 0.8f;
 
-	float kBlank = 0.5f;
+	float kBlank_ = 0.5f;
 
-	bool isJump = false;
+	bool isJump_ = false;
 
-	bool hitGoal = false;
+	bool hitGoal_ = false;
 
 
-	int HP = 5;
-	bool isInvincible;
-	float invincibilityTimer;
-	static constexpr float invincibilityDuration = 2.0f; // 無敵時間の長さ（秒）
+	int hp_ = 5;
+	bool isInvincible_;
+	float invincibilityTimer_;
+	static constexpr float invincibilityDuration_ = 2.0f; // 無敵時間の長さ（秒）
 
-	float alpha = 1.0f;       // 初期のアルファ値（不透明）
-	float fadeSpeed = 0.01f;  // 透明になる速度
+	float alpha_ = 1.0f;       // 初期のアルファ値（不透明）
+	float fadeSpeed_ = 0.005f;  // 透明になる速度
 
 	MapChipField* mapChipField_ = nullptr;
+
+	Phase phase_;
+
+	bool endMove_ = false;
+
+	uint32_t redTexture;
+	uint32_t playerTexture;
 
 private:
 
@@ -204,6 +234,9 @@ private:
 
 	void CollisionWall(const CollisionMapInfo& info);
 
+	void GamePlayPhase();
+	void DeathPhase();
+	void ClearPhase();
 
 };
 

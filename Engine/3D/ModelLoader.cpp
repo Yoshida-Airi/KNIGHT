@@ -1,13 +1,15 @@
 #include "ModelLoader.h"
 #include"MathUtilty.h"
 
+using namespace AobaraEngine;
+
 ModelLoader* ModelLoader::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new ModelLoader;
+		instance_ = new ModelLoader;
 	}
-	return instance;
+	return instance_;
 }
 
 ModelLoader::~ModelLoader()
@@ -25,24 +27,24 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 	std::string folderPath = path.parent_path().string();
 
 
-	for (int i = 0; i < kMaxModel; i++)
+	for (int i = 0; i < kMaxModel_; i++)
 	{
 		//同じモデルがあった場合
-		if (model[i].filename == filename)
+		if (model_[i].filename == filename)
 		{
-			return model[i];
+			return model_[i];
 		}
 
-		if (IsusedModel[i] == false) {
+		if (isUsedModel_[i] == false) {
 			index = i;
-			IsusedModel[i] = true;
-			model.at(index).filename = filename;
+			isUsedModel_[i] = true;
+			model_.at(index).filename = filename;
 			break;
 		}
 	}
 
 	//indexが不正な値だった場合止める
-	if (index < 0 || kMaxModel <= index) {
+	if (index < 0 || kMaxModel_ <= index) {
 		assert(false);
 	}
 
@@ -55,7 +57,7 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 		aiMesh* mesh = scene->mMeshes[meshIndex];
 		assert(mesh->HasNormals());
 		assert(mesh->HasTextureCoords(0));
-		model.at(index).vertices.resize(mesh->mNumVertices);//最初に頂点数分のメモリを確保しておく
+		model_.at(index).vertices.resize(mesh->mNumVertices);//最初に頂点数分のメモリを確保しておく
 
 		//vertexの解析
 		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex)
@@ -64,9 +66,9 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 			aiVector3D& normal = mesh->mNormals[vertexIndex];
 			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
 
-			model.at(index).vertices[vertexIndex].position = { -position.x,position.y,position.z,1.0f };
-			model.at(index).vertices[vertexIndex].normal = { -normal.x,normal.y,normal.z };
-			model.at(index).vertices[vertexIndex].texcoord = { texcoord.x,texcoord.y };
+			model_.at(index).vertices[vertexIndex].position = { -position.x,position.y,position.z,1.0f };
+			model_.at(index).vertices[vertexIndex].normal = { -normal.x,normal.y,normal.z };
+			model_.at(index).vertices[vertexIndex].texcoord = { texcoord.x,texcoord.y };
 		}
 		
 		//faceの解析
@@ -77,7 +79,7 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 			for (uint32_t element = 0; element < face.mNumIndices; ++element)
 			{
 				uint32_t vertexIndex = face.mIndices[element];
-				model.at(index).indices.push_back(vertexIndex);
+				model_.at(index).indices.push_back(vertexIndex);
 			}
 		}
 
@@ -87,7 +89,7 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 			//Jointごとの格納領域を作る
 			aiBone* bone = mesh->mBones[boneIndex];
 			std::string jointName = bone->mName.C_Str();
-			JointWeightData& jointWeigthData = model.at(index).skinClusterData[jointName];
+			JointWeightData& jointWeigthData = model_.at(index).skinClusterData[jointName];
 
 			//InverseBindPoseMatrixの抽出
 			aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
@@ -112,13 +114,13 @@ ModelData ModelLoader::LoadModelFile(const std::string& filename)
 		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 			aiString textureFilePath;
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			model.at(index).material.textureFilePath = folderPath + "/" + textureFilePath.C_Str();
+			model_.at(index).material.textureFilePath = folderPath + "/" + textureFilePath.C_Str();
 		}
 	}
 
-	model.at(index).rootNode = ReadNode(scene->mRootNode);
+	model_.at(index).rootNode = ReadNode(scene->mRootNode);
 
-	return model[index];
+	return model_[index];
 }
 
 
@@ -171,4 +173,4 @@ Node ModelLoader::ReadNode(aiNode* node)
 
 
 
-ModelLoader* ModelLoader::instance = NULL;
+ModelLoader* ModelLoader::instance_ = NULL;

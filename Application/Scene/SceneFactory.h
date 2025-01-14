@@ -11,7 +11,7 @@
 *	@brief シーン工場クラス
 */
 class SceneFactory :
-	public AbstractSceneFactory
+	public AobaraEngine::AbstractSceneFactory
 {
 public:
 	/// <summary>
@@ -19,6 +19,6 @@ public:
 	/// </summary>
 	/// <param name="sceneName">シーンの名前</param>
 	/// <returns>生成したシーン</returns>
-	BaseScene* CreateScene(const std::string& sceneName)override;
+	AobaraEngine::BaseScene* CreateScene(const std::string& sceneName)override;
 };
 

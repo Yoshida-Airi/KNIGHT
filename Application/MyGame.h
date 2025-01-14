@@ -25,7 +25,7 @@ public:
 	void Draw()override;
 
 private:
-	BaseScene* scene;
+	std::unique_ptr< AobaraEngine::BaseScene> scene_;
 
 };
 

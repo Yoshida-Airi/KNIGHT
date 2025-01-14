@@ -178,7 +178,13 @@
     <ClCompile Include="Application\Object\Ground\MapChipField.cpp">
       <Filter>Application\Objects\Ground</Filter>
     </ClCompile>
-    <ClCompile Include="Application\Effect\TitleEffect.cpp" />
+    <ClCompile Include="Application\Object\Enemy\EnemyBullet.cpp">
+      <Filter>Application\Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Effect\TitleEffect.cpp">
+      <Filter>Application\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Application\Utility\TimedCall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\Triangle.h">
@@ -355,7 +361,13 @@
     <ClInclude Include="Application\Object\Ground\MapChipField.h">
       <Filter>Application\Objects\Ground</Filter>
     </ClInclude>
-    <ClInclude Include="Application\Effect\TitleEffect.h" />
+    <ClInclude Include="Application\Object\Enemy\EnemyBullet.h">
+      <Filter>Application\Objects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Effect\TitleEffect.h">
+      <Filter>Application\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Application\Utility\TimedCall.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

@@ -1,5 +1,6 @@
 #include "CollisionManager.h"
 #include"Object/CollisionConfig.h"
+using namespace AobaraEngine;
 
 void CollisionManager::Initialize()
 {
@@ -30,7 +31,7 @@ void CollisionManager::Draw(Camera* camera)
 #ifdef _DEBUG
 	for (Collider* collider : colliders_)
 	{
-		collider->Draw(camera);
+		collider->Draw(*camera);
 	}
 #endif // _DEBUG
 

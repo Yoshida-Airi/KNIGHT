@@ -1,0 +1,24 @@
+# Blender 4.2.3 LTS MTL File: 'None'
+# www.blender.org
+
+newmtl N00_000_00_Body_00_SKIN_(Instance)
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd Image_3.png
+map_Ke textures/Image_4.png
+map_Bump -bm 1.000000 Image_5.png
+
+newmtl N00_000_00_FaceMouth_00_FACE_(Instance)
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd Image_0.png
+map_Ke Image_1.png
+map_Bump -bm 1.000000 Image_2.png

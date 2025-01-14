@@ -13,7 +13,7 @@
 * @brief 飛んでいる敵キャラクターを制御するクラス
 * @details 敵の移動、描画、衝突処理、浮遊アニメーションを管理する
 */
-class FlyEnemy : public GameObject
+class FlyEnemy : public AobaraEngine::GameObject
 {
 public:
 
@@ -34,7 +34,7 @@ public:
 	* @param camera カメラ情報
 	* @details モデルをカメラに合わせて描画する
 	*/
-	void Draw(Camera* camera)override;
+	void Draw(const AobaraEngine::Camera& camera)override;
 
 	/**
 	* @brief 飛んでいる敵の位置を設定する
@@ -66,7 +66,7 @@ public:
 	* @param other 衝突したコライダー
 	* @details 他のオブジェクトとの衝突時に呼び出される処理
 	*/
-	void OnCollision([[maybe_unused]] Collider* other)override;
+	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
 	/**
 	* @brief 生存状態を取得する
@@ -79,10 +79,11 @@ public:
 
 private:
 
-	std::unique_ptr<Model>enemyModel_;
-	std::vector<Model*>enemyModels_;
+	std::unique_ptr<AobaraEngine::Model>enemyModel_;
+	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
+	bool isHit_ = false;
 
 	float moveSpeed_ = 0.01f;  // 移動速度
 	float moveDistance_ = 5.0f;  // 移動する距離

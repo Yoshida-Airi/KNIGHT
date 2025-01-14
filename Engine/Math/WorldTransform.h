@@ -17,7 +17,7 @@ struct WorldTransform {
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuffer_;
 	// マッピング済みアドレス
-	ConstBufferDataWorldTransform* constMap = nullptr;
+	ConstBufferDataWorldTransform* constMap_ = nullptr;
 	// ローカルスケール
 	Vector3 scale_ = { 1, 1, 1 };
 	// X,Y,Z軸回りのローカル回転角

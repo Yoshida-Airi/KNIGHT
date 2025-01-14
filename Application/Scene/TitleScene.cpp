@@ -1,40 +1,39 @@
 #include "TitleScene.h"
 #include"SceneManager.h"
-
+using namespace AobaraEngine;
 TitleScene::~TitleScene()
 {
-	delete camera;
-	delete efect;
+
 }
 
 void TitleScene::Initialize()
 {
-	input = Input::GetInstance();
+	input_ = Input::GetInstance();
 	sceneManager_ = SceneManager::GetInstance();
-	textureManager = TextureManager::GetInstance();
+	textureManager_ = TextureManager::GetInstance();
 
-	titleLogo = textureManager->LoadTexture("Resources/Scene/logo.png");
-	backGroundTexture= textureManager->LoadTexture("Resources/Scene/backGround.png");
-	spaceTexture = textureManager->LoadTexture("Resources/Scene/space.png");
+	titleLogo_ = textureManager_->LoadTexture("Resources/Scene/logo.png");
+	backGroundTexture_= textureManager_->LoadTexture("Resources/Scene/backGround.png");
+	spaceTexture_ = textureManager_->LoadTexture("Resources/Scene/space.png");
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
+	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera = new Camera;
-	camera->Initialize();
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
 
-	title.reset(Sprite::Create(titleLogo));
-	title->GetWorldTransform()->translation_ = { 200.0f,110.0f };
+	title_.reset(AobaraEngine::Sprite::Create(titleLogo_));
+	title_->GetWorldTransform()->translation_ = { 200.0f,110.0f };
 
-	backGround.reset(Sprite::Create(backGroundTexture));
+	backGround_.reset(AobaraEngine::Sprite::Create(backGroundTexture_));
 
-	space.reset(Sprite::Create(spaceTexture));
-	space->GetWorldTransform()->translation_ = { 435.0f,490.0f };
+	space_.reset(AobaraEngine::Sprite::Create(spaceTexture_));
+	space_->GetWorldTransform()->translation_ = { 435.0f,490.0f };
 	
 
-	skydome = std::make_unique<Skydome>();
-	skydome->Initialize();
-	skydome->SetLight(false);
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize();
+	skydome_->SetLight(false);
 
 
 	fade_ = std::make_unique <Fade>();
@@ -42,7 +41,7 @@ void TitleScene::Initialize()
 	fade_->Start(Fade::Status::FadeIn, 1.5f);
 
 	titleEffect_ = std::make_unique <TitleEffect>();
-	titleEffect_->Initialize(camera);
+	titleEffect_->Initialize(camera_.get());
 	titleEffect_->SetFlag(true);
 	titleEffect_->SetPosition({ 0.0f,-3.5f,0.0f });
 
@@ -51,7 +50,7 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	camera->CameraDebug();
+	camera_->CameraDebug();
 
 	fade_->Update();
 
@@ -69,10 +68,10 @@ void TitleScene::Update()
 		}
 	}
 
-	if (input->TriggerKey(DIK_SPACE) && isSceneChange == false)
+	if (input_->TriggerKey(DIK_SPACE) && isSceneChange_ == false)
 	{
 		fade_->Start(Fade::Status::FadeOut, 1.5f);
-		isSceneChange = true;
+		isSceneChange_ = true;
 		//Audio::GetInstance()->SoundStopWave(soundData);
 	}
 
@@ -81,11 +80,11 @@ void TitleScene::Update()
 		sceneManager_->ChangeScene("GAMEPLAY");
 	}
 
-	title->Update();
-	backGround->Update();
-	space->Update();
+	title_->Update();
+	backGround_->Update();
+	space_->Update();
 
-	skydome->Update();
+	skydome_->Update();
 	
 	
 
@@ -101,25 +100,25 @@ void TitleScene::Draw()
 
 	
 	
-	skydome->Draw(camera);
+	skydome_->Draw(*camera_);
 
 	titleEffect_->Draw();
 	//backGround->Draw(camera);
-	title->Draw(camera);
-	space->Draw(camera);
+	title_->Draw(*camera_);
+	space_->Draw(*camera_);
 
-	fade_->Draw(camera);
+	fade_->Draw(*camera_);
 
 	
 }
 
 void TitleScene::UpdateSpriteBlink()
 {
-	frameCount++;
+	frameCount_++;
 
-	if (frameCount >= blinkFrames)
+	if (frameCount_ >= blinkFrames_)
 	{
-		space->SetisInvisible(!space->GetisInvisible());
-		frameCount = 0;
+		space_->SetisInvisible(!space_->GetisInvisible());
+		frameCount_ = 0;
 	}
 }

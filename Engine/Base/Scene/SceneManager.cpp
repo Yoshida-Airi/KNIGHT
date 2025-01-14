@@ -1,19 +1,21 @@
 #include "SceneManager.h"
 #include<cassert>
 
+using namespace AobaraEngine;
+
 SceneManager* SceneManager::GetInstance()
 {
-	if (instance == nullptr)
+	if (instance_ == nullptr)
 	{
-		instance = new SceneManager;
+		instance_ = new SceneManager;
 	}
-	return instance;
+	return instance_;
 }
 
 SceneManager::~SceneManager()
 {
 	//最後のシーンの解放
-	delete scene_;
+	//delete scene_;
 }
 
 void SceneManager::Update()
@@ -24,11 +26,11 @@ void SceneManager::Update()
 		//旧シーンの終了
 		if (scene_)
 		{
-			delete scene_;
+			scene_.reset();
 		}
 
 		//シーン切り替え
-		scene_ = nextSscene_;
+		scene_.reset(nextSscene_);
 		nextSscene_ = nullptr;
 		scene_->Initialize();
 	}
@@ -57,4 +59,4 @@ void SceneManager::SetSceneFactory(AbstractSceneFactory* sceneFactory)
 
 
 //静的メンバ変数の宣言と初期化
-SceneManager* SceneManager::instance = nullptr;
+SceneManager* SceneManager::instance_ = nullptr;

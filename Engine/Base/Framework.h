@@ -38,23 +38,23 @@ public:
 
 protected:
 	//WindowAPIの初期化
-	WinApp* winApp = nullptr;
+	AobaraEngine::WinApp* winApp_ = nullptr;
 	//DirectXの初期化
-	DirectXCommon* dxCommon = nullptr;
-	GraphicsPipelineManager* psoManager = nullptr;
-	TextureManager* texture = nullptr;
-	Input* input;
-	Audio* audio;
+	DirectXCommon* dxCommon_ = nullptr;
+	AobaraEngine::GraphicsPipelineManager* psoManager_ = nullptr;
+	AobaraEngine::TextureManager* texture_ = nullptr;
+	AobaraEngine::Input* input_;
+	AobaraEngine::Audio* audio_;
 	//IScene* scene_ = nullptr;	//シーン
 	SceneManager* sceneManager_ = nullptr;
-	GlobalVariables* glovalVariable = nullptr;
+	GlobalVariables* glovalVariable_ = nullptr;
 
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	AobaraEngine::AbstractSceneFactory* sceneFactory_ = nullptr;
 
 
-	ImGuiManager* imgui;
+	AobaraEngine::ImGuiManager* imgui_;
 
-	SrvManager* srvManager = nullptr;
+	AobaraEngine::SrvManager* srvManager_ = nullptr;
 
 };
 

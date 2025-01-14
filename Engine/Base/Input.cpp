@@ -1,12 +1,14 @@
 #include "Input.h"
 
+using namespace AobaraEngine;
+
 Input* Input::GetInstance()
 {
-	if (instance == NULL)
+	if (instance_ == NULL)
 	{
-		instance = new Input;
+		instance_ = new Input;
 	}
-	return instance;
+	return instance_;
 }
 
 void Input::Initialize()
@@ -15,40 +17,40 @@ void Input::Initialize()
 
 	//DirectInputの初期化
 
-	HRESULT hr = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
+	HRESULT hr = DirectInput8Create(winApp_->GetHInstance(), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput_, nullptr);
 	assert(SUCCEEDED(hr));
 
 	//キーボードデバイスの生成
-	hr = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
+	hr = directInput_->CreateDevice(GUID_SysKeyboard, &keyboard_, NULL);
 	assert(SUCCEEDED(hr));
 
 	//入力データ形式のセット
-	hr = keyboard->SetDataFormat(&c_dfDIKeyboard);	//標準形式
+	hr = keyboard_->SetDataFormat(&c_dfDIKeyboard);	//標準形式
 	assert(SUCCEEDED(hr));
 
 	//排他制御レベルのセット
-	hr = keyboard->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
+	hr = keyboard_->SetCooperativeLevel(winApp_->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
 	assert(SUCCEEDED(hr));
 }
 
 void Input::Update()
 {
 	//前回のキー入力を保存
-	memcpy(keyPre, key, sizeof(key));
+	memcpy(keyPre_, key_, sizeof(key_));
 
 	//キーボード情報の取得開始
-	keyboard->Acquire();
+	keyboard_->Acquire();
 
 	//全キーの入力状態を取得する
 
-	keyboard->GetDeviceState(sizeof(key), key);
+	keyboard_->GetDeviceState(sizeof(key_), key_);
 
 }
 
 bool Input::PushKey(BYTE keyNumber)
 {
 	//指定キーを押していればtrueを返す
-	if (key[keyNumber])
+	if (key_[keyNumber])
 	{
 		return true;
 	}
@@ -58,7 +60,7 @@ bool Input::PushKey(BYTE keyNumber)
 
 bool Input::TriggerKey(BYTE keyNumber)
 {
-	if (keyPre[keyNumber] != 0 && key[keyNumber] == 0)
+	if (keyPre_[keyNumber] != 0 && key_[keyNumber] == 0)
 	{
 		OutputDebugStringA("hit 0!\n");
 		return true;
@@ -96,4 +98,4 @@ bool Input::GetJoystickState(int32_t stickNo, XINPUT_STATE& state)
 	return Result == ERROR_SUCCESS;
 }
 
-Input* Input::instance = NULL;
+Input* Input::instance_ = NULL;

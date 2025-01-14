@@ -6,6 +6,7 @@
 #pragma once
 #include"BaseScene.h"
 #include"AbstractSceneFactory.h"
+#include<memory>
 
 /**
 *   @class SceneManager
@@ -27,13 +28,13 @@ public:
 	/// <param name="sceneName">シーン名</param>
 	void ChangeScene(const std::string& sceneName);
 
-	void SetSceneFactory(AbstractSceneFactory* sceneFactory);
+	void SetSceneFactory(AobaraEngine::AbstractSceneFactory* sceneFactory);
 
 private:
-	static SceneManager* instance;	//シングルトン
-	AbstractSceneFactory* sceneFactory_ = nullptr;
+	static SceneManager* instance_;	//シングルトン
+	AobaraEngine::AbstractSceneFactory* sceneFactory_ = nullptr;
 	//今のシーン
-	BaseScene* scene_ = nullptr;
-	BaseScene* nextSscene_ = nullptr;
+	std::unique_ptr<AobaraEngine::BaseScene> scene_ = nullptr;
+	AobaraEngine::BaseScene* nextSscene_ = nullptr;
 };
 

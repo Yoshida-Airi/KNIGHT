@@ -1,11 +1,11 @@
 #include "Camera.h"
 
-void Camera::Initialize()
+void AobaraEngine::Camera::Initialize()
 {
-	winApp = WinApp::GetInstance();
-	dxCommon = DirectXCommon::GetInstance();
+	winApp_ = WinApp::GetInstance();
+	dxCommon_ = DirectXCommon::GetInstance();
 
-	transform =
+	transform_ =
 	{
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
@@ -17,70 +17,58 @@ void Camera::Initialize()
 	UpdateMatrix();
 }
 
-void Camera::CreateConstBuffer()
+void AobaraEngine::Camera::CreateConstBuffer()
 {
-	constBuffer_ = dxCommon->CreateBufferResource(sizeof(ConstBufferDataViewProjection));
+	constBuffer_ = dxCommon_->CreateBufferResource(sizeof(ConstBufferDataViewProjection));
 }
 
-void Camera::Map() {
-	constBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&constMap));
+void AobaraEngine::Camera::Map() {
+	constBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&constMap_));
 }
 
-void Camera::UpdateMatrix()
+void AobaraEngine::Camera::UpdateMatrix()
 {
 	UpdateViewMatrix();
 	UpdateProjectionMatrix();
 	TransferMatrix();
 }
 
-void Camera::TransferMatrix()
+void AobaraEngine::Camera::TransferMatrix()
 {
-	constMap->view = matView;
-	constMap->projection = matProjection;
+	constMap_->view = matView_;
+	constMap_->projection = matProjection_;
 
-	constMap->sview = smatView;
-	constMap->sprojection = smatProjection;
+	constMap_->sview = smatView_;
+	constMap_->sprojection = smatProjection_;
 
-	constMap->worldPosition = transform.translate;
+	constMap_->worldPosition = transform_.translate;
 }
 
-void Camera::UpdateViewMatrix()
+void AobaraEngine::Camera::UpdateViewMatrix()
 {
-	cameraMatrix = MakeAffinMatrix(transform.scale, transform.rotate, transform.translate);
-	matView = Inverse(cameraMatrix);
-	smatView = MakeIdentity4x4();
+	cameraMatrix_ = MakeAffinMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	matView_ = Inverse(cameraMatrix_);
+	smatView_ = MakeIdentity4x4();
 }
 
-void Camera::UpdateProjectionMatrix()
+void AobaraEngine::Camera::UpdateProjectionMatrix()
 {
-	matProjection = MakePerspectiveFovMatrix(0.45f, float(winApp->kCilentWidth) / float(winApp->kCilentHeight), nearZ, farZ);
-	smatProjection = MakeOrthographicmatrix(0.0f, 0.0f, float(winApp->kCilentWidth), float(winApp->kCilentHeight), 0.0f, 100.0f);
+	matProjection_ = MakePerspectiveFovMatrix(0.45f, float(winApp_->kCilentWidth) / float(winApp_->kCilentHeight), nearZ_, farZ_);
+	smatProjection_ = MakeOrthographicmatrix(0.0f, 0.0f, float(winApp_->kCilentWidth), float(winApp_->kCilentHeight), 0.0f, 100.0f);
 }
 
-void Camera::CameraDebug()
+void AobaraEngine::Camera::CameraDebug()
 {
 #ifdef _DEBUG
 	ImGui::Begin("camera");
 
-	float translate[3] = { transform.translate.x,transform.translate.y,transform.translate.z };
-	ImGui::DragFloat3("transform", translate, 0.01f);
-	float rotate[3] = { transform.rotate.x,transform.rotate.y,transform.rotate.z };
-	ImGui::DragFloat3("rotate", rotate, 0.01f);
-	//float scale[3] = { transform.scale.x, transform.scale.y, transform.scale.z };
-	//ImGui::DragFloat3("scale", scale, 1);
-
-
-	transform.translate = { translate[0],translate[1],translate[2] };
-	transform.rotate = { rotate[0],rotate[1],rotate[2] };
-	//transform.scale = { scale[0],scale[1],scale[2] };
+	ImGui::DragFloat3("transform", &transform_.translate.x, 0.01f);
+	ImGui::DragFloat3("rotate", &transform_.rotate.x, 0.01f);
 
 	UpdateMatrix();
 
 	ImGui::End();
 
 #endif // _DEBUG
-
-
-
 	
 }

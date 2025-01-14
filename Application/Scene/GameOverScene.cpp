@@ -1,37 +1,32 @@
 #include "GameOverScene.h"
 #include"SceneManager.h"
 
+using namespace AobaraEngine;
+
 GameOverScene::~GameOverScene()
 {
-	delete camera;
-	delete efect;
 }
 
 void GameOverScene::Initialize()
 {
-	input = Input::GetInstance();
+	input_ = Input::GetInstance();
 	sceneManager_ = SceneManager::GetInstance();
-	textureManager = TextureManager::GetInstance();
+	textureManager_ = TextureManager::GetInstance();
 
-	titleTexture = textureManager->LoadTexture("Resources/Scene/gameOver.png");
+	titleTexture_ = textureManager_->LoadTexture("Resources/Scene/gameOver.png");
 
-	soundData = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
+	soundData_ = Audio::GetInstance()->SoundLoadWave("Resources/SampleSound/Alarm01.wav");
 	//Audio::GetInstance()->SoundPlayWave(soundData, false);
 
-	camera = new Camera;
-	camera->Initialize();
+	camera_ = std::make_unique<Camera>();
+	camera_->Initialize();
 
-	title.reset(Sprite::Create(titleTexture));
-
-
-	fence_.reset(Model::Create("Resources/SampleAssets/fence.obj"));
-	cube_.reset(Model::Create("Resources/SampleAssets/cube.obj"));
-	fence_->GetWorldTransform()->rotation_.y = 3.1f;
+	title_.reset(AobaraEngine::Sprite::Create(titleTexture_));
 }
 
 void GameOverScene::Update()
 {
-	camera->CameraDebug();
+	camera_->CameraDebug();
 
 	//ゲームパットの状態を得る変数(XINPUT)
 	XINPUT_STATE joyState;
@@ -45,32 +40,17 @@ void GameOverScene::Update()
 		}
 	}
 
-	if (input->TriggerKey(DIK_SPACE))
+	if (input_->TriggerKey(DIK_SPACE))
 	{
 		sceneManager_->ChangeScene("TITLE");
 		//Audio::GetInstance()->SoundStopWave(soundData);
 	}
 
-	title->Update();
-
-	fence_->Update();
-	cube_->Update();
-
-
-
-	cube_->ModelDebug("cube");
-	fence_->ModelDebug("fence");
-	fence_->Parent(cube_.get());
-
-
+	title_->Update();
 }
 
 void GameOverScene::Draw()
 {
-	title->Draw(camera);
-
-	fence_->Draw(camera);
-	cube_->Draw(camera);
-
+	title_->Draw(*camera_);
 }
 
