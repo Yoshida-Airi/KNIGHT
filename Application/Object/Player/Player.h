@@ -56,7 +56,7 @@ public:
 		hp_ = hp;
 	}
 		
-	void SetGround(std::list<Ground*>grounds)
+	void SetGround(std::vector<Ground*>grounds)
 	{
 		grounds_ = grounds;
 	}
@@ -155,7 +155,7 @@ private:
 	//static inline const float kJumpAcceleration = 3.0f;	//ジャンプ初速（上方向
 
 	Weapon* weapon_;
-	std::list<Ground*> grounds_;
+	std::vector<Ground*> grounds_;
 	Ground* ground_ = nullptr;
 
 

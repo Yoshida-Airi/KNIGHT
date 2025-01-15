@@ -38,7 +38,7 @@ GamePlayScene::~GamePlayScene()
 	//blocks_.clear();
 
 	//delete mapChipField_;
-
+	delete blockLevelEditor;
 }
 
 void GamePlayScene::Initialize()
@@ -64,6 +64,10 @@ void GamePlayScene::Initialize()
 	//levelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
 	//levelEditor->Initialize();
 
+	blockLevelEditor = new BlockLevelEditor();
+	blockLevelEditor->LoaderJsonFile("Resources/Level/levelEditor2.json");
+	blockLevelEditor->Initialize();
+	
 	weapon_ = std::make_unique<Weapon>();
 	weapon_->Initialize();
 
@@ -83,6 +87,8 @@ void GamePlayScene::Initialize()
 	player_->SetWeapon(weapon_.get());
 	//player_->SetGround(ground_.get());
 	player_->SetGround(grounds_);
+	player_->SetGround(blockLevelEditor->GetGrounds());
+	
 	player_->Initialize();
 	
 
@@ -178,6 +184,8 @@ void GamePlayScene::Draw()
 	{
 		ground->Draw(camera_);
 	}
+
+	blockLevelEditor->Draw(camera_);
 
 	//model->Draw(camera);
 	//model2->Draw(camera);
@@ -297,6 +305,11 @@ void GamePlayScene::CheckAllCollisions()
 	{
 		colliderManager_->AddColliders(ground);
 	}
+
+	for (const auto& ground : blockLevelEditor->GetGrounds()) {
+		colliderManager_->AddColliders(ground);
+	}
+
 	//for (Enemy* enemy : enemys_) 
 	//{
 	//	if(enemy->GetIsAlive() == true)
@@ -391,6 +404,8 @@ void GamePlayScene::GamePlayPhase()
 #endif // _DEBUG
 
 	cameraController_->Update();
+
+	blockLevelEditor->Update();
 
 	colliderManager_->UpdateWorldTransform();
 

@@ -36,7 +36,7 @@
 
 
 #include"LevelEditor.h"
-
+#include"BlockLevelEditor.h"
 
 /**
 *   @class GamePlayScene
@@ -115,6 +115,8 @@ private:
 	//std::unique_ptr<Fade> fade_ = nullptr;
 
 	//LevelEditor* levelEditor = nullptr;
+	BlockLevelEditor* blockLevelEditor = nullptr;
+
 
 	std::unique_ptr <Player> player_;
 	//std::list<Enemy*> enemys_;
@@ -123,7 +125,7 @@ private:
 	//std::unique_ptr <Goal>goal_;
 	CameraController* cameraController_;
 	std::unique_ptr<Weapon>weapon_;
-	std::list<Ground*>grounds_;
+	std::vector<Ground*>grounds_;
 
 	std::unique_ptr<Ground>ground_;
 	//std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
