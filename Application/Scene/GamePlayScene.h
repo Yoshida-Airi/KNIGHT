@@ -135,6 +135,11 @@ private:
 	std::vector<std::vector<Model*>>blocks_;
 	std::unique_ptr<MapChipField> mapChipField_;
 
+	bool configInstruction = true;
+	bool configDraw = false;
+
+	std::chrono::steady_clock::time_point lastInputTime;
+
 private:
 
 	/// @brief ゲームプレイフェーズ
@@ -145,5 +150,7 @@ private:
 	void GameOverPhase();
 	/// @brief ブロック生成
 	void GenerateBlocks();
+
+	void ConfigDraw();
 };
 

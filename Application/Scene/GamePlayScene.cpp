@@ -124,6 +124,9 @@ void GamePlayScene::Initialize()
 
 	player_->SetMapChipField(mapChipField_.get());
 	
+	lastInputTime = std::chrono::steady_clock::now();
+
+
 }
 
 void GamePlayScene::Update()
@@ -212,8 +215,12 @@ void GamePlayScene::Draw()
 
 	//colliderManager_->Draw(camera);
 
-	config_->Draw(*camera_);
+	ConfigDraw();
 
+	if (configInstruction == true)
+	{
+		config_->Draw(*camera_);
+	}
 
 	// HP に応じて描画
 	int hp = player_->GetHP();
@@ -677,4 +684,37 @@ void GamePlayScene::GenerateBlocks()
 		}
 	}
 
+}
+
+void GamePlayScene::ConfigDraw()
+{
+	auto now = std::chrono::steady_clock::now();
+
+	// キー入力があるかチェック
+	if (input_->GetInstance()->PushKey(DIK_RIGHT) || input_->PushKey(DIK_LEFT) ||
+		input_->GetInstance()->PushKey(DIK_UP) || input_->GetInstance()->PushKey(DIK_SPACE))
+	{
+		if (!configDraw)
+		{
+			// 起動後初めてキーが押された
+			configDraw = true;
+		}
+		configInstruction = false;      // 描画を停止
+		lastInputTime = now;            // 最後の入力時間を更新
+	}
+
+	// 入力が5秒間なかった場合に描画を再開
+	const float noInputDuration = 5.0f; // 秒
+	float elapsedTime = std::chrono::duration<float>(now - lastInputTime).count();
+	if (elapsedTime >= noInputDuration) {
+		configInstruction = true;       // 描画フラグを再設定
+	}
+
+	// 描画の制御
+	if (configInstruction) {
+		config_->SetisInvisible(false); // テクスチャを表示
+	}
+	else {
+		config_->SetisInvisible(true);  // テクスチャを非表示
+	}
 }
