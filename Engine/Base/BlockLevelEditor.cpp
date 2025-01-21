@@ -116,7 +116,7 @@ void BlockLevelEditor::LoaderJsonFile(std::string filePath)
 		{
 			//Model* model = Model::Create(objectData.filename);
 
-			modelsData_[objectData.filename].reset(new Ground);
+			modelsData_[objectData.filename] = (std::make_unique<Ground>());
 
 		}
 	}
