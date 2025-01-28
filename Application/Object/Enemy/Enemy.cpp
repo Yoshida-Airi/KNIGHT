@@ -4,15 +4,6 @@
 using namespace AobaraEngine;
 Enemy::~Enemy()
 {
-	for (EnemyBullet* bullet : bullets_)
-	{
-		delete bullet;
-	}
-
-	for (TimedCall* timeCall : this->timedCalls_)
-	{
-		delete timeCall;
-	}
 }
 
 void Enemy::Initialize()
@@ -36,25 +27,16 @@ void Enemy::Update()
 	GameObject::Update();
 
 	// 終了したタイマーを削除
-	timedCalls_.remove_if([](TimedCall* timeCall) {
-		if (timeCall->isFinished() == true) {
-			delete timeCall;
-			return true;
-		}
-		return false;
+	timedCalls_.remove_if([](const std::unique_ptr<TimedCall>& timecall) {
+		return timecall->isFinished(); // デスフラグが立っているか確認
 		});
 
 
 	//デスフラグの立った弾を削除
-	bullets_.remove_if([](EnemyBullet* bullet)
-		{
-			if (bullet->IsDead())
-			{
-				delete bullet;
-				return true;
-			}
-			return false;
+	bullets_.remove_if([](const std::unique_ptr<EnemyBullet>& bullet) {
+		return bullet->IsDead(); // デスフラグが立っているか確認
 		});
+
 
 	enemyModel_->ModelDebug("enemy");
 	//enemyModel->GetWorldTransform()->translation_.x += 0.03f;
@@ -78,13 +60,13 @@ void Enemy::Update()
 	}
 
 	//タイマーの更新
-	for (TimedCall* timedCall : this->timedCalls_)
+	for (std::unique_ptr<TimedCall>& timedCall : this->timedCalls_)
 	{
 		timedCall->Update();
 	}
 
 	//弾の更新
-	for (EnemyBullet* bullet : bullets_)
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
 		bullet->Update();
 	}
@@ -118,7 +100,7 @@ void Enemy::Draw(const AobaraEngine::Camera& camera)
 	enemyModel_->Draw(camera);
 
 	//弾の描画
-	for (EnemyBullet* bullet : bullets_)
+	for (std::unique_ptr<EnemyBullet>& bullet : bullets_)
 	{
 		bullet->Draw(camera);
 	}
@@ -163,7 +145,7 @@ void Enemy::AttackReset()
 
 	Fire();
 	// 発射タイマーをセットする
-	timedCalls_.push_back(new TimedCall(std::bind(&Enemy::AttackReset, this), kFireInterval));
+	timedCalls_.push_back(std::move(std::make_unique<TimedCall>(std::bind(&Enemy::AttackReset, this), kFireInterval)));
 }
 
 void Enemy::DeleteBullet()
@@ -200,12 +182,12 @@ void Enemy::Fire()
 	velocity.y = normarizeVector.y * kBulletSpeed;
 	velocity.z = normarizeVector.z * kBulletSpeed;
 	//球を生成し、初期化
-	EnemyBullet* newBullet = new EnemyBullet();
+	std::unique_ptr<EnemyBullet> newBullet = std::make_unique< EnemyBullet>();
 	newBullet->SetPlayer(player_);
 	newBullet->Initialize();
 	newBullet->SetPosition(GetWorldPosition());
 
 	//弾の登録
-	bullets_.push_back(newBullet);
+	bullets_.push_back(std::move(newBullet));
 
 }

@@ -93,9 +93,9 @@ private:
 	std::vector<AobaraEngine::Model*>enemyModels_;
 
 	////弾
-	std::list<EnemyBullet*> bullets_;
+	std::list<std::unique_ptr<EnemyBullet>> bullets_;
 	//時限発動のリスト
-	std::list<TimedCall*> timedCalls_;
+	std::list<std::unique_ptr<TimedCall>> timedCalls_;
 
 	bool isAlive_ = true;	//生きているか: true 生きている
 	bool isHit = false;
