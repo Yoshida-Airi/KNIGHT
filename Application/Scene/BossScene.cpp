@@ -4,15 +4,7 @@
 
 BossScene::~BossScene()
 {
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			delete block;
-		}
-	}
 
-	blocks_.clear();
 }
 
 void BossScene::Initialize()
@@ -149,9 +141,9 @@ void BossScene::Draw()
 	}
 
 	// ブロックの描画処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -384,9 +376,9 @@ void BossScene::GamePlayPhase()
 	CheckAllCollisions();
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -489,9 +481,9 @@ void BossScene::GameClearPhase()
 	CheckAllCollisions();
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -593,9 +585,9 @@ void BossScene::GameOverPhase()
 	CheckAllCollisions();
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -632,9 +624,9 @@ void BossScene::GenerateBlocks()
 		{
 			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
 			{
-				Model* model = new Model();
+				std::unique_ptr<Model> model = std::make_unique<Model>();
 				model->Initialize("Resources/Level/map.obj");
-				blocks_[i][j] = model;
+				blocks_[i][j] = std::move(model);
 				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 
 			}
