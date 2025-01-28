@@ -6,24 +6,10 @@ using namespace AobaraEngine;
 GamePlayScene::~GamePlayScene()
 {
 
-	//delete camera_;
-	//delete levelEditor;
-	//delete cameraController_;
-
-	for (Enemy* enemy : enemys_)
-	{
-		delete enemy;
-	}
-
-	for (FlyEnemy* flyEnemy : flyEnemys_)
-	{
-		delete flyEnemy;
-	}
-
-	for (Ground* ground : grounds_)
-	{
-		delete ground;
-	}
+	//for (Ground* ground : grounds_)
+	//{
+	//	delete ground;
+	//}
 
 	for (DeathEffect* deathEffects : deathEffect_) {
 		delete deathEffects;
@@ -38,8 +24,6 @@ GamePlayScene::~GamePlayScene()
 	}
 
 	blocks_.clear();
-
-	//delete mapChipField_;
 
 }
 
@@ -180,12 +164,12 @@ void GamePlayScene::Draw()
 	skydome_->Draw(*camera_);
 	player_->Draw(*camera_);
 	weapon_->Draw(*camera_);
-	for (Enemy* enemy : enemys_) 
+	for (const auto& enemy : enemys_) 
 	{
 		enemy->Draw(*camera_);
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_)
+	for (const auto& flyEnemy : flyEnemys_)
 	{
 		flyEnemy->Draw(*camera_);
 	}
@@ -249,21 +233,21 @@ void GamePlayScene::CheckAllCollisions()
 		//攻撃中のみ
 		colliderManager_->AddColliders(weapon_.get());
 	}
-	for (Enemy* enemy : enemys_) 
+	for (const auto& enemy : enemys_) 
 	{
 		if(enemy->GetIsAlive() == true)
 		{
 			//生きているときのみ
-			colliderManager_->AddColliders(enemy);
+			colliderManager_->AddColliders(enemy.get());
 		}
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_)
+	for (const auto& flyEnemy : flyEnemys_)
 	{
 		if (flyEnemy->GetIsAlive() == true)
 		{
 			//生きているときのみ
-			colliderManager_->AddColliders(flyEnemy);
+			colliderManager_->AddColliders(flyEnemy.get());
 		}
 	}
 
@@ -277,7 +261,7 @@ void GamePlayScene::CheckAllCollisions()
 void GamePlayScene::SpawnEnemy(const Vector3& position)
 {
 	// 敵を発生させる
-	Enemy* enemy = new Enemy();
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 	// 敵の初期化
 	enemy->Initialize();
 	enemy->SetPosition(position);
@@ -286,19 +270,19 @@ void GamePlayScene::SpawnEnemy(const Vector3& position)
 	enemy->AttackReset();
 
 	// リストに登録
-	enemys_.push_back(enemy);
+	enemys_.push_back(std::move(enemy));
 }
 
 void GamePlayScene::SpawnFlyEnemy(const Vector3& position)
 {
 	// 敵を発生させる
-	FlyEnemy* enemy = new FlyEnemy();
+	std::unique_ptr<FlyEnemy> enemy = std::make_unique<FlyEnemy>();
 	// 敵の初期化
 	enemy->Initialize();
 	enemy->SetPosition(position);
 
 	// リストに登録
-	flyEnemys_.push_back(enemy);
+	flyEnemys_.push_back(std::move(enemy));
 }
 
 void GamePlayScene::SpawnBlock(const Vector3& position, const Vector3& scale)
@@ -379,14 +363,14 @@ void GamePlayScene::GamePlayPhase()
 	}
 
 
-	for (Enemy* enemy : enemys_) {
+	for(const auto & enemy : enemys_) {
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
 			CreateDeathEffect({ enemy->GetWorldPosition() });
 		}
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_) {
+	for (const auto& flyEnemy : flyEnemys_) {
 		flyEnemy->Update();
 		if (flyEnemy->GetIsAlive() == false) {
 			CreateDeathEffect({ flyEnemy->GetWorldPosition() });
@@ -403,20 +387,16 @@ void GamePlayScene::GamePlayPhase()
 		return false;
 		});
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
+	enemys_.remove_if(
+		[](const std::unique_ptr<Enemy>& enemy) {
+			return !enemy->GetIsAlive();
 		});
 
-	flyEnemys_.remove_if([](FlyEnemy* flyEnemys) {
-		if (flyEnemys->GetIsAlive() == false) {
-			delete flyEnemys;
-			return true;
-		}
-		return false;
+
+
+	flyEnemys_.remove_if(
+		[](const std::unique_ptr<FlyEnemy>& enemy) {
+			return !enemy->GetIsAlive();
 		});
 
 
@@ -439,12 +419,12 @@ void GamePlayScene::GamePlayPhase()
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}
 
-	for (FlyEnemy* flyEnemy : flyEnemys_)
+	for (const auto& flyEnemy : flyEnemys_)
 	{
 		flyEnemy->Update();
 	}
@@ -500,7 +480,7 @@ void GamePlayScene::GameClearPhase()
 		hpTextures_[i]->Update();
 	}
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
@@ -509,13 +489,11 @@ void GamePlayScene::GameClearPhase()
 	}
 
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
+	enemys_.remove_if(
+		[](const std::unique_ptr<Enemy>& enemy) {
+			return !enemy->GetIsAlive();
 		});
+
 
 
 	for (DeathEffect* deathEffects : deathEffect_) {
@@ -537,7 +515,7 @@ void GamePlayScene::GameClearPhase()
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}
@@ -592,7 +570,7 @@ void GamePlayScene::GameOverPhase()
 		hpTextures_[i]->Update();
 	}
 
-	for (Enemy* enemy : enemys_) {
+	for (const auto& enemy : enemys_) {
 		enemy->Update();
 		if (enemy->GetIsAlive() == false) {
 			CreateDeathEffect({ enemy->GetWorldPosition() });
@@ -600,12 +578,9 @@ void GamePlayScene::GameOverPhase()
 	}
 
 
-	enemys_.remove_if([](Enemy* enemys) {
-		if (enemys->GetIsAlive() == false) {
-			delete enemys;
-			return true;
-		}
-		return false;
+	enemys_.remove_if(
+		[](const std::unique_ptr<Enemy>& enemy) {
+			return !enemy->GetIsAlive();
 		});
 
 
@@ -627,7 +602,7 @@ void GamePlayScene::GameOverPhase()
 	//武器の更新
 	weapon_->Update();
 
-	for (Enemy* enemy : enemys_)
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Update();
 	}

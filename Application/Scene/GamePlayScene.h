@@ -116,8 +116,8 @@ private:
 	//LevelEditor* levelEditor = nullptr;
 
 	std::unique_ptr <Player> player_;
-	std::list<Enemy*> enemys_;
-	std::list<FlyEnemy*> flyEnemys_;
+	std::list<std::unique_ptr<Enemy>> enemys_;
+	std::list<std::unique_ptr<FlyEnemy>> flyEnemys_;
 	std::unique_ptr <Skydome>skydome_;
 	std::unique_ptr <Goal>goal_;
 	std::unique_ptr<CameraController> cameraController_;
