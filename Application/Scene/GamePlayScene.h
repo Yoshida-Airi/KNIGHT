@@ -123,7 +123,7 @@ private:
 	std::unique_ptr<CameraController> cameraController_;
 	std::unique_ptr<Weapon>weapon_;
 	std::list<Ground*>grounds_;
-	std::list<DeathEffect*>deathEffect_;	//敵消滅エフェクト
+	std::list<std::unique_ptr<DeathEffect>>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
 	std::unique_ptr<AobaraEngine::Sprite> config_ = nullptr;
@@ -132,7 +132,7 @@ private:
 
 	Phase phase_;
 
-	std::vector<std::vector<Model*>>blocks_;
+	std::vector<std::vector<std::unique_ptr<Model>>>blocks_;
 	std::unique_ptr<MapChipField> mapChipField_;
 
 	bool configInstruction = true;

@@ -5,26 +5,6 @@ using namespace AobaraEngine;
 
 GamePlayScene::~GamePlayScene()
 {
-
-	//for (Ground* ground : grounds_)
-	//{
-	//	delete ground;
-	//}
-
-	for (DeathEffect* deathEffects : deathEffect_) {
-		delete deathEffects;
-	}
-
-	for (std::vector<Model*>& blockLine : blocks_)
-	{
-		for (Model* block : blockLine)
-		{
-			delete block;
-		}
-	}
-
-	blocks_.clear();
-
 }
 
 void GamePlayScene::Initialize()
@@ -175,15 +155,15 @@ void GamePlayScene::Draw()
 	}
 
 
-	for (DeathEffect* deathEffects : deathEffect_)
+	for (const auto& deathEffects : deathEffect_)
 	{
 		deathEffects->Draw();
 	}
 
 	// ブロックの描画処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -300,13 +280,13 @@ void GamePlayScene::SpawnBlock(const Vector3& position, const Vector3& scale)
 
 void GamePlayScene::CreateDeathEffect(Vector3 position)
 {
-	DeathEffect* newDeathEffect = new DeathEffect();
+	std::unique_ptr<DeathEffect> newDeathEffect = std::make_unique< DeathEffect>();
 	newDeathEffect->Initialize(camera_.get());
 	newDeathEffect->SetFlag(true);
 
 	newDeathEffect->SetPosition(position);
 
-	deathEffect_.push_back(newDeathEffect);
+	deathEffect_.push_back(std::move(newDeathEffect));
 }
 
 void GamePlayScene::ChangePhase(Phase phase)
@@ -377,15 +357,10 @@ void GamePlayScene::GamePlayPhase()
 		}
 	}
 
-	deathEffect_.remove_if([](DeathEffect* hitEffects) {
-		if (hitEffects->IsDead())
-		{
-			//実行時間をすぎたらメモリ削除
-			delete hitEffects;
-			return true;
-		}
-		return false;
+	deathEffect_.remove_if([](const std::unique_ptr<DeathEffect>& hitEffect) {
+		return hitEffect->IsDead(); // IsDead() が true なら削除
 		});
+
 
 	enemys_.remove_if(
 		[](const std::unique_ptr<Enemy>& enemy) {
@@ -400,7 +375,7 @@ void GamePlayScene::GamePlayPhase()
 		});
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
@@ -435,9 +410,9 @@ void GamePlayScene::GamePlayPhase()
 	CheckAllCollisions();
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -496,7 +471,7 @@ void GamePlayScene::GameClearPhase()
 
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
@@ -526,9 +501,9 @@ void GamePlayScene::GameClearPhase()
 	CheckAllCollisions();
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -584,7 +559,7 @@ void GamePlayScene::GameOverPhase()
 		});
 
 
-	for (DeathEffect* deathEffects : deathEffect_) {
+	for (const auto& deathEffects : deathEffect_) {
 		deathEffects->Update();
 	}
 
@@ -614,9 +589,9 @@ void GamePlayScene::GameOverPhase()
 
 
 	// ブロックの更新処理
-	for (std::vector<Model*>& blockLine : blocks_)
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
 	{
-		for (Model* block : blockLine)
+		for (std::unique_ptr<Model>& block : blockLine)
 		{
 			if (!block)
 			{
@@ -650,9 +625,9 @@ void GamePlayScene::GenerateBlocks()
 		{
 			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
 			{
-				Model* model = new Model();
+				std::unique_ptr<Model> model = std::make_unique< Model>();
 				model->Initialize("Resources/Level/map.obj");
-				blocks_[i][j] = model;
+				blocks_[i][j] = std::move(model);
 				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
 
 			}
