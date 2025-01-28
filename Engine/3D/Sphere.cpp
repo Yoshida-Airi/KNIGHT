@@ -3,7 +3,6 @@ using namespace AobaraEngine;
 
 Sphere::~Sphere()
 {
-	//delete worldTransform_;
 }
 
 void Sphere::Initialize(uint32_t textureHandle)

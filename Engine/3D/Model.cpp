@@ -6,7 +6,6 @@ using namespace AobaraEngine;
 
 Model::~Model()
 {
-	//delete worldTransform_;
 }
 
 void Model::Initialize(const std::string& filename)
