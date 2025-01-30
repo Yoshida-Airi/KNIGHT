@@ -65,6 +65,13 @@ void Player::Update()
 		break;
 	}
 
+	GameObject::Update();
+	ApplyGlobalVariables();
+	//デバッグ
+	playerModel_->ModelDebug("player");
+
+
+
 }
 
 void Player::Draw(const Camera& camera)
@@ -553,13 +560,6 @@ void Player::CollisionWall(const CollisionMapInfo& info)
 
 void Player::GamePlayPhase()
 {
-	GameObject::Update();
-	ApplyGlobalVariables();
-	//デバッグ
-	playerModel_->ModelDebug("player");
-
-
-
 	BehaviorRootUpdate();
 	BehaviorAttackUpdate();
 
@@ -618,11 +618,6 @@ void Player::GamePlayPhase()
 
 void Player::DeathPhase()
 {
-	GameObject::Update();
-	ApplyGlobalVariables();
-	//デバッグ
-	playerModel_->ModelDebug("player");
-
 	bool isRising = true;
 	float interpolationRate_ = 0.04f;
 
@@ -657,11 +652,6 @@ void Player::DeathPhase()
 
 void Player::ClearPhase()
 {
-	GameObject::Update();
-	ApplyGlobalVariables();
-	//デバッグ
-	playerModel_->ModelDebug("player");
-
 	bool isRising = true;
 	float interpolationRate_ = 0.04f;
 
