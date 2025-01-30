@@ -28,22 +28,14 @@ void GamePlayScene::Initialize()
 	weapon_ = std::make_unique<Weapon>();
 	weapon_->Initialize();
 
-
-	//SpawnBlock({ 47.8f, -1.0f, 0 }, {50.31f, 1.0f, 1.0f});
-	//SpawnBlock({ 6.7f, 4.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	//SpawnBlock({ 8.7f, 6.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	//SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
-	//SpawnBlock({ 50.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
-
 	player_ = std::make_unique<Player>();
 	player_->SetWeapon(weapon_.get());
 	player_->SetGround(grounds_);
 	player_->Initialize();
-	
+
 
 	SpawnEnemy({ 20.0f,5.5f,0.0f });
 	SpawnEnemy({ 10.0f,3.5f,0.0f });
-	//SpawnEnemy({ 30.0f,1.0f,0.0f });
 
 	SpawnFlyEnemy({ 35.0f,8.0f,0.0f });
 
@@ -87,7 +79,7 @@ void GamePlayScene::Initialize()
 	GenerateBlocks();
 
 	player_->SetMapChipField(mapChipField_.get());
-	
+
 	lastInputTime = std::chrono::steady_clock::now();
 
 
@@ -98,53 +90,111 @@ void GamePlayScene::Update()
 	switch (phase_)
 	{
 	case GamePlayScene::Phase::kPlay:
-		//ゲームプレイフェーズの処理
+		// ゲームプレイフェーズの処理
 		GamePlayPhase();
 		break;
 	case GamePlayScene::Phase::kClear:
-		//自キャラ死亡時の処理
+		// ゲームクリアフェーズの処理
 		GameClearPhase();
 		break;
 	case GamePlayScene::Phase::kDeath:
-		//自キャラ死亡時の処理
+		// 自キャラ死亡時の処理
 		GameOverPhase();
 		break;
 	}
 
-	
+#ifdef _DEBUG
+
+	camera_->CameraDebug();
+
+#endif // _DEBUG
+
+	cameraController_->Update();
+
+	player_->Update();
+	//武器の更新
+	weapon_->Update();
+
+	skydome_->Update();
+	goal_->Update();
+
+	//HP(UI)の更新
+	for (int i = 0; i < hpTextures_.size(); ++i) {
+		hpTextures_[i]->Update();
+	}
+
+	/*敵の更新処理*/
+	for (const auto& enemy : enemys_) {
+		enemy->Update();
+		if (enemy->GetIsAlive() == false) {
+			CreateDeathEffect({ enemy->GetWorldPosition() });
+		}
+	}
+
+	for (const auto& flyEnemy : flyEnemys_) {
+		flyEnemy->Update();
+		if (flyEnemy->GetIsAlive() == false) {
+			CreateDeathEffect({ flyEnemy->GetWorldPosition() });
+		}
+	}
+
+	int i = 0;
+	for (Ground* ground : grounds_)
+	{
+		i++;
+		ground->Update();
+		ground->Debug("ground" + i);
+	}
+
+	// ブロックの更新処理
+	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
+	{
+		for (std::unique_ptr<Model>& block : blockLine)
+		{
+			if (!block)
+			{
+				continue;
+			}
+
+			block->Update();
+		}
+	}
+
+	//ゲーム中に死んだ敵の後処理
+	enemys_.remove_if(
+		[](const std::unique_ptr<Enemy>& enemy) {
+			return !enemy->GetIsAlive();
+		});
+
+	flyEnemys_.remove_if(
+		[](const std::unique_ptr<FlyEnemy>& enemy) {
+			return !enemy->GetIsAlive();
+		});
+
+	deathEffect_.remove_if([](const std::unique_ptr<DeathEffect>& hitEffect) {
+		return hitEffect->IsDead(); // IsDead() が true なら削除
+		});
+
+	for (const auto& deathEffects : deathEffect_) {
+		deathEffects->Update();
+	}
+
+	//当たり判定
+	CheckAllCollisions();
 }
 
 void GamePlayScene::Draw()
 {
-
-	//triangle->Draw(camera);
-	//triangle2->Draw(camera);
-
-	//	
-
-	//sphere->Draw(camera);
-
-	//levelEditor->Draw(camera);
 
 	for (Ground* ground : grounds_)
 	{
 		ground->Draw(*camera_);
 	}
 
-	//model->Draw(camera);
-	//model2->Draw(camera);
-
-
-	//sprite->Draw(camera);
-	//sprite2->Draw(camera);
-
-	//particle->Draw();
-	//particle2->Draw();
-
 	skydome_->Draw(*camera_);
 	player_->Draw(*camera_);
 	weapon_->Draw(*camera_);
-	for (const auto& enemy : enemys_) 
+	for (const auto& enemy : enemys_)
 	{
 		enemy->Draw(*camera_);
 	}
@@ -213,9 +263,9 @@ void GamePlayScene::CheckAllCollisions()
 		//攻撃中のみ
 		colliderManager_->AddColliders(weapon_.get());
 	}
-	for (const auto& enemy : enemys_) 
+	for (const auto& enemy : enemys_)
 	{
-		if(enemy->GetIsAlive() == true)
+		if (enemy->GetIsAlive() == true)
 		{
 			//生きているときのみ
 			colliderManager_->AddColliders(enemy.get());
@@ -301,14 +351,6 @@ void GamePlayScene::GamePlayPhase()
 		player_->SetHP(0);
 	}
 
-#ifdef _DEBUG
-
-	camera_->CameraDebug();
-
-#endif // _DEBUG
-
-	cameraController_->Update();
-
 	colliderManager_->UpdateWorldTransform();
 
 
@@ -320,7 +362,7 @@ void GamePlayScene::GamePlayPhase()
 
 	if (player_->GetHP() == 0)
 	{
-		if(player_->GetEndMove())
+		if (player_->GetEndMove())
 		{
 			CreateDeathEffect({ player_->GetWorldPosition().x,player_->GetWorldPosition().y,player_->GetWorldPosition().z - 4.0f });
 			ChangePhase(Phase::kDeath);
@@ -337,271 +379,29 @@ void GamePlayScene::GamePlayPhase()
 
 	config_->Update();
 
-	//HP(UI)の更新
-	for (int i = 0; i < hpTextures_.size(); ++i) {
-		hpTextures_[i]->Update();
-	}
-
-
-	for(const auto & enemy : enemys_) {
-		enemy->Update();
-		if (enemy->GetIsAlive() == false) {
-			CreateDeathEffect({ enemy->GetWorldPosition() });
-		}
-	}
-
-	for (const auto& flyEnemy : flyEnemys_) {
-		flyEnemy->Update();
-		if (flyEnemy->GetIsAlive() == false) {
-			CreateDeathEffect({ flyEnemy->GetWorldPosition() });
-		}
-	}
-
-	deathEffect_.remove_if([](const std::unique_ptr<DeathEffect>& hitEffect) {
-		return hitEffect->IsDead(); // IsDead() が true なら削除
-		});
-
-
-	enemys_.remove_if(
-		[](const std::unique_ptr<Enemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-
-
-	flyEnemys_.remove_if(
-		[](const std::unique_ptr<FlyEnemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-
-	for (const auto& deathEffects : deathEffect_) {
-		deathEffects->Update();
-	}
-
-	//levelEditor->Update();
-
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
-
-
-	player_->Update();
-	//武器の更新
-	weapon_->Update();
-
-	for (const auto& enemy : enemys_)
-	{
-		enemy->Update();
-	}
-
-	for (const auto& flyEnemy : flyEnemys_)
-	{
-		flyEnemy->Update();
-	}
-
-	skydome_->Update();
-	goal_->Update();
-
-	CheckAllCollisions();
-
-	// ブロックの更新処理
-	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	{
-		for (std::unique_ptr<Model>& block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
-
-			block->Update();
-		}
-	}
-
 }
 
 void GamePlayScene::GameClearPhase()
 {
-	input_->TriggerKey(DIK_0);
-
-#ifdef _DEBUG
-
-	camera_->CameraDebug();
-
-#endif // _DEBUG
-
-	cameraController_->Update();
-
-
 	fade_->Update();
-
-
 
 	if (fade_->IsFinished())
 	{
 		sceneManager_->ChangeScene("CLEAR");
 
 	}
-
-	config_->Update();
-
-	//HP（UI）の更新
-	for (int i = 0; i < hpTextures_.size(); ++i) {
-		hpTextures_[i]->Update();
-	}
-
-	for (const auto& enemy : enemys_)
-	{
-		enemy->Update();
-		if (enemy->GetIsAlive() == false) {
-			CreateDeathEffect({ enemy->GetWorldPosition() });
-		}
-	}
-
-
-	enemys_.remove_if(
-		[](const std::unique_ptr<Enemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-
-
-	for (const auto& deathEffects : deathEffect_) {
-		deathEffects->Update();
-	}
-
-	//levelEditor->Update();
-
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
-
-
-	player_->Update();
-	//武器の更新
-	weapon_->Update();
-
-	for (const auto& enemy : enemys_)
-	{
-		enemy->Update();
-	}
-
-	skydome_->Update();
-	goal_->Update();
-
-	CheckAllCollisions();
-
-	// ブロックの更新処理
-	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	{
-		for (std::unique_ptr<Model>& block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
-
-			block->Update();
-		}
-	}
-
 }
 
 void GamePlayScene::GameOverPhase()
 {
-	input_->TriggerKey(DIK_0);
-
-#ifdef _DEBUG
-
-	camera_->CameraDebug();
-
-#endif // _DEBUG
-
-	cameraController_->Update();
 
 	fade_->Update();
-
-	
 
 	if (fade_->IsFinished())
 	{
 		sceneManager_->ChangeScene("GAMEOVER");
 
 	}
-
-	config_->Update();
-
-	//HP（UI）の更新
-	for (int i = 0; i < hpTextures_.size(); ++i) {
-		hpTextures_[i]->Update();
-	}
-
-	for (const auto& enemy : enemys_) {
-		enemy->Update();
-		if (enemy->GetIsAlive() == false) {
-			CreateDeathEffect({ enemy->GetWorldPosition() });
-		}
-	}
-
-
-	enemys_.remove_if(
-		[](const std::unique_ptr<Enemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-
-	for (const auto& deathEffects : deathEffect_) {
-		deathEffects->Update();
-	}
-
-
-	int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		i++;
-		ground->Update();
-		ground->Debug("ground" + i);
-	}
-
-
-	player_->Update();
-	//武器の更新
-	weapon_->Update();
-
-	for (const auto& enemy : enemys_)
-	{
-		enemy->Update();
-	}
-
-	skydome_->Update();
-	goal_->Update();
-
-	CheckAllCollisions();
-
-
-	// ブロックの更新処理
-	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	{
-		for (std::unique_ptr<Model>& block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
-
-			block->Update();
-		}
-	}
-
 }
 
 
