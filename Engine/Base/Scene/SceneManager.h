@@ -35,6 +35,6 @@ private:
 	AobaraEngine::AbstractSceneFactory* sceneFactory_ = nullptr;
 	//今のシーン
 	std::unique_ptr<AobaraEngine::BaseScene> scene_ = nullptr;
-	AobaraEngine::BaseScene* nextSscene_ = nullptr;
+	std::unique_ptr<AobaraEngine::BaseScene> nextSscene_ = nullptr;
 };
 

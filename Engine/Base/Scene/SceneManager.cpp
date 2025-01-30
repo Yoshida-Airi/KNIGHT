@@ -30,7 +30,7 @@ void SceneManager::Update()
 		}
 
 		//シーン切り替え
-		scene_.reset(nextSscene_);
+		scene_ = std::move(nextSscene_);
 		nextSscene_ = nullptr;
 		scene_->Initialize();
 	}
@@ -49,7 +49,7 @@ void SceneManager::ChangeScene(const std::string& sceneName)
 	assert(nextSscene_ == nullptr);
 
 	//次シーンを生成
-	nextSscene_ = sceneFactory_->CreateScene(sceneName);
+	nextSscene_ = std::unique_ptr<BaseScene>(sceneFactory_->CreateScene(sceneName));
 }
 
 void SceneManager::SetSceneFactory(AbstractSceneFactory* sceneFactory)
