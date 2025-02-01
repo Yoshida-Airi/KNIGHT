@@ -132,8 +132,8 @@ private:
 
 	Phase phase_;
 
-	std::vector<std::vector<std::unique_ptr<Model>>>blocks_;
-	std::unique_ptr<MapChipField> mapChipField_;
+	//std::vector<std::vector<std::unique_ptr<Model>>>blocks_;
+	//std::unique_ptr<MapChipField> mapChipField_;
 
 	bool configInstruction = true;
 	bool configDraw = false;

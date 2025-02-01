@@ -338,9 +338,7 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 		return;
 	}
 
-	MapChipType mapChipType;
 	bool hit = false;
-	MapChipField::IndexSet indexSet;
 
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i)
@@ -348,29 +346,30 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 		positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 	}
 
-	//左上
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
+	for (Ground* ground : grounds_)
 	{
-		hit = true;
+		//左上点の判定
+		if (IsCollision(positionsNew[kLeftTop], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
+
+		//右上点の判定
+		if (IsCollision(positionsNew[kRightTop], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
 	}
 
-	//右上
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
-	{
-		hit = true;
-	}
+
 
 	if (hit)
 	{
 		Vector3 offset = { 0.0f, kHeight_ / 2.0f, 0.0f };
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
-		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		float moveY = (rect.bottom - playerModel_->GetWorldTransform()->translation_.y) - (kHeight_ / 2.0f) - kBlank_;
-		info.move.y = std::max(0.0f, moveY);
+		float moveY = (playerModel_->GetWorldTransform()->translation_.y) - (kHeight_ / 2.0f) - kBlank_;
+		info.move.y = std::min(0.0f, moveY);
 		info.isTop = true;
 	}
 	else
@@ -381,16 +380,21 @@ void Player::CollisionMapTop(CollisionMapInfo& info)
 
 void Player::CollisionMapBottom(CollisionMapInfo& info)
 {
-
 	if (info.move.y >= 0)
 	{
 		return;
 	}
 
+	if (isHitGround_)
+	{
+		info.isGround = true;
+	}
+	else
+	{
+		info.isGround = false;
+	}
 
-	MapChipType mapChipType;
 	bool hit = false;
-	MapChipField::IndexSet indexSet;
 
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i)
@@ -398,29 +402,28 @@ void Player::CollisionMapBottom(CollisionMapInfo& info)
 		positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 	}
 
-
-	//左下
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
+	for (Ground* ground : grounds_)
 	{
-		hit = true;
+		//左上点の判定
+		if (IsCollision(positionsNew[kLeftBottom], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
+
+		//右上点の判定
+		if (IsCollision(positionsNew[kRightBottom], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
 	}
 
-	//右下
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
-	{
-		hit = true;
-	}
 
 	if (hit)
 	{
 		Vector3 offset = { 0.0f, kHeight_ / 2.0f, 0.0f };
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Subtract(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
-		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
-		float moveY = (rect.top - playerModel_->GetWorldTransform()->translation_.y) + (kHeight_ / 2.0f) + kBlank_;
+		float moveY = (playerModel_->GetWorldTransform()->translation_.y);
 
 		info.move.y = std::min(0.0f, moveY);
 		info.isGround = true;
@@ -438,43 +441,49 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 		return;
 	}
 
+	if (isHitGround_)
+	{
+		info.isWall = true;
+	}
+	else
+	{
+		info.isWall = false;
+	}
+
+
+
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i)
 	{
 		positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 	}
 
-	MapChipType mapChipType;
 	bool hit = false;
-	MapChipField::IndexSet indexSet;
 
-	//左上
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftTop]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
+	for (Ground* ground : grounds_)
 	{
-		hit = true;
-	}
-	//左下
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
-	{
-		hit = true;
+		//左上点の判定
+		if (IsCollision(positionsNew[kLeftTop], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
+
+		//右上点の判定
+		if (IsCollision(positionsNew[kLeftBottom], ground->GetAABB()))
+		{
+			hit = true;
+		}
 	}
 
 	if (hit)
 	{
 		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Subtract(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
-		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		float moveX = rect.right - playerModel_->GetWorldTransform()->translation_.x + kWidth_ / 2 + kBlank_;
+		float moveX = playerModel_->GetWorldTransform()->translation_.x;
 		info.move.x = std::min(0.0f, moveX);
 		info.isWall = true;
 	}
-
-
 }
 
 void Player::CollisionMapRight(CollisionMapInfo& info)
@@ -484,39 +493,47 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 		return;
 	}
 
+	if (isHitGround_)
+	{
+		info.isWall = true;
+	}
+	else
+	{
+		info.isWall = false;
+	}
+
+
+
 	std::array<Vector3, kNumCorner> positionsNew;
 	for (uint32_t i = 0; i < positionsNew.size(); ++i)
 	{
 		positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 	}
 
-	MapChipType mapChipType;
 	bool hit = false;
-	MapChipField::IndexSet indexSet;
 
-	//右上
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightTop]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
+	for (Ground* ground : grounds_)
 	{
-		hit = true;
-	}
-	//右下
-	indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
-	mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-	if (mapChipType == MapChipType::kBlock)
-	{
-		hit = true;
+		//左上点の判定
+		if (IsCollision(positionsNew[kRightTop], ground->GetAABB()))
+		{
+			hit = true;
+		}
+
+
+		//右上点の判定
+		if (IsCollision(positionsNew[kRightBottom], ground->GetAABB()))
+		{
+			hit = true;
+		}
 	}
 
 	if (hit)
 	{
 		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
-		indexSet = mapChipField_->GetMapChipIndexSetByPosition(Add(Add(playerModel_->GetWorldTransform()->translation_, info.move), offset));
-		MapChipField::Rect rect = mapChipField_->GetRectByIndex(indexSet.xIndex, indexSet.yIndex);
 
-		float moveX = rect.left - playerModel_->GetWorldTransform()->translation_.x - kWidth_ / 2 - kBlank_;
-		info.move.x = std::max(0.0f, moveX);
+		float moveX = playerModel_->GetWorldTransform()->translation_.x - kWidth_ / 2.0f - kBlank_;
+		info.move.x = std::min(0.0f, moveX);
 		info.isWall = true;
 	}
 }
@@ -687,7 +704,6 @@ void Player::ClearPhase()
 
 void Player::SwitchGround(const CollisionMapInfo& info)
 {
-
 	if (onGround_)
 	{
 		//接地状態の処理
@@ -698,7 +714,8 @@ void Player::SwitchGround(const CollisionMapInfo& info)
 		else
 		{
 			std::array<Vector3, kNumCorner> positionsNew;
-			for (uint32_t i = 0; i < positionsNew.size(); ++i) {
+			for (uint32_t i = 0; i < positionsNew.size(); ++i)
+			{
 				positionsNew[i] = CornerPosition(Add(playerModel_->GetWorldTransform()->translation_, info.move), static_cast<Corner>(i));
 			}
 
@@ -707,24 +724,24 @@ void Player::SwitchGround(const CollisionMapInfo& info)
 				return;
 			}
 
-			MapChipType mapChipType;
 			bool hit = false;
-			MapChipField::IndexSet indexSet;
 
-			// 左下
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kLeftBottom]);
-			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-			if (mapChipType == MapChipType::kBlock)
+			for (Ground* ground : grounds_)
 			{
-				hit = true;
+				//左上点の判定
+				if (IsCollision(positionsNew[kLeftBottom], ground->GetAABB()))
+				{
+					hit = true;
+				}
+
+
+				//右上点の判定
+				if (IsCollision(positionsNew[kRightBottom], ground->GetAABB()))
+				{
+					hit = true;
+				}
 			}
-			// 右下
-			indexSet = mapChipField_->GetMapChipIndexSetByPosition(positionsNew[kRightBottom]);
-			mapChipType = mapChipField_->GetMapChipTypeByIndex(indexSet.xIndex, indexSet.yIndex);
-			if (mapChipType == MapChipType::kBlock)
-			{
-				hit = true;
-			}
+
 
 			//落下開始
 			if (!hit)
@@ -747,7 +764,6 @@ void Player::SwitchGround(const CollisionMapInfo& info)
 			velocity_.y = 0.0f;
 		}
 	}
-
 }
 
 

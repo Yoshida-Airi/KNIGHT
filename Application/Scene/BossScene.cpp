@@ -88,7 +88,7 @@ void BossScene::Initialize()
 
 	GenerateBlocks();
 
-	player_->SetMapChipField(mapChipField_.get());
+	//player_->SetMapChipField(mapChipField_.get());
 }
 
 void BossScene::Update()

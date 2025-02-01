@@ -73,12 +73,12 @@ void GamePlayScene::Initialize()
 
 	phase_ = Phase::kPlay;
 
-	mapChipField_ = std::make_unique<MapChipField>();
+	/*mapChipField_ = std::make_unique<MapChipField>();
 	mapChipField_->LoadMapChipCsv("Resources/CSV/field.csv");
 
-	GenerateBlocks();
+	GenerateBlocks();*/
 
-	player_->SetMapChipField(mapChipField_.get());
+	//player_->SetMapChipField(mapChipField_.get());
 
 	lastInputTime = std::chrono::steady_clock::now();
 
@@ -147,18 +147,18 @@ void GamePlayScene::Update()
 	}
 
 	// ブロックの更新処理
-	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	{
-		for (std::unique_ptr<Model>& block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
+	//for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
+	//{
+	//	for (std::unique_ptr<Model>& block : blockLine)
+	//	{
+	//		if (!block)
+	//		{
+	//			continue;
+	//		}
 
-			block->Update();
-		}
-	}
+	//		block->Update();
+	//	}
+	//}
 
 	//ゲーム中に死んだ敵の後処理
 	enemys_.remove_if(
@@ -210,19 +210,19 @@ void GamePlayScene::Draw()
 		deathEffects->Draw();
 	}
 
-	// ブロックの描画処理
-	for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	{
-		for (std::unique_ptr<Model>& block : blockLine)
-		{
-			if (!block)
-			{
-				continue;
-			}
+	//// ブロックの描画処理
+	//for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
+	//{
+	//	for (std::unique_ptr<Model>& block : blockLine)
+	//	{
+	//		if (!block)
+	//		{
+	//			continue;
+	//		}
 
-			block->Draw(*camera_);
-		}
-	}
+	//		block->Draw(*camera_);
+	//	}
+	//}
 
 
 	goal_->Draw(*camera_);
@@ -404,37 +404,37 @@ void GamePlayScene::GameOverPhase()
 	}
 }
 
-
-void GamePlayScene::GenerateBlocks()
-{
-	//要素数
-	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVertical();
-	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
-
-	//要素数を変更
-	blocks_.resize(numBlockVirtical);
-	for (uint32_t i = 0; i < numBlockVirtical; ++i)
-	{
-		blocks_[i].resize(numBlockHorizontal);
-	}
-
-	//ブロックの生成
-	for (uint32_t i = 0; i < numBlockVirtical; ++i)
-	{
-		for (uint32_t j = 0; j < numBlockHorizontal; ++j)
-		{
-			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
-			{
-				std::unique_ptr<Model> model = std::make_unique< Model>();
-				model->Initialize("Resources/Level/map.obj");
-				blocks_[i][j] = std::move(model);
-				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
-
-			}
-		}
-	}
-
-}
+//
+//void GamePlayScene::GenerateBlocks()
+//{
+//	//要素数
+//	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVertical();
+//	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
+//
+//	//要素数を変更
+//	blocks_.resize(numBlockVirtical);
+//	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+//	{
+//		blocks_[i].resize(numBlockHorizontal);
+//	}
+//
+//	//ブロックの生成
+//	for (uint32_t i = 0; i < numBlockVirtical; ++i)
+//	{
+//		for (uint32_t j = 0; j < numBlockHorizontal; ++j)
+//		{
+//			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
+//			{
+//				std::unique_ptr<Model> model = std::make_unique< Model>();
+//				model->Initialize("Resources/Level/map.obj");
+//				blocks_[i][j] = std::move(model);
+//				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
+//
+//			}
+//		}
+//	}
+//
+//}
 
 void GamePlayScene::ConfigDraw()
 {

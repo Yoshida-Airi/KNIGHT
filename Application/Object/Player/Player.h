@@ -103,10 +103,6 @@ public:
 		float top;
 	};
 
-	void SetMapChipField(MapChipField* mapChipField)
-	{
-		mapChipField_ = mapChipField;
-	}
 
 private:
 
@@ -168,11 +164,13 @@ private:
 	float alpha_ = 1.0f;       // 初期のアルファ値（不透明）
 	float fadeSpeed_ = 0.005f;  // 透明になる速度
 
-	MapChipField* mapChipField_ = nullptr;
+	std::vector<Ground*> grounds_;
 
 	Phase phase_;
 
 	bool endMove_ = false;
+
+	bool isHitGround_ = false;
 
 	uint32_t redTexture;
 	uint32_t playerTexture;
