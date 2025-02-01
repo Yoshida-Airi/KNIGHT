@@ -72,11 +72,17 @@ void GamePlayScene::Initialize()
 	weapon_->Initialize();
 
 
-	SpawnBlock({ 47.8f, -1.0f, 0 }, {50.31f, 1.0f, 1.0f});
-	SpawnBlock({ 6.7f, 4.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	SpawnBlock({ 8.7f, 6.5f, 0 }, { 1.0f, 1.0f, 1.0f });
-	SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
-	SpawnBlock({ 50.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	//SpawnBlock({ 47.8f, -1.0f, 0 }, {50.31f, 1.0f, 1.0f});
+	//SpawnBlock({ 6.7f, 4.5f, 0 }, { 1.0f, 1.0f, 1.0f });
+	//SpawnBlock({ 8.7f, 6.5f, 0 }, { 1.0f, 1.0f, 1.0f });
+	//SpawnBlock({ -2.15f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+	//SpawnBlock({ 50.11f, 7.8f, 0 }, { 1.0f, 9.8f, 1.0f });
+
+
+	for (auto& enemyData : blockLevelEditor->GetGrounds())
+	{
+		SpawnBlock(enemyData.translation, enemyData.scaling);
+	}
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize();
@@ -87,7 +93,7 @@ void GamePlayScene::Initialize()
 	player_->SetWeapon(weapon_.get());
 	//player_->SetGround(ground_.get());
 	player_->SetGround(grounds_);
-	player_->SetGround(blockLevelEditor->GetGrounds());
+	//player_->SetGround(blockLevelEditor->GetGrounds());
 	
 	player_->Initialize();
 	
@@ -165,7 +171,7 @@ void GamePlayScene::Update()
 		break;
 	}
 
-	
+
 }
 
 void GamePlayScene::Draw()
@@ -306,9 +312,7 @@ void GamePlayScene::CheckAllCollisions()
 		colliderManager_->AddColliders(ground);
 	}
 
-	for (const auto& ground : blockLevelEditor->GetGrounds()) {
-		colliderManager_->AddColliders(ground);
-	}
+	
 
 	//for (Enemy* enemy : enemys_) 
 	//{

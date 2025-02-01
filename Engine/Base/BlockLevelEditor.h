@@ -19,6 +19,8 @@
 //前方宣言
 class CollisionManager;
 
+
+
 //レベルデータ
 struct BlockLevelData 
 {
@@ -36,6 +38,20 @@ struct BlockLevelData
 		Vector3 size;    // コライダーのサイズ
 
 	};
+
+	struct GroundData
+	{
+		//ファイル名
+		std::string filename;
+		//平行移動
+		Vector3 translation;
+		//回転角
+		Vector3 rotation;
+		//スケール
+		Vector3 scaling;
+	};
+
+	std::vector<GroundData> grounds;
 	std::vector<ObjectData>objects;
 };
 
@@ -54,8 +70,8 @@ public:
 	void Update();
 	void Draw(Camera* camera);
 
-	std::vector<Ground*> GetGrounds() {
-		return models_;
+	std::vector<BlockLevelData::GroundData> GetGrounds() {
+		return levelData_.get()->grounds;
 	}
 
 	//Vector3 GetWorldPosition();

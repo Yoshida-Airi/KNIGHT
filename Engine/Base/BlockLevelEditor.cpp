@@ -51,9 +51,9 @@ void BlockLevelEditor::LoaderJsonFile(std::string filePath)
 		if (objectType.compare("MESH") == 0)
 		{
 			//要素追加
-			levelData_->objects.emplace_back(BlockLevelData::ObjectData{});
+			levelData_->grounds.emplace_back(BlockLevelData::GroundData{});
 			//今追加した要素の参照を得る
-			BlockLevelData::ObjectData& objectData = levelData_->objects.back();
+			BlockLevelData::GroundData& objectData = levelData_->grounds.back();
 
 			if (object.contains("file_name"))
 			{
@@ -81,22 +81,22 @@ void BlockLevelEditor::LoaderJsonFile(std::string filePath)
 			objectData.scaling.z = (float)transform["scaling"][1];
 
 			//コライダーのパラメータ読み込み
-			nlohmann::json& collider = object["collider"];
+			//nlohmann::json& collider = object["collider"];
 
-			if (collider.contains("type"))
-			{
-				//コライダー情報があったら取得
-				std::string colliderType = collider["type"].get<std::string>();
-				objectData.collisionType = colliderType;
+			//if (collider.contains("type"))
+			//{
+			//	//コライダー情報があったら取得
+			//	std::string colliderType = collider["type"].get<std::string>();
+			//	objectData.collisionType = colliderType;
 
-				objectData.center.x = (float)collider["center"][0];
-				objectData.center.y = (float)collider["center"][2];
-				objectData.center.z = (float)collider["center"][1];
+			//	objectData.center.x = (float)collider["center"][0];
+			//	objectData.center.y = (float)collider["center"][2];
+			//	objectData.center.z = (float)collider["center"][1];
 
-				objectData.size.x = (float)collider["size"][0];
-				objectData.size.y = (float)collider["size"][2];
-				objectData.size.z = (float)collider["size"][1];
-			}
+			//	objectData.size.x = (float)collider["size"][0];
+			//	objectData.size.y = (float)collider["size"][2];
+			//	objectData.size.z = (float)collider["size"][1];
+			//}
 		}
 
 		//オブジェクト走査を再帰関数にまとめ、再起呼出で枝を走査する
