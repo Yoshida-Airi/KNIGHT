@@ -487,13 +487,16 @@ void Player::CollisionMapLeft(CollisionMapInfo& info)
 		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
 
 		float moveX = playerModel_->GetWorldTransform()->translation_.x;
-		info.move.x = std::min(0.0f, moveX);
+		info.move.x = std::max(0.0f, moveX);
 		info.isWall = true;
 	}
+
+
 }
 
 void Player::CollisionMapRight(CollisionMapInfo& info)
 {
+
 	if (info.move.x <= 0)
 	{
 		return;
@@ -539,14 +542,13 @@ void Player::CollisionMapRight(CollisionMapInfo& info)
 		Vector3 offset = { kWidth_ / 2.0f, 0.0f, 0.0f };
 
 		float moveX = playerModel_->GetWorldTransform()->translation_.x - kWidth_ / 2.0f - kBlank_;
-		info.move.x = std::min(0.0f, moveX);
+		info.move.x = std::max(0.0f, moveX);
 		info.isWall = true;
 	}
 }
 
 Vector3 Player::CornerPosition(const Vector3& center, Corner corner)
 {
-
 	Vector3 offsetTable[kNumCorner] =
 	{
 		{kWidth_ / 2.0f,-kHeight_ / 2.0f,0.0f},
