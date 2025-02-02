@@ -12,6 +12,7 @@ void Skydome::Initialize()
 	skydomeModel_->GetWorldTransform()->scale_.y = 1000.0f;
 	skydomeModel_->GetWorldTransform()->scale_.z = 1000.0f;
 
+	skydomeModel_->SetLight(false);
 	
 }
 
