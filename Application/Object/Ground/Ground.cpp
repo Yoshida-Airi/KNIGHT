@@ -4,14 +4,24 @@ using namespace AobaraEngine;
 
 void Ground::Initialize()
 {
+	Collider::SetTypeID(CollisionTypeDef::kMap);
+	Collider::SetColliderTypeID(ColliderType::AABB);
+
+
 	groundModel_.reset(Model::Create("Resources/Level/Map.obj"));
 
-	groundModel_->GetWorldTransform()->translation_.x = -10.0f;
-	groundModel_->GetWorldTransform()->translation_.y = 1.0f;
+	groundModels_.push_back(groundModel_.get());
+
+
+	GameObject::Initialize();
+	GameObject::SetModel(groundModels_);
+
+	//groundModel_->GetWorldTransform()->translation_.x = -10.0f;
+	//groundModel_->GetWorldTransform()->translation_.y = 1.0f;
 
 	groundModel_->GetWorldTransform()->scale_ = { 2.0f,1.0f,1.0f };
 
-	SetRadius({ groundModel_->GetWorldTransform()->scale_.x / 2.0f,groundModel_->GetWorldTransform()->scale_.y / 2.0f,groundModel_->GetWorldTransform()->scale_.z / 2.0f });
+	//SetRadius({ groundModel_->GetWorldTransform()->scale_.x / 2.0f,groundModel_->GetWorldTransform()->scale_.y / 2.0f,groundModel_->GetWorldTransform()->scale_.z / 2.0f });
 
 	//groundModel->SetisInvisible(true);
 }
@@ -21,7 +31,7 @@ void Ground::Update()
 	groundModel_->Update();
 }
 
-void Ground::Draw(const Camera& camera)
+void Ground::Draw(const AobaraEngine::Camera& camera)
 {
 	groundModel_->Draw(camera);
 }
@@ -44,17 +54,17 @@ AABB Ground::GetAABB()
 	Vector3 worldPos = GetWorldPosition();
 	AABB aabb;
 
-	aabb.min = 
-	{ 
-		worldPos.x - groundModel_->GetWorldTransform()->scale_.x   ,
-		worldPos.y - groundModel_->GetWorldTransform()->scale_.y  ,
+	aabb.min =
+	{
+		worldPos.x - groundModel_->GetWorldTransform()->scale_.x    ,
+		worldPos.y - groundModel_->GetWorldTransform()->scale_.y   ,
 		worldPos.z - groundModel_->GetWorldTransform()->scale_.z
 	};
 
-	aabb.max = 
-	{ 
-		worldPos.x + groundModel_->GetWorldTransform()->scale_.x  ,
-		worldPos.y + groundModel_->GetWorldTransform()->scale_.y  ,
+	aabb.max =
+	{
+		worldPos.x + groundModel_->GetWorldTransform()->scale_.x   ,
+		worldPos.y + groundModel_->GetWorldTransform()->scale_.y   ,
 		worldPos.z + groundModel_->GetWorldTransform()->scale_.z
 	};
 
@@ -70,5 +80,4 @@ void Ground::Debug(const char* name)
 {
 	groundModel_->ModelDebug(name);
 }
-
 

@@ -5,6 +5,10 @@ using namespace AobaraEngine;
 
 GamePlayScene::~GamePlayScene()
 {
+	for (Ground* ground : grounds_)
+	{
+		delete ground;
+	}
 }
 
 void GamePlayScene::Initialize()
@@ -17,6 +21,14 @@ void GamePlayScene::Initialize()
 	colliderManager_ = std::make_unique<CollisionManager>();
 	colliderManager_->Initialize();
 
+	blockLevelEditor = new BlockLevelEditor();
+	blockLevelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
+	blockLevelEditor->Initialize();
+
+	for (auto& enemyData : blockLevelEditor->GetGrounds())
+	{
+		SpawnBlock(enemyData.translation, enemyData.scaling);
+	}
 
 	//テクスチャの読み込み
 	configTexture_ = texture_->LoadTexture("Resources/Scene/config.png");
@@ -138,12 +150,12 @@ void GamePlayScene::Update()
 		}
 	}
 
-	int i = 0;
+	//int i = 0;
 	for (Ground* ground : grounds_)
 	{
-		i++;
+		//i++;
 		ground->Update();
-		ground->Debug("ground" + i);
+		//ground->Debug("ground" + i);
 	}
 
 	// ブロックの更新処理

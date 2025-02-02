@@ -185,6 +185,7 @@
       <Filter>Application\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Application\Utility\TimedCall.cpp" />
+    <ClCompile Include="Engine\Base\BlockLevelEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\2D\Triangle.h">
@@ -368,6 +369,7 @@
       <Filter>Application\Effect</Filter>
     </ClInclude>
     <ClInclude Include="Application\Utility\TimedCall.h" />
+    <ClInclude Include="Engine\Base\BlockLevelEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">

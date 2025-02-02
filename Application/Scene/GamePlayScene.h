@@ -35,7 +35,7 @@
 #include"Object/Ground/MapChipField.h"
 
 
-#include"LevelEditor.h"
+#include"BlockLevelEditor.h"
 
 /**
 *   @class GamePlayScene
@@ -113,7 +113,7 @@ private:
 
 	std::unique_ptr<Fade> fade_ = nullptr;
 
-	//LevelEditor* levelEditor = nullptr;
+	BlockLevelEditor* blockLevelEditor = nullptr;
 
 	std::unique_ptr <Player> player_;
 	std::list<std::unique_ptr<Enemy>> enemys_;
@@ -122,7 +122,7 @@ private:
 	std::unique_ptr <Goal>goal_;
 	std::unique_ptr<CameraController> cameraController_;
 	std::unique_ptr<Weapon>weapon_;
-	std::list<Ground*>grounds_;
+	std::vector<Ground*>grounds_;
 	std::list<std::unique_ptr<DeathEffect>>deathEffect_;	//敵消滅エフェクト
 	//　std::unique_ptr<DeathEffect> playerDeathEffect = nullptr;
 
@@ -149,7 +149,7 @@ private:
 	/// @brief ゲームオーバーフェーズ
 	void GameOverPhase();
 	/// @brief ブロック生成
-	void GenerateBlocks();
+	//void GenerateBlocks();
 
 	void ConfigDraw();
 };

@@ -41,6 +41,8 @@ public:
 	*/
 	Vector3 GetWorldPosition()override;
 
+	WorldTransform* GetWorldTransform() { return groundModel_->GetWorldTransform(); };
+
 	/**
 	* @brief 地面オブジェクトのAABB（軸に平行なバウンディングボックス）を取得
 	* @return 地面のバウンディングボックス
@@ -50,9 +52,8 @@ public:
 	/**
 	* @brief 衝突時の処理
 	* @param other 衝突したコライダー
-	* @details 衝突した際の処理を行う。今回は処理が必要ないため [[maybe_unused]] を付与
 	*/
-	[[maybe_unused]] void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
+	[[maybe_unused]] void OnCollision([[maybe_unused]] Collider* other)override;
 
 	/**
 	* @brief デバッグ用処理
@@ -89,10 +90,9 @@ public:
 	}
 
 private:
-	
+
 
 
 	std::unique_ptr<AobaraEngine::Model>groundModel_ = nullptr;
-
+	std::vector<AobaraEngine::Model*>groundModels_;
 };
-

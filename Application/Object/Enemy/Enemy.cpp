@@ -7,7 +7,7 @@ Enemy::~Enemy()
 }
 
 void Enemy::Initialize()
-{
+{ 
 	Collider::SetTypeID(CollisionTypeDef::kEnemy);
 	Collider::SetColliderTypeID(ColliderType::SPHERE);
 

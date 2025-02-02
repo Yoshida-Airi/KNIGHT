@@ -18,7 +18,7 @@ void Player::Initialize()
 	redTexture = TextureManager::GetInstance()->LoadTexture("Resources/Object/Player/player_damage.png");
 
 	Collider::SetTypeID(CollisionTypeDef::kPlayer);
-	Collider::SetColliderTypeID(ColliderType::SPHERE);
+	Collider::SetColliderTypeID(ColliderType::AABB);
 
 	GameObject::Initialize();
 	GameObject::SetModel(playerModels_);
@@ -60,6 +60,7 @@ void Player::Update()
 	case Player::Phase::kDeath:
 		//自キャラ死亡時の処理
 		DeathPhase();
+		break;
 	case Player::Phase::kClear:
 		ClearPhase();
 		break;
@@ -131,6 +132,11 @@ void Player::OnCollision(Collider* other)
 				playerModel_->SetTexture(playerTexture);
 				playerModel_->SetMaterial({ 1.0f,1.0f,1.0f,1.0f });
 		}
+	}
+	if (typeID == static_cast<uint32_t>(CollisionTypeDef::kMap))
+	{
+		isHitGround_ = true;
+		ImGui::Text("aabb1 : %f,%f,%f,%f", GetAABB().min.x, GetAABB().min.y, GetAABB().max.x, GetAABB().max.y);
 	}
 }
 

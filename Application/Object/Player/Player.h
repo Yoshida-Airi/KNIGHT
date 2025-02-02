@@ -57,9 +57,9 @@ public:
 		hp_ = hp;
 	}
 		
-	void SetGround(std::list<Ground*>grounds)
+	void SetGround(std::vector<Ground*> grounds)
 	{
-		ground_ = grounds;
+		grounds_ = grounds;
 	}
 
 	struct CollisionMapInfo
@@ -141,8 +141,7 @@ private:
 	float kAttenuationWall_ = 0.05f;	
 
 	Weapon* weapon_;
-	std::list<Ground*> ground_;
-
+	
 	CollisionMapInfo collisionMapInfo_;
 
 	float kWidth_ = 0.8f;
