@@ -25,6 +25,11 @@ public:
 
 	void OnCollision([[maybe_unused]] AobaraEngine::Collider* other)override;
 
+	void SetVelocity(Vector3 velocity)
+	{
+		velocity_ = velocity;
+	}
+
 	void SetPosition(Vector3 pos)
 	{
 		bulletModel_->GetWorldTransform()->translation_ = pos;

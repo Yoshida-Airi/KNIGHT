@@ -54,9 +54,11 @@ void Enemy::Update()
 	// 一定の距離を移動したら方向を反転
 	if (traveledDistance_ >= moveDistance_) {
 		movingRight_ = false;
+		
 	}
 	else if (traveledDistance_ <= 0.0f) {
 		movingRight_ = true;
+	
 	}
 
 	//タイマーの更新
@@ -186,6 +188,15 @@ void Enemy::Fire()
 	newBullet->SetPlayer(player_);
 	newBullet->Initialize();
 	newBullet->SetPosition(GetWorldPosition());
+	
+	if (movingRight_ == false)
+	{
+		newBullet->SetVelocity({ -0.5f,0.0f,0.0f });
+	}
+	else
+	{
+		newBullet->SetVelocity({ 0.5f,0.0f,0.0f });
+	}
 
 	//弾の登録
 	bullets_.push_back(std::move(newBullet));
