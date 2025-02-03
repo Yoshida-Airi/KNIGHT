@@ -48,6 +48,10 @@ void GamePlayScene::Initialize()
 
 	SpawnEnemy({ 20.0f,3.0f,0.0f });
 	SpawnEnemy({ 10.0f,3.0f,0.0f });
+	SpawnEnemy({ 30.0f,17.5f,0.0f });
+	SpawnEnemy({ 52.0f,17.5f,0.0f });
+	SpawnEnemy({ 44.0f,24.0f,0.0f });
+	SpawnEnemy({ 65.0f,24.0f,0.0f });
 
 	SpawnFlyEnemy({ 35.0f,8.0f,0.0f });
 
