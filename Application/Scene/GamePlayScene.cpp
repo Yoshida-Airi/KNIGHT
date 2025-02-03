@@ -33,6 +33,12 @@ void GamePlayScene::Initialize()
 	//テクスチャの読み込み
 	configTexture_ = texture_->LoadTexture("Resources/Scene/config.png");
 	HPTexture_ = texture_->LoadTexture("Resources/Object/Heart.png");
+	poseBackTexture_ = texture_->LoadTexture("Resources/Object/pose_back.png");
+	poseTitleBackTexture_ = texture_->LoadTexture("Resources/Object/pose_titleBack.png");
+	pose_gameBackTexture_ = texture_->LoadTexture("Resources/Object/pose_gameBack.png");
+	pose_arrowTexture_ = texture_->LoadTexture("Resources/Object/pose_arrow.png");
+	pose_configTexture_ = texture_->LoadTexture("Resources/Object/poseConfig.png");
+
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
@@ -68,11 +74,19 @@ void GamePlayScene::Initialize()
 	cameraController_->Reset();
 
 	config_.reset(AobaraEngine::Sprite::Create(configTexture_));
+	pose_back.reset(AobaraEngine::Sprite::Create(poseBackTexture_));
+	pose_titleBack.reset(AobaraEngine::Sprite::Create(poseTitleBackTexture_));
+	pose_gameBack.reset(AobaraEngine::Sprite::Create(pose_gameBackTexture_));
+	pose_arrow.reset(AobaraEngine::Sprite::Create(pose_arrowTexture_));
+	pose_Config.reset(AobaraEngine::Sprite::Create(pose_configTexture_));
+
 
 	//初期化
 	for (int i = 0; i < hpTextures_.size(); ++i) {
 		hpTextures_[i].reset(AobaraEngine::Sprite::Create(HPTexture_));
 	}
+
+
 
 	// スケールと位置を一括設定
 	for (size_t i = 0; i < hpTextures_.size(); ++i) {
@@ -85,20 +99,9 @@ void GamePlayScene::Initialize()
 	fade_->Initialize();
 	fade_->Start(Fade::Status::FadeIn, 1.5f);
 
-
-
 	phase_ = Phase::kPlay;
 
-	/*mapChipField_ = std::make_unique<MapChipField>();
-	mapChipField_->LoadMapChipCsv("Resources/CSV/field.csv");
-
-	GenerateBlocks();*/
-
-	//player_->SetMapChipField(mapChipField_.get());
-
 	lastInputTime = std::chrono::steady_clock::now();
-
-
 }
 
 void GamePlayScene::Update()
@@ -125,78 +128,79 @@ void GamePlayScene::Update()
 
 #endif // _DEBUG
 
-	cameraController_->Update();
+	if (isPoseFlag == false)
+	{
 
-	player_->Update();
-	//武器の更新
-	weapon_->Update();
+		cameraController_->Update();
 
-	skydome_->Update();
-	goal_->Update();
+		player_->Update();
+		//武器の更新
+		weapon_->Update();
+
+		skydome_->Update();
+		goal_->Update();
+
+
+
+		/*敵の更新処理*/
+		for (const auto& enemy : enemys_) {
+			enemy->Update();
+			if (enemy->GetIsAlive() == false) {
+				CreateDeathEffect({ enemy->GetWorldPosition() });
+			}
+		}
+
+		for (const auto& flyEnemy : flyEnemys_) {
+			flyEnemy->Update();
+			if (flyEnemy->GetIsAlive() == false) {
+				CreateDeathEffect({ flyEnemy->GetWorldPosition() });
+			}
+		}
+
+		//int i = 0;
+		for (Ground* ground : grounds_)
+		{
+			//i++;
+			ground->Update();
+			//ground->Debug("ground" + i);
+		}
+
+
+		//ゲーム中に死んだ敵の後処理
+		enemys_.remove_if(
+			[](const std::unique_ptr<Enemy>& enemy) {
+				return !enemy->GetIsAlive();
+			});
+
+		flyEnemys_.remove_if(
+			[](const std::unique_ptr<FlyEnemy>& enemy) {
+				return !enemy->GetIsAlive();
+			});
+
+		deathEffect_.remove_if([](const std::unique_ptr<DeathEffect>& hitEffect) {
+			return hitEffect->IsDead(); // IsDead() が true なら削除
+			});
+
+		for (const auto& deathEffects : deathEffect_) {
+			deathEffects->Update();
+		}
+
+		//当たり判定
+		CheckAllCollisions();
+	}
 
 	//HP(UI)の更新
 	for (int i = 0; i < hpTextures_.size(); ++i) {
 		hpTextures_[i]->Update();
 	}
 
-	/*敵の更新処理*/
-	for (const auto& enemy : enemys_) {
-		enemy->Update();
-		if (enemy->GetIsAlive() == false) {
-			CreateDeathEffect({ enemy->GetWorldPosition() });
-		}
-	}
+	pose_back->Update();
+	pose_titleBack->Update();
+	pose_gameBack->Update();
+	pose_arrow->Update();
+	pose_Config->Update();
 
-	for (const auto& flyEnemy : flyEnemys_) {
-		flyEnemy->Update();
-		if (flyEnemy->GetIsAlive() == false) {
-			CreateDeathEffect({ flyEnemy->GetWorldPosition() });
-		}
-	}
-
-	//int i = 0;
-	for (Ground* ground : grounds_)
-	{
-		//i++;
-		ground->Update();
-		//ground->Debug("ground" + i);
-	}
-
-	// ブロックの更新処理
-	//for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	//{
-	//	for (std::unique_ptr<Model>& block : blockLine)
-	//	{
-	//		if (!block)
-	//		{
-	//			continue;
-	//		}
-
-	//		block->Update();
-	//	}
-	//}
-
-	//ゲーム中に死んだ敵の後処理
-	enemys_.remove_if(
-		[](const std::unique_ptr<Enemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-	flyEnemys_.remove_if(
-		[](const std::unique_ptr<FlyEnemy>& enemy) {
-			return !enemy->GetIsAlive();
-		});
-
-	deathEffect_.remove_if([](const std::unique_ptr<DeathEffect>& hitEffect) {
-		return hitEffect->IsDead(); // IsDead() が true なら削除
-		});
-
-	for (const auto& deathEffects : deathEffect_) {
-		deathEffects->Update();
-	}
-
-	//当たり判定
-	CheckAllCollisions();
+	PoseWindow();
 }
 
 void GamePlayScene::Draw()
@@ -226,24 +230,7 @@ void GamePlayScene::Draw()
 		deathEffects->Draw();
 	}
 
-	//// ブロックの描画処理
-	//for (std::vector<std::unique_ptr<Model>>& blockLine : blocks_)
-	//{
-	//	for (std::unique_ptr<Model>& block : blockLine)
-	//	{
-	//		if (!block)
-	//		{
-	//			continue;
-	//		}
-
-	//		block->Draw(*camera_);
-	//	}
-	//}
-
-
 	goal_->Draw(*camera_);
-
-	//colliderManager_->Draw(camera);
 
 	ConfigDraw();
 
@@ -251,6 +238,13 @@ void GamePlayScene::Draw()
 	{
 		config_->Draw(*camera_);
 	}
+
+	
+	pose_back->Draw(*camera_);
+	pose_titleBack->Draw(*camera_);
+	pose_gameBack->Draw(*camera_);
+	pose_arrow->Draw(*camera_);
+	pose_Config->Draw(*camera_);
 
 	// HP に応じて描画
 	int hp = player_->GetHP();
@@ -367,6 +361,9 @@ void GamePlayScene::GamePlayPhase()
 		player_->SetHP(0);
 	}
 
+	
+
+
 	colliderManager_->UpdateWorldTransform();
 
 
@@ -394,6 +391,7 @@ void GamePlayScene::GamePlayPhase()
 	}
 
 	config_->Update();
+	//pose_back->Update();
 
 }
 
@@ -420,37 +418,52 @@ void GamePlayScene::GameOverPhase()
 	}
 }
 
-//
-//void GamePlayScene::GenerateBlocks()
-//{
-//	//要素数
-//	uint32_t numBlockVirtical = mapChipField_->GetNumBlockVertical();
-//	uint32_t numBlockHorizontal = mapChipField_->GetNumBlockHorizontal();
-//
-//	//要素数を変更
-//	blocks_.resize(numBlockVirtical);
-//	for (uint32_t i = 0; i < numBlockVirtical; ++i)
-//	{
-//		blocks_[i].resize(numBlockHorizontal);
-//	}
-//
-//	//ブロックの生成
-//	for (uint32_t i = 0; i < numBlockVirtical; ++i)
-//	{
-//		for (uint32_t j = 0; j < numBlockHorizontal; ++j)
-//		{
-//			if (mapChipField_->GetMapChipTypeByIndex(j, i) == MapChipType::kBlock)
-//			{
-//				std::unique_ptr<Model> model = std::make_unique< Model>();
-//				model->Initialize("Resources/Level/map.obj");
-//				blocks_[i][j] = std::move(model);
-//				blocks_[i][j]->GetWorldTransform()->translation_ = mapChipField_->GetMapChipPositionByIndex(j, i);
-//
-//			}
-//		}
-//	}
-//
-//}
+void GamePlayScene::PoseWindow()
+{
+	if (input_->TriggerKey(DIK_X))
+	{
+		isPoseFlag = !isPoseFlag;
+	}
+
+	if (isPoseFlag == true)
+	{
+		//描画
+		pose_back->SetisInvisible(false);
+		pose_titleBack->SetisInvisible(false);
+		pose_gameBack->SetisInvisible(false);
+		pose_arrow->SetisInvisible(false);
+
+		if (input_->TriggerKey(DIK_LEFT))
+		{
+			pose_arrow->GetWorldTransform()->translation_.x = -400.0f;
+			isBackTitleFlag = true;
+		}
+		if (input_->TriggerKey(DIK_RIGHT))
+		{
+			pose_arrow->GetWorldTransform()->translation_.x = 0.0f;
+			isBackTitleFlag = false;
+		}
+
+		if (isBackTitleFlag && input_->TriggerKey(DIK_SPACE))
+		{
+			sceneManager_->ChangeScene("TITLE");
+		}
+		if (isBackTitleFlag==false && input_->TriggerKey(DIK_SPACE))
+		{
+			isPoseFlag = false;
+		}
+
+
+	}
+	else
+	{
+		pose_back->SetisInvisible(true);
+		pose_titleBack->SetisInvisible(true);
+		pose_gameBack->SetisInvisible(true);
+		pose_arrow->SetisInvisible(true);
+	}
+
+}
 
 void GamePlayScene::ConfigDraw()
 {

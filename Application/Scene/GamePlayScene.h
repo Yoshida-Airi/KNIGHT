@@ -105,7 +105,11 @@ private:
 
 	uint32_t configTexture_;
 	uint32_t HPTexture_;
-	
+	uint32_t poseBackTexture_;
+	uint32_t poseTitleBackTexture_;
+	uint32_t pose_gameBackTexture_;
+	uint32_t pose_arrowTexture_;
+	uint32_t pose_configTexture_;
 
 	std::unique_ptr< AobaraEngine::Camera> camera_;
 	Input* input_;
@@ -128,6 +132,11 @@ private:
 
 	std::unique_ptr<AobaraEngine::Sprite> config_ = nullptr;
 	std::array<std::unique_ptr<AobaraEngine::Sprite>, 5> hpTextures_;
+	std::unique_ptr<AobaraEngine::Sprite> pose_back = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> pose_titleBack = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> pose_gameBack = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> pose_arrow = nullptr;
+	std::unique_ptr<AobaraEngine::Sprite> pose_Config = nullptr;
 
 
 	Phase phase_;
@@ -140,6 +149,9 @@ private:
 
 	std::chrono::steady_clock::time_point lastInputTime;
 
+	bool isPoseFlag = false;	//ポーズ画面を描画するかフラグ
+	bool isBackTitleFlag = false;
+
 private:
 
 	/// @brief ゲームプレイフェーズ
@@ -148,6 +160,8 @@ private:
 	void GameClearPhase();
 	/// @brief ゲームオーバーフェーズ
 	void GameOverPhase();
+	/// @brief ポーズ画面
+	void PoseWindow();
 	/// @brief ブロック生成
 	//void GenerateBlocks();
 
