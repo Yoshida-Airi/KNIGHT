@@ -43,6 +43,17 @@ void BlockLevelEditor::LoaderJsonFile(std::string filePath)
 	{
 		assert(object.contains("type"));
 
+		if (object.contains("disabled"))  // C++20 以降では contains() が使える
+		{
+			bool disabled = object["disabled"].get<bool>();
+			if (disabled)
+			{
+				continue;
+			}
+		}
+
+
+
 		//種別を取得
 		std::string objectType = object["type"].get<std::string>();
 

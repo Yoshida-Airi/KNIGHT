@@ -11,7 +11,7 @@ void Player::Initialize()
 	grobalVariables_ = GlobalVariables::GetInstance();
 	groupName_ = "Player";
 
-	playerModel_.reset(Model::Create("Resources/Object/Player/player.obj"));
+	playerModel_.reset(Model::Create("Resources/Object/Player/cube.obj"));
 	playerModels_ = { playerModel_.get() };
 
 	playerTexture = TextureManager::GetInstance()->LoadTexture("Resources/Object/Player/player.png");

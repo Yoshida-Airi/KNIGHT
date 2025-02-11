@@ -22,7 +22,7 @@ void GamePlayScene::Initialize()
 	colliderManager_->Initialize();
 
 	blockLevelEditor = new BlockLevelEditor();
-	blockLevelEditor->LoaderJsonFile("Resources/Level/levelEditor.json");
+	blockLevelEditor->LoaderJsonFile("Resources/Level/levelEditor2.json");
 	blockLevelEditor->Initialize();
 
 	for (auto& enemyData : blockLevelEditor->GetGrounds())
