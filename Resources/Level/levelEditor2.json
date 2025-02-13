@@ -119,7 +119,6 @@
                     1.0
                 ]
             },
-            "disabled": true,
             "file_name": "Map.obj",
             "collider": {
                 "type": "BOX",
@@ -260,7 +259,6 @@
                     1.0
                 ]
             },
-            "disabled": false,
             "file_name": "Map.obj",
             "collider": {
                 "type": "BOX",
@@ -289,6 +287,27 @@
                     63.559295654296875,
                     2.2983238068263745e-07,
                     46.69194412231445
+                ],
+                "scaling": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        {
+            "type": "PlayerSpawn",
+            "name": "PlayerSpawn",
+            "transform": {
+                "translation": [
+                    -3.2329139709472656,
+                    0.0,
+                    3.0380866527557373
+                ],
+                "rotation": [
+                    0.0,
+                    -0.0,
+                    0.0
                 ],
                 "scaling": [
                     1.0,
